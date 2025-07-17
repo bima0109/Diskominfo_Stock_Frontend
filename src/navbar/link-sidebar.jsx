@@ -1,20 +1,17 @@
-
-import React from "react";
-import './link-sidebar-css.css';
-import { Link } from 'react-router-dom';
+import "./link-sidebar-css.css";
+import { Link } from "react-router-dom";
 
 const LinkSidebar = () => {
-
   const user = JSON.parse(sessionStorage.getItem("user"));
-  const role = user?.role;
+  const role = user?.role?.nama;
 
   return (
     <div className="d-flex flex-column gap-3">
       {/* Hanya admin */}
-      {role === "Admin" && (
+      {role === "SUPERADMIN" && (
         <>
           <Link
-            to=""
+            to="super/dashboard-super"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
@@ -26,7 +23,7 @@ const LinkSidebar = () => {
             Dashboard
           </Link>
           <Link
-            to="pegawai/"
+            to="index-stok-opname"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
@@ -35,7 +32,7 @@ const LinkSidebar = () => {
               width="30"
               className="d-inline-block"
             />
-            Data Pegawai
+            Data Stock Opname
           </Link>
           <Link
             to="organisasi/"
@@ -52,7 +49,7 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "Penitip" && (
+      {role === "ADMIN_IKP" && (
         <>
           <Link
             to="/"
@@ -90,16 +87,17 @@ const LinkSidebar = () => {
             />
             Data Barang
           </Link>
-          <Link 
-          to="/penitip/penitipan-lanjut/"
-          className="d-flex align-items-center gap-2 text-white link-side">
+          <Link
+            to="/penitip/penitipan-lanjut/"
+            className="d-flex align-items-center gap-2 text-white link-side"
+          >
             Penitipan Lanjut
           </Link>
         </>
       )}
 
       {/* Customer Service */}
-      {role === "Customer Service" && (
+      {role === "PPTKSEKRETARIAT" && (
         <>
           <Link
             to="penitip/"
@@ -142,7 +140,7 @@ const LinkSidebar = () => {
       )}
 
       {/* Pegawai Gudang */}
-      {role === "Pegawai Gudang" && (
+      {role === "KABID_IKP" && (
         <>
           <Link
             to="barang-titipan"
@@ -185,7 +183,7 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "Owner" && (
+      {role === "KABID_TIK" && (
         <>
           <Link
             to="request-donasi"
@@ -303,6 +301,5 @@ const LinkSidebar = () => {
       )}
     </div>
   );
-
-}
+};
 export default LinkSidebar;

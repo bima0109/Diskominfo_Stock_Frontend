@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import logoJateng from "../Assets/logoJateng.png";
 import { Login } from "../Api/ApiAuth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
 
+  const navigate = useNavigate();
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const generateCaptcha = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let result = "";
     for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
     setCaptchaText(result);
   };
@@ -32,15 +36,69 @@ const LoginPage = () => {
       setCaptchaInput("");
       return;
     }
-    //
 
     try {
-      const response = await Login(email, password);
-      console.log("Login berhasil:", response);
+      const response = await Login(username, password);
+      const user = response.data.user;
+
+      sessionStorage.setItem("token", response.data.access_token);
+      sessionStorage.setItem("user", JSON.stringify(user));
+
+      // Akses role sekarang harus user.role.nama
+      if (user && user.role && user.role.nama) {
+        alert("Login Berhasil!");
+
+        switch (user.role.nama) {
+          case "SUPERADMIN":
+            navigate("super/dashboard-super");
+            break;
+          case "ADMIN_IKP":
+            navigate("/dashboard/ikp");
+            break;
+          case "ADMIN_PDKI":
+            navigate("/dashboard/pdki");
+            break;
+          case "ADMIN_STATISTIK":
+            navigate("/dashboard/statistik");
+            break;
+          case "ADMIN_EGOV":
+            navigate("/dashboard/egov");
+            break;
+          case "ADMIN_TIK":
+            navigate("/dashboard/tik");
+            break;
+          case "ADMIN_SEKRETARIAT":
+            navigate("/dashboard/sekretariat");
+            break;
+          case "PPTKSEKRETARIAT":
+            navigate("/dashboard/pptk");
+            break;
+          case "KABID_IKP":
+            navigate("/dashboard/kabid-ikp");
+            break;
+          case "KABID_TIK":
+            navigate("/dashboard/kabid-tik");
+            break;
+          case "KABID_STATISTIK":
+            navigate("/dashboard/kabid-statistik");
+            break;
+          case "KABID_PDKI":
+            navigate("/dashboard/kabid-pdki");
+            break;
+          case "KABID_EGOV":
+            navigate("/dashboard/kabid-egov");
+            break;
+          default:
+            alert("Role tidak dikenali.");
+            break;
+        }
+      } else {
+        alert("Login gagal: role tidak ditemukan.");
+      }
     } catch (error) {
       console.error("Login gagal:", error);
       alert(
-        "Login gagal: " + (error.message || "Periksa kembali email/password")
+        "Login gagal: " + (error.message || "Periksa kembali Username/password")
       );
     }
   };
@@ -63,20 +121,23 @@ const LoginPage = () => {
 
       <div style={styles.innerContainer}>
         <form onSubmit={handleSubmit} style={styles.form}>
-          <label htmlFor="email" style={styles.label}>
-            <strong>Email Address</strong>
+          <label htmlFor="username" style={styles.label}>
+            <strong>Username</strong>
           </label>
           <input
-            type="email"
-            id="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="Username"
+            id="username"
+            placeholder="Enter your Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             style={styles.input}
             required
           />
 
-          <label htmlFor="password" style={{ ...styles.label, marginTop: "20px" }}>
+          <label
+            htmlFor="password"
+            style={{ ...styles.label, marginTop: "20px" }}
+          >
             <strong>Password</strong>
           </label>
           <div style={styles.passwordWrapper}>
@@ -107,7 +168,10 @@ const LoginPage = () => {
             </button>
           </div>
 
-          <label htmlFor="captcha" style={{ ...styles.label, marginTop: "20px" }}>
+          <label
+            htmlFor="captcha"
+            style={{ ...styles.label, marginTop: "20px" }}
+          >
             <strong>Captcha</strong>
           </label>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -172,7 +236,7 @@ const LoginPage = () => {
 
 const styles = {
   container: {
-    minHeight: "100vh",
+    minHeight: "40vh",
     width: "100vw",
     display: "flex",
     flexDirection: "column",
@@ -185,21 +249,21 @@ const styles = {
   headerSection: {
     textAlign: "center",
     marginBottom: "20px",
-    paddingTop: "120px",
+    paddingTop: "5px",
   },
   logo: {
-    width: "120px",
-    height: "120px",
+    width: "150px",
+    height: "150px",
     borderRadius: "50%",
     objectFit: "cover",
-    backgroundSize: "170px 170px",
+    backgroundSize: "300px 300px",
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: "10px",
   },
   title: {
     margin: "0",
-    fontWeight: "700",
-    fontSize: "26px",
+    fontWeight: "900",
+    fontSize: "32px",
     color: "white",
   },
   subtitle: {
@@ -212,7 +276,8 @@ const styles = {
     padding: "42px 36px",
     borderRadius: "15px",
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "700px",
+    maxHeight: "550px",
     boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
     textAlign: "center",
     color: "white",
@@ -236,11 +301,12 @@ const styles = {
     border: "1.5px solid rgba(255, 255, 255, 0.4)",
     outline: "none",
     padding: "15px 15px",
-    width: "30.5vw",
+    width: "40.5vw",
     fontSize: "15px",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     color: "white",
     transition: "border-color 0.3s ease",
+    marginTop: "0.5px",
   },
   passwordWrapper: {
     position: "relative",
@@ -275,12 +341,12 @@ const styles = {
     transition: "background-color 0.3s ease",
   },
   footerIcon: {
-    marginTop: "26px",
+    marginTop: "2px",
     fontSize: "22px",
     opacity: 0.6,
   },
   footerText: {
-    marginTop: "10px",
+    marginTop: "1px",
     fontSize: "13px",
     opacity: 0.5,
   },
