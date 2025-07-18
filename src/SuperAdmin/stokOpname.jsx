@@ -12,12 +12,19 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 const StockOpnamePage = () => {
   const [stockList, setStockList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [formDataTambah, setFormDataTambah] = useState({
     nama_barang: "",
     jumlah: "",
     satuan: "",
     harga: "",
   });
+  const [formDataEdit, setFormDataEdit] = useState({
+    nama_barang: "",
+    jumlah: "",
+    satuan: "",
+    harga: "",
+  });
+
   const [editId, setEditId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -38,7 +45,11 @@ const StockOpnamePage = () => {
   }, []);
 
   const totalPages = Math.ceil(stockList.length / itemsPerPage);
-  const paginatedStock = stockList.slice(
+  const sortedStock = [...stockList].sort((a, b) =>
+    a.nama_barang.localeCompare(b.nama_barang)
+  );
+
+  const paginatedStock = sortedStock.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -57,10 +68,13 @@ const StockOpnamePage = () => {
   const handleSubmitTambah = async (e) => {
     e.preventDefault();
     try {
-      await createStock(formData);
+      await createStock(formDataTambah);
       alert("Data berhasil ditambahkan");
-      setFormData({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
+      setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       fetchStock();
+      bootstrap.Modal.getInstance(
+        document.getElementById("modalTambahStock")
+      )?.hide();
     } catch {
       alert("Gagal menambahkan data");
     }
@@ -68,33 +82,46 @@ const StockOpnamePage = () => {
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
+    console.log("SUBMIT EDIT ID:", editId);
+
+    if (!formDataEdit.nama_barang || !formDataEdit.jumlah) {
+      alert("Nama barang dan jumlah wajib diisi");
+      return;
+    }
+
+    if (!editId) {
+      alert("Edit ID tidak ditemukan");
+      return;
+    }
+
     try {
-      await updateStock(editId, formData);
+      await updateStock(editId, formDataEdit);
       alert("Data berhasil diperbarui");
-      setFormData({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
+      bootstrap.Modal.getInstance(
+        document.getElementById("modalEditStock")
+      )?.hide();
+      setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       setEditId(null);
       fetchStock();
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Gagal memperbarui data");
     }
   };
 
   const handleEdit = (stock) => {
+    console.log("DATA STOCK:", stock);
     setEditId(stock.id);
-    setFormData({
+    setFormDataEdit({
       nama_barang: stock.nama_barang,
       jumlah: stock.Jumlah,
       satuan: stock.satuan,
       harga: stock["Harga Satuan"],
     });
-
-    setTimeout(() => {
-      const modalEl = document.getElementById("modalEditStock");
-      if (modalEl) {
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        modalInstance?.hide();
-      }
-    }, 200);
+    console.log("EDIT ID:", stock.id);
+    const modalEl = document.getElementById("modalEditStock");
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
   };
 
   return (
@@ -188,14 +215,6 @@ const StockOpnamePage = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <form onSubmit={handleSubmitTambah}>
-              <div className="modal-header">
-                <h5 className="modal-title">Tambah Stock</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
               <div className="modal-body">
                 {["nama_barang", "jumlah", "satuan", "harga"].map(
                   (field, i) => (
@@ -208,9 +227,12 @@ const StockOpnamePage = () => {
                       }
                       className="form-control mb-2"
                       placeholder={field.replace("_", " ").toUpperCase()}
-                      value={formData[field]}
+                      value={formDataTambah[field]}
                       onChange={(e) =>
-                        setFormData({ ...formData, [field]: e.target.value })
+                        setFormDataTambah({
+                          ...formDataTambah,
+                          [field]: e.target.value,
+                        })
                       }
                       required
                     />
@@ -221,8 +243,8 @@ const StockOpnamePage = () => {
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
                   Batal
                 </button>
-                <button className="btn btn-primary" type="submit">
-                  Tambah
+                <button className="btn btn-warning" type="submit">
+                  Tambah Data
                 </button>
               </div>
             </form>
@@ -235,14 +257,6 @@ const StockOpnamePage = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <form onSubmit={handleSubmitEdit}>
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Stock</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
               <div className="modal-body">
                 {["nama_barang", "jumlah", "satuan", "harga"].map(
                   (field, i) => (
@@ -255,9 +269,12 @@ const StockOpnamePage = () => {
                       }
                       className="form-control mb-2"
                       placeholder={field.replace("_", " ").toUpperCase()}
-                      value={formData[field]}
+                      value={formDataEdit[field]}
                       onChange={(e) =>
-                        setFormData({ ...formData, [field]: e.target.value })
+                        setFormDataEdit({
+                          ...formDataEdit,
+                          [field]: e.target.value,
+                        })
                       }
                       required
                     />

@@ -2,7 +2,9 @@ import "./link-sidebar-css.css";
 import { Link } from "react-router-dom";
 
 const LinkSidebar = () => {
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  const storedUser = sessionStorage.getItem("user");
+  // const user = JSON.parse(sessionStorage.getItem("user"));
+  const user = storedUser ? JSON.parse(storedUser) : null;
   const role = user?.role?.nama;
 
   return (
@@ -11,7 +13,7 @@ const LinkSidebar = () => {
       {role === "SUPERADMIN" && (
         <>
           <Link
-            to="super/dashboard-super"
+            to="dashboard-super/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
@@ -23,7 +25,7 @@ const LinkSidebar = () => {
             Dashboard
           </Link>
           <Link
-            to="index-stok-opname"
+            to="index-stok-opname/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img

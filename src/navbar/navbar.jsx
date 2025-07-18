@@ -3,7 +3,7 @@ import Sidebar from "./sidebar";
 
 const Navbar = () => {
   return (
-    <nav className="navbar bg-success">
+    <nav className="navbar" style={{ backgroundColor: "#667eea" }}>
       <div className="container-fluid">
         <Sidebar />
 
