@@ -29,7 +29,7 @@ const LinkSidebar = () => {
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=13042&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAcdJREFUSEvd1r+rT3Ecx/HHRZJFsVqk3PwalJEIC11dIaVYDFIY/QMMFpvBjwyka7x1B5NcikXJRlZJBsqPFANx3vocfZzO997P+X6PO/jUWU6n9/O8Xu9fnzELfMYWmOe/AW7EG3xsOti3wpWYxg58xwWcz6F9AgP2AK9xGOvwGLdwtob2Baxh7zCBbwmwD3exCc/jXR/AVUnZZhzDVGbhEnzGftzvAxjKItCyBD2JIymPEf8SjmIcX0YFBuwhlmIb3uMyTuFQAoe9u/Bs1By2weqYAT2DT03YsApr2KJK4c6kLK/8AB5vgw0DzGHb8aHR2HPCugJHhnUBrsAj/EhWNZVdT0XyV4G0LYaSPgzYbDWiImcxsqKv8lMMK1FYw0LZngYsfvZaqbKStshhYdXvxk0nYDcxOagaB+3ZQZb+E9hcloZVW1POmspu4GBVRLvzCVJ6c2hTuBwx9Q/gXh82zrcPT+NctcfW4GeWszvY2zVnTeVtCl/gNi6mjzekzR1VGjY+LbWvpA9jS7/E+tQGJ7ClemYS9M/UHxbaVBjV+bYKvhhfcRVX8GpYQImla7G6yteT7KrQF6+XK0annymZpZ0CzvfxLzPMXx107a6aAAAAAElFTkSuQmCC"
               alt=""
               width="30"
               className="d-inline-block"
@@ -37,7 +37,7 @@ const LinkSidebar = () => {
             Data Stock Opname
           </Link>
           <Link
-            to="organisasi/"
+            to="bidang/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
@@ -46,7 +46,7 @@ const LinkSidebar = () => {
               width="30"
               className="d-inline-block"
             />
-            Data Organisasi
+            Bidang
           </Link>
         </>
       )}
