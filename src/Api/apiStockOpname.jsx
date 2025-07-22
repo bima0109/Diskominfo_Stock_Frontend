@@ -83,3 +83,21 @@ export const DeleteStock = async (id) => {
     throw error.response?.data || error;
   }
 };
+
+export const SearchStock = async (query) => {
+  try {
+    const response = await useAxios.post(
+      "/stock/search",
+      { query },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

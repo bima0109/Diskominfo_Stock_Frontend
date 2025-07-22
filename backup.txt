@@ -1,0 +1,34 @@
+{/* <div
+            className="d-flex align-items-center gap-2 text-white link-side"
+            onClick={toggleStokSubmenu}
+            style={{ cursor: "pointer" }}
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAcdJREFUSEvd1r+rT3Ecx/HHRZJFsVqk3PwalJEIC11dIaVYDFIY/QMMFpvBjwyka7x1B5NcikXJRlZJBsqPFANx3vocfZzO997P+X6PO/jUWU6n9/O8Xu9fnzELfMYWmOe/AW7EG3xsOti3wpWYxg58xwWcz6F9AgP2AK9xGOvwGLdwtob2Baxh7zCBbwmwD3exCc/jXR/AVUnZZhzDVGbhEnzGftzvAxjKItCyBD2JIymPEf8SjmIcX0YFBuwhlmIb3uMyTuFQAoe9u/Bs1By2weqYAT2DT03YsApr2KJK4c6kLK/8AB5vgw0DzGHb8aHR2HPCugJHhnUBrsAj/EhWNZVdT0XyV4G0LYaSPgzYbDWiImcxsqKv8lMMK1FYw0LZngYsfvZaqbKStshhYdXvxk0nYDcxOagaB+3ZQZb+E9hcloZVW1POmspu4GBVRLvzCVJ6c2hTuBwx9Q/gXh82zrcPT+NctcfW4GeWszvY2zVnTeVtCl/gNi6mjzekzR1VGjY+LbWvpA9jS7/E+tQGJ7ClemYS9M/UHxbaVBjV+bYKvhhfcRVX8GpYQImla7G6yteT7KrQF6+XK0annymZpZ0CzvfxLzPMXx107a6aAAAAAElFTkSuQmCC"
+              alt=""
+              width="30"
+            />
+            Stok Opname
+          </div>
+          {showStokSubmenu && (
+            <div className="ms-4 d-flex flex-column gap-2">
+              <Link to="index-stok-opname/" className="text-white link-side">
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAMhJREFUSEvt0zFOAkEUgOFvL+EhTGyQxAYbr4AdPbWF9zBQ2HgOLyAdkNDT0tJQS4wh2YIAu2/XQQoy275Mvp1/ZgoX/ooLezJ49uI5aU7ausA5Ls0DZvhpoqeC3RKb4hmrCE0FH/FVIhsM8FmHpoI9TA6AEV6xPQVH4Bteokwn5h0s/gLe4LYGvMP4YP6BYdWaaIfR5vbP8Lus8f6fZ3iPOdbo712gSjN1h7v1T1g2eRK7v0gFo+RH8wy2ThYtyEmjQq3n15/0F7h2Fx0FmPloAAAAAElFTkSuQmCC"
+                  alt=""
+                  width="30"
+                  className="d-inline-block"
+                />
+                Data Stok Opname
+              </Link>
+              {/* <Link to="permintaan/" className="text-white link-side">
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAMhJREFUSEvt0zFOAkEUgOFvL+EhTGyQxAYbr4AdPbWF9zBQ2HgOLyAdkNDT0tJQS4wh2YIAu2/XQQoy275Mvp1/ZgoX/ooLezJ49uI5aU7ausA5Ls0DZvhpoqeC3RKb4hmrCE0FH/FVIhsM8FmHpoI9TA6AEV6xPQVH4Bteokwn5h0s/gLe4LYGvMP4YP6BYdWaaIfR5vbP8Lus8f6fZ3iPOdbo712gSjN1h7v1T1g2eRK7v0gFo+RH8wy2ThYtyEmjQq3n15/0F7h2Fx0FmPloAAAAAElFTkSuQmCC"
+                  alt=""
+                  width="30"
+                  className="d-inline-block"
+                />
+                Data Permintaan
+              </Link> */}
+          {/* </div> */}
+          {/* } */}

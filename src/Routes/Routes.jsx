@@ -8,6 +8,15 @@ import Layout from "../navbar/layout.jsx";
 //Import super admin components
 import BlankPage from "../SuperAdmin/umum.jsx";
 import StockOpnamePage from "../SuperAdmin/stokOpname.jsx";
+import PermintaanPage from "../SuperAdmin/permintaan.jsx";
+import bidangList from "../SuperAdmin/bidang.jsx";
+import Bidang from "../SuperAdmin/bidang.jsx";
+import PermintaanegovPage from "../SuperAdmin/perbidang/egov.jsx";
+import PermintaanikpPage from "../SuperAdmin/perbidang/ikp.jsx";
+import PermintaanTikPage from "../SuperAdmin/perbidang/tik.jsx";
+import PermintaanPdkipage from "../SuperAdmin/perbidang/pdki.jsx";
+import PermintaanSekretariatPage from "../SuperAdmin/perbidang/sekre.jsx";
+import PermintaanStatistikPage from "../SuperAdmin/perbidang/statis.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,11 +40,38 @@ const router = createBrowserRouter([
         path: "index-stok-opname",
         element: <StockOpnamePage />,
       },
-
-      // {
-      //   path: "settings",
-      //   element: <Settings />,
-      // },
+      {
+        path: "permintaan",
+        element: <PermintaanPage />,
+      },
+      {
+        path: "bidang",
+        element: <Bidang />,
+      },
+      {
+        path: "bidang/egov",
+        element: <PermintaanegovPage />,
+      },
+      {
+        path: "bidang/ikp",
+        element: <PermintaanikpPage />,
+      },
+      {
+        path: "bidang/tik",
+        element: <PermintaanTikPage />,
+      },
+      {
+        path: "bidang/pdki",
+        element: <PermintaanPdkipage />,
+      },
+      {
+        path: "bidang/sekretariat",
+        element: <PermintaanSekretariatPage />,
+      },
+      {
+        path: "bidang/statistik",
+        element: <PermintaanStatistikPage />,
+      },
     ],
   },
 ]);

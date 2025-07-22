@@ -4,6 +4,7 @@ import {
   UpdateStock as updateStock,
   DeleteStock as deleteStock,
   CreateStock as createStock,
+  SearchStock as searchStock,
 } from "../Api/apiStockOpname.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as bootstrap from "bootstrap";
@@ -16,18 +17,35 @@ const StockOpnamePage = () => {
     nama_barang: "",
     jumlah: "",
     satuan: "",
-    harga: "",
+    // harga: "",
   });
   const [formDataEdit, setFormDataEdit] = useState({
     nama_barang: "",
     jumlah: "",
     satuan: "",
-    harga: "",
+    // harga: "",
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [editId, setEditId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
+  const handleSearchChange = async (value) => {
+    setSearchTerm(value);
+    if (value.trim() === "") {
+      fetchStock(); // reset ke semua data
+      return;
+    }
+
+    try {
+      const results = await searchStock(value);
+      setStockList(results);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Gagal mencari:", error);
+      alert("Terjadi kesalahan saat mencari data.");
+    }
+  };
 
   const fetchStock = async () => {
     try {
@@ -44,7 +62,7 @@ const StockOpnamePage = () => {
     fetchStock();
   }, []);
 
-  const totalPages = Math.ceil(stockList.length / itemsPerPage);
+  const totalPages = Math.ceil((stockList?.length || 0) / itemsPerPage);
   const sortedStock = [...stockList].sort((a, b) =>
     a.nama_barang.localeCompare(b.nama_barang)
   );
@@ -70,7 +88,7 @@ const StockOpnamePage = () => {
     try {
       await createStock(formDataTambah);
       alert("Data berhasil ditambahkan");
-      setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
+      setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "" });
       fetchStock();
       bootstrap.Modal.getInstance(
         document.getElementById("modalTambahStock")
@@ -100,7 +118,7 @@ const StockOpnamePage = () => {
       bootstrap.Modal.getInstance(
         document.getElementById("modalEditStock")
       )?.hide();
-      setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
+      setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "" });
       setEditId(null);
       fetchStock();
     } catch (err) {
@@ -116,7 +134,7 @@ const StockOpnamePage = () => {
       nama_barang: stock.nama_barang,
       jumlah: stock.Jumlah,
       satuan: stock.satuan,
-      harga: stock["Harga Satuan"],
+      // harga: stock["Harga Satuan"],
     });
     console.log("EDIT ID:", stock.id);
     const modalEl = document.getElementById("modalEditStock");
@@ -136,6 +154,14 @@ const StockOpnamePage = () => {
           + Tambah Stock
         </button>
       </div>
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Cari Data Barang..."
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
 
       {loading ? (
         <div>Loading...</div>
@@ -150,8 +176,8 @@ const StockOpnamePage = () => {
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
                 <th>Satuan</th>
-                <th>Harga Satuan (Rp. )</th>
-                <th>Total (Rp. )</th>
+                {/* <th>Harga Satuan (Rp. )</th> */}
+                {/* <th>Total (Rp. )</th> */}
                 <th>Bulan</th>
                 <th>Tahun</th>
                 <th>Aksi</th>
@@ -164,8 +190,8 @@ const StockOpnamePage = () => {
                   <td>{item.nama_barang}</td>
                   <td>{item.Jumlah}</td>
                   <td>{item.satuan}</td>
-                  <td>{item["Harga Satuan"]}</td>
-                  <td>{item.jumlah}</td>
+                  {/* <td>{item["Harga Satuan"]}</td> */}
+                  {/* <td>{item.jumlah}</td> */}
                   <td>{item.bulan}</td>
                   <td>{item.tahun}</td>
                   <td>
@@ -216,28 +242,26 @@ const StockOpnamePage = () => {
           <div className="modal-content">
             <form onSubmit={handleSubmitTambah}>
               <div className="modal-body">
-                {["nama_barang", "jumlah", "satuan", "harga"].map(
-                  (field, i) => (
-                    <input
-                      key={i}
-                      type={
-                        field === "harga" || field === "jumlah"
-                          ? "number"
-                          : "text"
-                      }
-                      className="form-control mb-2"
-                      placeholder={field.replace("_", " ").toUpperCase()}
-                      value={formDataTambah[field]}
-                      onChange={(e) =>
-                        setFormDataTambah({
-                          ...formDataTambah,
-                          [field]: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  )
-                )}
+                {["nama_barang", "jumlah", "satuan"].map((field, i) => (
+                  <input
+                    key={i}
+                    // type={
+                    //   field === "harga" || field === "jumlah"
+                    //     ? "number"
+                    //     : "text"
+                    // }
+                    className="form-control mb-2"
+                    placeholder={field.replace("_", " ").toUpperCase()}
+                    value={formDataTambah[field]}
+                    onChange={(e) =>
+                      setFormDataTambah({
+                        ...formDataTambah,
+                        [field]: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                ))}
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
@@ -258,28 +282,26 @@ const StockOpnamePage = () => {
           <div className="modal-content">
             <form onSubmit={handleSubmitEdit}>
               <div className="modal-body">
-                {["nama_barang", "jumlah", "satuan", "harga"].map(
-                  (field, i) => (
-                    <input
-                      key={i}
-                      type={
-                        field === "harga" || field === "jumlah"
-                          ? "number"
-                          : "text"
-                      }
-                      className="form-control mb-2"
-                      placeholder={field.replace("_", " ").toUpperCase()}
-                      value={formDataEdit[field]}
-                      onChange={(e) =>
-                        setFormDataEdit({
-                          ...formDataEdit,
-                          [field]: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  )
-                )}
+                {["nama_barang", "jumlah", "satuan"].map((field, i) => (
+                  <input
+                    key={i}
+                    // type={
+                    //   field === "harga" || field === "jumlah"
+                    //     ? "number"
+                    //     : "text"
+                    // }
+                    className="form-control mb-2"
+                    placeholder={field.replace("_", " ").toUpperCase()}
+                    value={formDataEdit[field]}
+                    onChange={(e) =>
+                      setFormDataEdit({
+                        ...formDataEdit,
+                        [field]: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                ))}
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
