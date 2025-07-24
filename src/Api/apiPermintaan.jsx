@@ -35,3 +35,33 @@ export const CreatePermintaan = async (value) => {
     throw error.response?.data || error;
   }
 };
+export const UpdatePermintaan = async (id, value) => {
+  try {
+    const response = await useAxios.put(`/permintaan/${id}`, value, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error.response?.data || error;
+  }
+};
+
+// Hapus data permintaan
+export const DeletePermintaan = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  try {
+    const response = await useAxios.delete(`/permintaan/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

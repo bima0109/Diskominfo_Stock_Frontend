@@ -1,120 +1,381 @@
 import React, { useEffect, useState } from "react";
-import { GetAllpermintaan } from "../Api/apiPermintaan";
+import { GetAlldata } from "../Api/apiVerifikasi";
+import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import ttdImage from "../assets/ttd.png";
+import kopsurat from "../assets/kopsurat.png";
+
+const romanMonths = [
+  "",
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+  "XI",
+  "XII",
+];
+
+const monthNames = [
+  "",
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+const formatNoSurat = (id, tanggal) => {
+  const date = new Date(tanggal);
+  const romawi = romanMonths[date.getMonth() + 1];
+  const tahun = date.getFullYear();
+  return `000.2.3.1/${id}/${romawi}/${tahun}`;
+};
+
+const formatTanggal = (tanggal) => {
+  const date = new Date(tanggal);
+  const options = { day: "2-digit", month: "short", year: "2-digit" };
+  return date.toLocaleDateString("en-GB", options).replace(/ /g, "-");
+};
+
+const allStatuses = [
+  "DITOLAK",
+  "DIPROSES",
+  "ACC KABID",
+  "ACC SEKRETARIAT",
+  "ACC PPTKSEKRETARIAT",
+];
+
+const renderStatusProgress = (currentStatus) => {
+  return (
+    <div className="d-flex flex-column gap-1">
+      {allStatuses.map((status, idx) => {
+        let badgeClass = "bg-secondary";
+
+        if (status === currentStatus) {
+          switch (status) {
+            case "DITOLAK":
+              badgeClass = "bg-danger";
+              break;
+            case "DIPROSES":
+              badgeClass = "bg-secondary";
+              break;
+            case "ACC KABID":
+              badgeClass = "bg-warning text-dark";
+              break;
+            case "ACC SEKRETARIAT":
+              badgeClass = "bg-primary";
+              break;
+            case "ACC PPTKSEKRETARIAT":
+              badgeClass = "bg-success";
+              break;
+            default:
+              badgeClass = "bg-secondary";
+          }
+        }
+
+        return (
+          <span key={idx} className={`badge ${badgeClass}`}>
+            {status}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
 
 const PermintaanPage = () => {
-  const [permintaanList, setPermintaanList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const itemsPerPage = 20;
-  const [currentPage, setCurrentPage] = useState(1);
+  const today = new Date();
+  const [verifikasiData, setVerifikasiData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
+  const [availableYears, setAvailableYears] = useState([]);
 
-  const fetchPermintaan = async () => {
-    try {
-      const data = await GetAllpermintaan();
+  const handleCetak = (verif) => {
+    const doc = new jsPDF();
+    const tanggalSurat = formatTanggal(verif.tanggal);
+    const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
-      // Urutkan berdasarkan tanggal secara descending
-      const sortedData = data.sort((a, b) =>
-        b.tanggal.localeCompare(a.tanggal)
-      );
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
 
-      setPermintaanList(sortedData);
-    } catch (error) {
-      alert("Gagal mengambil data permintaan");
-      console.error(error);
-    } finally {
-      setLoading(false);
+    // Logo kiri atas
+    doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
+
+    // Teks di sebelah kanan logo
+    doc.setFont("helvetica", "bold");
+    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 40, 20);
+    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
+
+    // Judul di kanan atas
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("FORM Permintaan Barang", 70, 40); // Sesuaikan X dan Y
+
+    // Info surat
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`No Surat  : ${noSurat}`, 20, 50);
+    doc.text(`Tanggal   : ${tanggalSurat}`, 20, 57);
+    doc.text(`Bidang    : ${verif.bidang?.nama.toUpperCase() || "-"}`, 20, 64);
+
+    const tableData = verif.permintaans.map((item, index) => [
+      index + 1,
+      item.nama_barang,
+      item.jumlah,
+      item.stock_opname?.satuan || "-",
+      item.keterangan || "-",
+    ]);
+
+    autoTable(doc, {
+      startY: 68,
+      head: [["No", "Nama Barang", "Vol.", "Satuan", "Keterangan"]],
+      body: tableData,
+      styles: {
+        fontSize: 10,
+        lineWidth: 0.1,
+        lineColor: [0, 0, 0],
+        halign: "left",
+        valign: "middle",
+      },
+      headStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        halign: "center",
+      },
+    });
+
+    const finalY = doc.lastAutoTable?.finalY ?? 90;
+    const centerX = 105;
+
+    doc.setFont("helvetica", "normal");
+    doc.text("Menyetujui", centerX, finalY + 10, { align: "center" });
+    // doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 13, 30, 15);
+    doc.text("PPTKSEKRETARIAT", centerX, finalY + 32, { align: "center" });
+    doc.text("(Galih Wibowo)", centerX, finalY + 40, { align: "center" });
+
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
+  const handleUpdate = async (item) => {
+    const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan);
+
+    if (newJumlah !== null && newKeterangan !== null) {
+      try {
+        await UpdatePermintaan(item.id, {
+          jumlah: newJumlah,
+          keterangan: newKeterangan,
+        });
+        alert("Berhasil update permintaan.");
+        // Refresh data
+        const result = await GetAlldata();
+        setVerifikasiData(result);
+      } catch (error) {
+        console.error(error);
+        alert("Gagal update permintaan.");
+      }
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
+      try {
+        await DeletePermintaan(id);
+        alert("Berhasil menghapus permintaan.");
+        // Refresh data
+        const result = await GetAlldata();
+        setVerifikasiData(result);
+      } catch (error) {
+        console.error(error);
+        alert("Gagal menghapus permintaan.");
+      }
     }
   };
 
   useEffect(() => {
-    fetchPermintaan();
+    const fetchData = async () => {
+      try {
+        const result = await GetAlldata();
+        setVerifikasiData(result);
+
+        const years = result.map((item) =>
+          new Date(item.tanggal).getFullYear()
+        );
+        const uniqueYears = Array.from(
+          new Set([...years, today.getFullYear()])
+        );
+        uniqueYears.sort((a, b) => b - a);
+        setAvailableYears(uniqueYears);
+
+        // Filter langsung saat fetch data
+        const initialFiltered = result.filter((item) => {
+          const date = new Date(item.tanggal);
+          return (
+            date.getMonth() + 1 === today.getMonth() + 1 &&
+            date.getFullYear() === today.getFullYear()
+          );
+        });
+        setFilteredData(initialFiltered);
+      } catch (err) {
+        alert("Gagal mengambil data");
+        console.error(err);
+      }
+    };
+    fetchData();
   }, []);
 
-  const totalPages = Math.ceil((permintaanList.length || 0) / itemsPerPage);
-  const paginatedData = permintaanList.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    let filtered = verifikasiData;
 
-  // Fungsi untuk menentukan kelas warna berdasarkan status
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "DITOLAK":
-        return "btn btn-danger btn-sm";
-      case "ACC KABID":
-        return "btn btn-warning btn-sm text-dark";
-      case "ACC UMPEG":
-        return "btn btn-primary btn-sm";
-      case "ACC PPTKSEKRETARIAT":
-        return "btn btn-success btn-sm";
-      default:
-        return "btn btn-secondary btn-sm"; // PROSES atau lainnya
+    if (selectedMonth) {
+      filtered = filtered.filter(
+        (item) =>
+          new Date(item.tanggal).getMonth() + 1 === parseInt(selectedMonth)
+      );
     }
-  };
+
+    if (selectedYear) {
+      filtered = filtered.filter(
+        (item) =>
+          new Date(item.tanggal).getFullYear() === parseInt(selectedYear)
+      );
+    }
+
+    setFilteredData(filtered);
+  }, [selectedMonth, selectedYear, verifikasiData]);
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4">Daftar Permintaan Barang</h2>
-      {loading ? (
-        <div>Loading...</div>
-      ) : paginatedData.length === 0 ? (
-        <div className="alert alert-info">Tidak ada data permintaan</div>
-      ) : (
-        <>
-          <table className="table table-bordered table-striped">
+      <h3 className="mb-4">Data Permintaan Barang </h3>
+
+      {/* Filter */}
+      <div className="row mb-3">
+        <div className="col-md-3">
+          <select
+            className="form-select"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          >
+            <option value="">-- Pilih Bulan --</option>
+            {monthNames.map(
+              (month, idx) =>
+                idx > 0 && (
+                  <option key={idx} value={idx}>
+                    {month}
+                  </option>
+                )
+            )}
+          </select>
+        </div>
+        <div className="col-md-3">
+          <select
+            className="form-select"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            <option value="">-- Pilih Tahun --</option>
+            {availableYears.map((year, idx) => (
+              <option key={idx} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Data Table */}
+      {filteredData.map((verif, idx) => (
+        <div className="mb-5" key={verif.id}>
+          {verif.status === "ACC PPTKSEKRETARIAT" && (
+            <div className="d-flex justify-content-end mb-2">
+              <button
+                className="btn btn-outline-success"
+                onClick={() => handleCetak(verif)}
+              >
+                <i className="bi bi-printer me-1" />
+                Cetak
+              </button>
+            </div>
+          )}
+
+          <table className="table table-bordered">
             <thead className="table-light">
               <tr>
-                <th>No</th>
+                <th style={{ width: "3%" }}>NO</th>
+                <th style={{ width: "12%" }}>Tanggal</th>
+                <th style={{ width: "20%" }}>No Surat</th>
                 <th>Nama Barang</th>
-                <th>Jumlah</th>
-                <th>Satuan</th>
-                <th>Bidang</th>
-                <th>Tanggal Pengajuan</th>
-                <th>Status</th>
+                <th style={{ width: "7%" }}>Vol.</th>
+                <th style={{ width: "10%" }}>Satuan</th>
                 <th>Keterangan</th>
+                <th style={{ width: "20%" }}>Action</th>
+                <th style={{ width: "10%" }}>Progres</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedData.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td>{item.nama_barang}</td>
-                  <td>{item.jumlah}</td>
-                  <td>{item.satuan}</td>
-                  <td>{item.bidang?.nama || "-"}</td>
-                  <td>{item.tanggal}</td>
-                  <td>
-                    <span className={getStatusClass(item.status)}>
-                      {item.status}
-                    </span>
+              {verif.permintaans.length > 0 ? (
+                verif.permintaans.map((item, i) => (
+                  <tr key={item.id}>
+                    <td>{i + 1}</td>
+                    <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
+                    <td>
+                      {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
+                    </td>
+                    <td>{item.nama_barang}</td>
+                    <td>{item.jumlah}</td>
+                    <td>{item.stock_opname?.satuan || "-"}</td>
+                    <td>{item.keterangan}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-warning me-1"
+                        onClick={() => handleUpdate(item)}
+                      >
+                        <i className="bi bi-pencil" />
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        <i className="bi bi-trash" />
+                      </button>
+                    </td>
+                    {i === 0 && (
+                      <td rowSpan={verif.permintaans.length}>
+                        {renderStatusProgress(verif.status)}
+                      </td>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" className="text-center">
+                    Tidak ada permintaan
                   </td>
-                  <td>{item.keterangan}</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
-
-          <nav className="mt-3">
-            <ul className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <li
-                  key={i}
-                  className={`page-item ${
-                    currentPage === i + 1 ? "active" : ""
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </>
-      )}
+        </div>
+      ))}
     </div>
   );
 };

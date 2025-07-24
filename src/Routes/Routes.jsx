@@ -17,6 +17,7 @@ import PermintaanTikPage from "../SuperAdmin/perbidang/tik.jsx";
 import PermintaanPdkipage from "../SuperAdmin/perbidang/pdki.jsx";
 import PermintaanSekretariatPage from "../SuperAdmin/perbidang/sekre.jsx";
 import PermintaanStatistikPage from "../SuperAdmin/perbidang/statis.jsx";
+import UserPage from "../SuperAdmin/user.jsx";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: "bidang/statistik",
         element: <PermintaanStatistikPage />,
+      },
+      {
+        path: "user",
+        element: <UserPage />,
       },
     ],
   },

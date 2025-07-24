@@ -44,7 +44,7 @@ const LinkSidebar = () => {
             Bidang
           </Link>
           <Link
-            to="bidang/"
+            to="user/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
@@ -53,7 +53,7 @@ const LinkSidebar = () => {
               width="30"
               className="d-inline-block"
             />
-            Tambah Admin
+            Manajemen User
           </Link>
         </>
       )}
