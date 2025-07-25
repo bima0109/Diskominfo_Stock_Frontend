@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ttdImage from "../assets/ttd.png";
 import kopsurat from "../assets/kopsurat.png";
+import { useLocation } from "react-router-dom";
 
 const romanMonths = [
   "",
@@ -106,6 +107,9 @@ const PermintaanPage = () => {
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [availableYears, setAvailableYears] = useState([]);
+  const location = useLocation();
+  const selectedBidangFromNav = location.state?.selectedBidang || null;
+  const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
 
   const handleCetak = (verif) => {
     const doc = new jsPDF();
@@ -131,9 +135,9 @@ const PermintaanPage = () => {
     // Info surat
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    doc.text(`No Surat  : ${noSurat}`, 20, 50);
-    doc.text(`Tanggal   : ${tanggalSurat}`, 20, 57);
-    doc.text(`Bidang    : ${verif.bidang?.nama.toUpperCase() || "-"}`, 20, 64);
+    doc.text(`No Surat  : ${noSurat}`, 17, 50);
+    doc.text(`Tanggal   : ${tanggalSurat}`, 17, 57);
+    doc.text(`Bidang    : ${verif.bidang?.nama.toUpperCase() || "-"}`, 17, 64);
 
     const tableData = verif.permintaans.map((item, index) => [
       index + 1,
@@ -151,7 +155,7 @@ const PermintaanPage = () => {
         fontSize: 10,
         lineWidth: 0.1,
         lineColor: [0, 0, 0],
-        halign: "left",
+        halign: "left", // default
         valign: "middle",
       },
       headStyles: {
@@ -159,16 +163,20 @@ const PermintaanPage = () => {
         textColor: [0, 0, 0],
         halign: "center",
       },
+      columnStyles: {
+        0: { halign: "center" }, // kolom "No"
+        2: { halign: "center" }, // kolom "Vol."
+      },
     });
 
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
 
     doc.setFont("helvetica", "normal");
-    doc.text("Menyetujui", centerX, finalY + 10, { align: "center" });
-    // doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 13, 30, 15);
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 32, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 40, { align: "center" });
+    doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
+    doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
+    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -260,8 +268,15 @@ const PermintaanPage = () => {
       );
     }
 
+    if (selectedBidang) {
+      filtered = filtered.filter(
+        (item) =>
+          item.bidang?.nama?.toLowerCase() === selectedBidang.toLowerCase()
+      );
+    }
+
     setFilteredData(filtered);
-  }, [selectedMonth, selectedYear, verifikasiData]);
+  }, [selectedMonth, selectedYear, selectedBidang, verifikasiData]);
 
   return (
     <div className="container py-4">
@@ -303,79 +318,104 @@ const PermintaanPage = () => {
       </div>
 
       {/* Data Table */}
-      {filteredData.map((verif, idx) => (
-        <div className="mb-5" key={verif.id}>
-          {verif.status === "ACC PPTKSEKRETARIAT" && (
-            <div className="d-flex justify-content-end mb-2">
-              <button
-                className="btn btn-outline-success"
-                onClick={() => handleCetak(verif)}
-              >
-                <i className="bi bi-printer me-1" />
-                Cetak
-              </button>
-            </div>
-          )}
-
-          <table className="table table-bordered">
-            <thead className="table-light">
-              <tr>
-                <th style={{ width: "3%" }}>NO</th>
-                <th style={{ width: "12%" }}>Tanggal</th>
-                <th style={{ width: "20%" }}>No Surat</th>
-                <th>Nama Barang</th>
-                <th style={{ width: "7%" }}>Vol.</th>
-                <th style={{ width: "10%" }}>Satuan</th>
-                <th>Keterangan</th>
-                <th style={{ width: "20%" }}>Action</th>
-                <th style={{ width: "10%" }}>Progres</th>
-              </tr>
-            </thead>
-            <tbody>
-              {verif.permintaans.length > 0 ? (
-                verif.permintaans.map((item, i) => (
-                  <tr key={item.id}>
-                    <td>{i + 1}</td>
-                    <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
-                    <td>
-                      {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                    </td>
-                    <td>{item.nama_barang}</td>
-                    <td>{item.jumlah}</td>
-                    <td>{item.stock_opname?.satuan || "-"}</td>
-                    <td>{item.keterangan}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-warning me-1"
-                        onClick={() => handleUpdate(item)}
-                      >
-                        <i className="bi bi-pencil" />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <i className="bi bi-trash" />
-                      </button>
-                    </td>
-                    {i === 0 && (
-                      <td rowSpan={verif.permintaans.length}>
-                        {renderStatusProgress(verif.status)}
-                      </td>
-                    )}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center">
-                    Tidak ada permintaan
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      {filteredData.length === 0 ? (
+        <div className="alert alert-warning text-center mt-4" role="alert">
+          TIDAK ADA DATA BULAN INI
         </div>
-      ))}
+      ) : (
+        filteredData.map((verif, idx) => (
+          <div className="mb-5" key={verif.id}>
+            {verif.status === "ACC PPTKSEKRETARIAT" && (
+              <div className="d-flex justify-content-end mb-2">
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => handleCetak(verif)}
+                >
+                  <i className="bi bi-printer me-1" />
+                  Cetak
+                </button>
+              </div>
+            )}
+
+            <table className="table table-bordered">
+              <thead className="table-light">
+                <tr>
+                  <th className="text-center" style={{ width: "3%" }}>
+                    NO
+                  </th>
+                  <th style={{ width: "12%" }}>Tanggal</th>
+                  <th style={{ width: "20%" }}>No Surat</th>
+                  <th>Nama Barang</th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Vol.
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Satuan
+                  </th>
+                  <th>Keterangan</th>
+                  <th className="text-center" style={{ width: "20%" }}>
+                    Action
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Progres
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {verif.permintaans.length > 0 ? (
+                  verif.permintaans.map((item, i) => (
+                    <tr key={item.id}>
+                      <td className="text-center">{i + 1}</td>
+                      <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
+                      <td>
+                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
+                      </td>
+                      <td>{item.nama_barang}</td>
+                      <td className="text-center">{item.jumlah}</td>
+                      <td className="text-center">
+                        {item.stock_opname?.satuan || "-"}
+                      </td>
+                      <td>{item.keterangan}</td>
+                      <td className="text-center">
+                        {verif.status !== "ACC PPTKSEKRETARIAT" ? (
+                          <>
+                            <button
+                              className="btn btn-sm btn-warning me-1"
+                              onClick={() => handleUpdate(item)}
+                            >
+                              <i className="bi bi-pencil" />
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDelete(item.id)}
+                            >
+                              <i className="bi bi-trash" />
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-bold">Pengajuan DITERIMA</span>
+                        )}
+                      </td>
+                      {i === 0 && (
+                        <td rowSpan={verif.permintaans.length}>
+                          {renderStatusProgress(verif.status)}
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center">
+                      Tidak ada permintaan
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ))
+      )}
     </div>
   );
 };

@@ -9,14 +9,8 @@ import Layout from "../navbar/layout.jsx";
 import BlankPage from "../SuperAdmin/umum.jsx";
 import StockOpnamePage from "../SuperAdmin/stokOpname.jsx";
 import PermintaanPage from "../SuperAdmin/permintaan.jsx";
-import bidangList from "../SuperAdmin/bidang.jsx";
+// import bidangList from "../SuperAdmin/bidang.jsx";
 import Bidang from "../SuperAdmin/bidang.jsx";
-import PermintaanegovPage from "../SuperAdmin/perbidang/egov.jsx";
-import PermintaanikpPage from "../SuperAdmin/perbidang/ikp.jsx";
-import PermintaanTikPage from "../SuperAdmin/perbidang/tik.jsx";
-import PermintaanPdkipage from "../SuperAdmin/perbidang/pdki.jsx";
-import PermintaanSekretariatPage from "../SuperAdmin/perbidang/sekre.jsx";
-import PermintaanStatistikPage from "../SuperAdmin/perbidang/statis.jsx";
 import UserPage from "../SuperAdmin/user.jsx";
 
 const router = createBrowserRouter([
@@ -49,30 +43,30 @@ const router = createBrowserRouter([
         path: "bidang",
         element: <Bidang />,
       },
-      {
-        path: "bidang/egov",
-        element: <PermintaanegovPage />,
-      },
-      {
-        path: "bidang/ikp",
-        element: <PermintaanikpPage />,
-      },
-      {
-        path: "bidang/tik",
-        element: <PermintaanTikPage />,
-      },
-      {
-        path: "bidang/pdki",
-        element: <PermintaanPdkipage />,
-      },
-      {
-        path: "bidang/sekretariat",
-        element: <PermintaanSekretariatPage />,
-      },
-      {
-        path: "bidang/statistik",
-        element: <PermintaanStatistikPage />,
-      },
+      // {
+      //   path: "bidang/egov",
+      //   element: <PermintaanegovPage />,
+      // },
+      // {
+      //   path: "bidang/ikp",
+      //   element: <PermintaanikpPage />,
+      // },
+      // {
+      //   path: "bidang/tik",
+      //   element: <PermintaanTikPage />,
+      // },
+      // {
+      //   path: "bidang/pdki",
+      //   element: <PermintaanPdkipage />,
+      // },
+      // {
+      //   path: "bidang/sekretariat",
+      //   element: <PermintaanSekretariatPage />,
+      // },
+      // {
+      //   path: "bidang/statistik",
+      //   element: <PermintaanStatistikPage />,
+      // },
       {
         path: "user",
         element: <UserPage />,

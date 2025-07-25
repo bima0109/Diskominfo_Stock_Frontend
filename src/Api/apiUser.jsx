@@ -38,15 +38,18 @@ export const CreateUser = async (value) => {
 
 export const GetUserByusername = async (username) => {
   try {
+    const token = sessionStorage.getItem("token");
     const response = await useAxios.post(
       "/users-show",
-      { username: username }, // JSON body
+      { username: username },
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
+
     return response.data.data;
   } catch (error) {
     console.error("Gagal mencari user:", error.response?.data || error.message);
