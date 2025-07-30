@@ -12,6 +12,9 @@ import PermintaanPage from "../SuperAdmin/permintaan.jsx";
 // import bidangList from "../SuperAdmin/bidang.jsx";
 import Bidang from "../SuperAdmin/bidang.jsx";
 import UserPage from "../SuperAdmin/user.jsx";
+import MasukPage from "../SuperAdmin/rekap/masuk.jsx";
+import MasihPage from "../SuperAdmin/rekap/masih.jsx";
+import HabisPage from "../SuperAdmin/rekap/habis.jsx";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +73,18 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <UserPage />,
+      },
+      {
+        path: "masuk",
+        element: <MasukPage />,
+      },
+      {
+        path: "masih",
+        element: <MasihPage />,
+      },
+      {
+        path: "habis",
+        element: <HabisPage />,
       },
     ],
   },

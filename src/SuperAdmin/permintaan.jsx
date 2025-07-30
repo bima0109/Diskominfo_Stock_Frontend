@@ -50,8 +50,8 @@ const formatNoSurat = (id, tanggal) => {
 
 const formatTanggal = (tanggal) => {
   const date = new Date(tanggal);
-  const options = { day: "2-digit", month: "short", year: "2-digit" };
-  return date.toLocaleDateString("en-GB", options).replace(/ /g, "-");
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
 };
 
 const allStatuses = [
@@ -137,13 +137,13 @@ const PermintaanPage = () => {
     doc.setFont("helvetica", "normal");
     doc.text(`No Surat  : ${noSurat}`, 17, 50);
     doc.text(`Tanggal   : ${tanggalSurat}`, 17, 57);
-    doc.text(`Bidang    : ${verif.bidang?.nama.toUpperCase() || "-"}`, 17, 64);
+    doc.text(`Bidang     : ${verif.bidang?.nama.toUpperCase() || "-"}`, 17, 64);
 
     const tableData = verif.permintaans.map((item, index) => [
       index + 1,
       item.nama_barang,
       item.jumlah,
-      item.stock_opname?.satuan || "-",
+      item.satuan || "-",
       item.keterangan || "-",
     ]);
 
@@ -373,9 +373,7 @@ const PermintaanPage = () => {
                       </td>
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
-                      <td className="text-center">
-                        {item.stock_opname?.satuan || "-"}
-                      </td>
+                      <td className="text-center">{item.satuan || "-"}</td>
                       <td>{item.keterangan}</td>
                       <td className="text-center">
                         {verif.status !== "ACC PPTKSEKRETARIAT" ? (
