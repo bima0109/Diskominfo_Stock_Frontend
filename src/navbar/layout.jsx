@@ -115,46 +115,51 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "ADMIN_IKP" && (
+      {role === "ADMIN" && (
         <>
           <Link
-            to="/"
+            to="stock-in/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=iPqKoSmxmAyJ&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAapJREFUSEvt1s+LTnEUx/HXFKVGykbKsGDBxk7MampqNmNnQyksLaSkZCHZWFhYzCxnNQuNFUn5A5hsaAZLCguEjSILP1LcU99H03junfPcW0+Us3q695z7fs7n+z0/RgzZRobM89cCd2JHQo13eNbkl8lwLx5hXQL4E+N4WOfbBNyCKziM0QSs5/INN3ERL1fH1QG34x5uVNANOD0A8Dqe4iSmyu/f4XXA23iCS7hQyXl5AOAszuAUjmBiZWw/4EZ8wgEsYU91JgexKQENOefxHmN4jVDrTS+2H3B3kWFz9U8/JiBNLl8wjbv/gXHLepJOlsuTVTcuza3i3ErSreXiZIFRe6+6ALOgfn6tMozCj3aVtWV87pLhUSxkaaXo4xzDWmU4AOsP138DuAvHGtJ8gWs171tlGD012lOdRfub6QKMuovJvQ1vOxzgenzFPjxu6qXx7gNOVM53OgBDmftleH9fC3iumtbHcQjPW0BDnRjei1VpnF8ZXzeA4/lVnC1rQsy1rMVqEjN0rmwKPzLAnk/ovx/xkazFccQS9aBfQGZry4JSfkMH/gL0K2od+TqpuwAAAABJRU5ErkJggg=="
               alt=""
               width="30"
             />
-            Dashboard
+            Stock dan Input
           </Link>
           <Link
-            to="Profile/"
+            to="draft-pengajuan/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=13547&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAQdJREFUSEvt1b0uREEYh/HfXoeEaBQUohdqHRegFLVEomN9tdtTuAyUNnsLCmoSClQa2cZOMgWymY/k5BRrTzUn+c88M8953zkdLT+dlnmmwMaN/2+lS9jHC3p4a8JvSukAqxFygqM43sJyATxs9OJvLgW8w/oY4NmPjaS4T9iuAa7gCvfYa0NpgbX6SK4tZvExKp7P+qXHz0gBj3GIL4RCuWkCmgI+YiFCLkftsRvH19gogIeiCYZ+PSlgaINuPOEmbuPMOcwXAF/xUAMM2Va/YcEh6iMppZN/tfWxFqWdxhYJrzuYKZA5xHlN0SziAM/xb/FeAMlGcjdNdoHawBRYayybn3yl32TTLB02xL32AAAAAElFTkSuQmCC"
               alt=""
               width="30"
             />
-            Profile
+            Draft Pengajuan
           </Link>
           <Link
-            to="/penitip/pengambilan/"
+            to="pengajuan/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=13042&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAeFJREFUSEvF1svLTlEUx/HPqzA0kCJlJpdyzUTJRDJVBkoZuZQMpES5TRgxwUQGRnpzmZgghOSSIvIHuIXkD3DP7azaj55257xnP8d7OcOz11rftfZev7X3kHH+hsaZZ8KBkzATH8aq8rzCjTiAxX3ASGIJphUk8RnP8KvJNgduxkHMSw6zcQvzC2A9k9dYi5d1Pm3A05iLdVnWF/EOe7KgES/WfmJTF+D1KtuHOJI5NwHDbDt2YFkX4E3cw9HM+RLe1lQYZluxC4u6ALtUuA07sbQL8FTVNKuwPlXUi3GhquR9TYWzENXH+XY6wwhwZ8AufZGa7FWXCsNnUB0+xe+uOhxAfmWmbTqMKHOwoXDS5NQ3SZdfewttwJW4jdimpnEVMVYnm08ZcTomYzm+xFob8Hwy3DLChk3B9yT055ldnH/odV81sYZLgDdwv0b4/XGjgh8NwLC7i6s4XgJsmjT9wKn41gK8hmMlwCvpujnccUvD7VGl4xgUJ0uA+7EbcWs0aSvO6RDO4GOW2Iw0yFekxFubJrbrRNXaC8pUVmt1FudKZfEfnHrXXBZrqufE5WoAL0zDecyB0eIP0l32eJRofyot78WTuqaJfwGNUTbIO2ak3AL4r6Em/F06SrvYHOYv/vttHdylo1cAAAAASUVORK5CYII="
               alt=""
               width="30"
             />
-            Data Barang
+            Daftar Pengajuan
           </Link>
           <Link
-            to="/penitip/penitipan-lanjut/"
+            to="dashboard-admin/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
-            Penitipan Lanjut
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAcBJREFUSEvN1s+LjVEYwPHPKBZix0JK+VEsiIYsUPwBYiMkSrPgP7CysCM2ykpIkWJDNpKQxSymEJGkqNkJJTtMwnnqTN37eu/tnXNqzNnct9t5nu9znt8jZvmMzDLPnAEuwCYsrPDAT7zAj14dbS/cjtv4hK8VwMVYjf14MK2nCVyGt9iN8QrYtOgoHmML3sefTeBenMfKAtgB3MxyB3Erfz/DRVxqAx7BSawtAIbx4ZV5yYXb8CfreIJ7KR/OtgEP4wKWJvCvAmjIxfmSf8OID+n7FK4NAl7HDVwuADZFwrWHsALfBgFP4yH2YVElNIw/h9eDsrQmhr22bcCrXMffh9XhfweeSPUTiRS1OexEcT/KGT6B4hcexfqOcVyCiP+7GmBH1j/Xil8YmqKRdz1T+WIx8C72dKVhDFdrXBqdY/kMgC9rXzgDVt/VYpfuxJoh1MlcDs0rxcBo5Mcxv7c95Rj9xhUcazGoMzAK+Ezq7KtKfZnlNuNpzvC+qdMcwOvwJs2vrXheAY0hvivvRX1q2naamMwxVkqBsXhtTAtUbA/3m0YPWhNjYu8o3No+J+CdFPuPbR6aM3tpRfiGi/4FxT5fHeFPWn8AAAAASUVORK5CYII="
+              alt=""
+              width="30"
+            />
+            Rekap Tahunan (Beta)
           </Link>
         </>
       )}
@@ -197,7 +202,7 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "KABID_IKP" && (
+      {role === "KABID" && (
         <>
           <Link
             to="barang-titipan"
@@ -235,7 +240,7 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "KABID_TIK" && (
+      {role === "SEKRETARIS" && (
         <>
           {[
             {

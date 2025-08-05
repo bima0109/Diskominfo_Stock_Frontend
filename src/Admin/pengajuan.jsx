@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { GetAlldata } from "../Api/apiVerifikasi";
-import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
+import { GetVerifikasiByBidang } from "../Api/apiVerifikasi"; // pastikan fungsi ini benar
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ttdImage from "../assets/ttd.png";
 import kopsurat from "../assets/kopsurat.png";
-import { useLocation } from "react-router-dom";
 
 const romanMonths = [
   "",
@@ -24,7 +22,6 @@ const romanMonths = [
   "XI",
   "XII",
 ];
-
 const monthNames = [
   "",
   "Januari",
@@ -55,7 +52,6 @@ const formatTanggal = (tanggal) => {
 };
 
 const allStatuses = [
-  // "DITOLAK",
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
@@ -67,12 +63,8 @@ const renderStatusProgress = (currentStatus) => {
     <div className="d-flex flex-column gap-1">
       {allStatuses.map((status, idx) => {
         let badgeClass = "bg-secondary";
-
         if (status === currentStatus) {
           switch (status) {
-            // case "DITOLAK":
-            //   badgeClass = "bg-danger";
-            //   break;
             case "DIPROSES":
               badgeClass = "bg-info text-dark";
               break;
@@ -89,7 +81,6 @@ const renderStatusProgress = (currentStatus) => {
               badgeClass = "bg-secondary";
           }
         }
-
         return (
           <span key={idx} className={`badge ${badgeClass}`}>
             {status}
@@ -100,16 +91,13 @@ const renderStatusProgress = (currentStatus) => {
   );
 };
 
-const PermintaanPage = () => {
+const PengajuanPage = () => {
   const today = new Date();
   const [verifikasiData, setVerifikasiData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [availableYears, setAvailableYears] = useState([]);
-  const location = useLocation();
-  const selectedBidangFromNav = location.state?.selectedBidang || null;
-  const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
 
   const handleCetak = (verif) => {
     const doc = new jsPDF();
@@ -118,21 +106,12 @@ const PermintaanPage = () => {
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-
-    // Logo kiri atas
     doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
-
-    // Teks di sebelah kanan logo
     doc.setFont("helvetica", "bold");
     doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 40, 20);
     doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
-
-    // Judul di kanan atas
-    doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
-    doc.text("Form Permintaan Barang", 70, 40); // Sesuaikan X dan Y
-
-    // Info surat
+    doc.text("Form Permintaan Barang", 70, 40);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
     doc.text(`No Surat  : ${noSurat}`, 17, 50);
@@ -155,7 +134,7 @@ const PermintaanPage = () => {
         fontSize: 10,
         lineWidth: 0.1,
         lineColor: [0, 0, 0],
-        halign: "left", // default
+        halign: "left",
         valign: "middle",
       },
       headStyles: {
@@ -164,14 +143,13 @@ const PermintaanPage = () => {
         halign: "center",
       },
       columnStyles: {
-        0: { halign: "center" }, // kolom "No"
-        2: { halign: "center" }, // kolom "Vol."
+        0: { halign: "center" },
+        2: { halign: "center" },
       },
     });
 
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
-
     doc.setFont("helvetica", "normal");
     doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
     doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
@@ -183,48 +161,11 @@ const PermintaanPage = () => {
     window.open(url, "_blank");
   };
 
-  const handleUpdate = async (item) => {
-    const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan);
-
-    if (newJumlah !== null && newKeterangan !== null) {
-      try {
-        await UpdatePermintaan(item.id, {
-          jumlah: newJumlah,
-          keterangan: newKeterangan,
-        });
-        alert("Berhasil update permintaan.");
-        // Refresh data
-        const result = await GetAlldata();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Gagal update permintaan.");
-      }
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
-      try {
-        await DeletePermintaan(id);
-        alert("Berhasil menghapus permintaan.");
-        // Refresh data
-        const result = await GetAlldata();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Gagal menghapus permintaan.");
-      }
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await GetAlldata();
+        const result = await GetVerifikasiByBidang();
         setVerifikasiData(result);
-
         const years = result.map((item) =>
           new Date(item.tanggal).getFullYear()
         );
@@ -233,16 +174,6 @@ const PermintaanPage = () => {
         );
         uniqueYears.sort((a, b) => b - a);
         setAvailableYears(uniqueYears);
-
-        // Filter langsung saat fetch data
-        const initialFiltered = result.filter((item) => {
-          const date = new Date(item.tanggal);
-          return (
-            date.getMonth() + 1 === today.getMonth() + 1 &&
-            date.getFullYear() === today.getFullYear()
-          );
-        });
-        setFilteredData(initialFiltered);
       } catch (err) {
         alert("Gagal mengambil data");
         console.error(err);
@@ -268,19 +199,12 @@ const PermintaanPage = () => {
       );
     }
 
-    if (selectedBidang) {
-      filtered = filtered.filter(
-        (item) =>
-          item.bidang?.nama?.toLowerCase() === selectedBidang.toLowerCase()
-      );
-    }
-
     setFilteredData(filtered);
-  }, [selectedMonth, selectedYear, selectedBidang, verifikasiData]);
+  }, [selectedMonth, selectedYear, verifikasiData]);
 
   return (
     <div className="container py-4">
-      <h3 className="mb-4">Data Permintaan Barang </h3>
+      <h3 className="mb-4">Data Pengajuan Barang</h3>
 
       {/* Filter */}
       <div className="row mb-3">
@@ -317,13 +241,13 @@ const PermintaanPage = () => {
         </div>
       </div>
 
-      {/* Data Table */}
+      {/* Table Data */}
       {filteredData.length === 0 ? (
         <div className="alert alert-warning text-center mt-4" role="alert">
           TIDAK ADA DATA BULAN INI
         </div>
       ) : (
-        filteredData.map((verif, idx) => (
+        filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
             {verif.status === "ACC PPTKSEKRETARIAT" && (
               <div className="d-flex justify-content-end mb-2">
@@ -353,15 +277,11 @@ const PermintaanPage = () => {
                     Satuan
                   </th>
                   <th>Keterangan</th>
-                  <th className="text-center" style={{ width: "20%" }}>
-                    Action
-                  </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Progres
                   </th>
                 </tr>
               </thead>
-
               <tbody>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => (
@@ -375,26 +295,6 @@ const PermintaanPage = () => {
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
                       <td>{item.keterangan}</td>
-                      <td className="text-center">
-                        {verif.status !== "ACC PPTKSEKRETARIAT" ? (
-                          <>
-                            <button
-                              className="btn btn-sm btn-warning me-1"
-                              onClick={() => handleUpdate(item)}
-                            >
-                              <i className="bi bi-pencil" />
-                            </button>
-                            <button
-                              className="btn btn-sm btn-danger"
-                              onClick={() => handleDelete(item.id)}
-                            >
-                              <i className="bi bi-trash" />
-                            </button>
-                          </>
-                        ) : (
-                          <span className="text-bold">Pengajuan DITERIMA</span>
-                        )}
-                      </td>
                       {i === 0 && (
                         <td rowSpan={verif.permintaans.length}>
                           {renderStatusProgress(verif.status)}
@@ -404,7 +304,7 @@ const PermintaanPage = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">
+                    <td colSpan="8" className="text-center">
                       Tidak ada permintaan
                     </td>
                   </tr>
@@ -418,4 +318,4 @@ const PermintaanPage = () => {
   );
 };
 
-export default PermintaanPage;
+export default PengajuanPage;

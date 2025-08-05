@@ -17,7 +17,7 @@ const mockRoles = [
   { id: 2, nama: "ADMIN" },
   { id: 3, nama: "PPTKSEKRETARIAT" },
   { id: 4, nama: "KABID" },
-  { id: 5, nama: "SEKRETARIAT" },
+  { id: 5, nama: "SEKRETARIS" },
 ];
 
 const mockBidangs = [

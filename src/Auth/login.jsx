@@ -52,41 +52,17 @@ const LoginPage = () => {
           case "SUPERADMIN":
             navigate("super/dashboard-super");
             break;
-          case "ADMIN_IKP":
-            navigate("/dashboard/ikp");
-            break;
-          case "ADMIN_PDKI":
-            navigate("/dashboard/pdki");
-            break;
-          case "ADMIN_STATISTIK":
-            navigate("/dashboard/statistik");
-            break;
-          case "ADMIN_EGOV":
-            navigate("/dashboard/egov");
-            break;
-          case "ADMIN_TIK":
-            navigate("/dashboard/tik");
-            break;
-          case "ADMIN_SEKRETARIAT":
-            navigate("/dashboard/sekretariat");
+          case "ADMIN":
+            navigate("admin/dashboard-admin");
             break;
           case "PPTKSEKRETARIAT":
-            navigate("/dashboard/pptk");
+            navigate("/dashboard-pptk");
             break;
-          case "KABID_IKP":
-            navigate("/dashboard/kabid-ikp");
+          case "KABID":
+            navigate("/dashboard-kabid");
             break;
-          case "KABID_TIK":
-            navigate("/dashboard/kabid-tik");
-            break;
-          case "KABID_STATISTIK":
-            navigate("/dashboard/kabid-statistik");
-            break;
-          case "KABID_PDKI":
-            navigate("/dashboard/kabid-pdki");
-            break;
-          case "KABID_EGOV":
-            navigate("/dashboard/kabid-egov");
+          case "SEKRETARIS":
+            navigate("/dashboard-sekretariat");
             break;
           default:
             alert("Role tidak dikenali.");

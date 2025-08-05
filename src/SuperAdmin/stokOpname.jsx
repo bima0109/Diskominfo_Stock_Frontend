@@ -10,6 +10,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import * as bootstrap from "bootstrap";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+const satuanOptions = ["rim", "buah", "slop", "dus", "pack", "botol"];
+
 const StockOpnamePage = () => {
   const [stockList, setStockList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -242,27 +244,51 @@ const StockOpnamePage = () => {
           <div className="modal-content">
             <form onSubmit={handleSubmitTambah}>
               <div className="modal-body">
-                {["nama_barang", "jumlah", "satuan"].map((field, i) => (
-                  <input
-                    key={i}
-                    // type={
-                    //   field === "harga" || field === "jumlah"
-                    //     ? "number"
-                    //     : "text"
-                    // }
-                    className="form-control mb-2"
-                    placeholder={field.replace("_", " ").toUpperCase()}
-                    value={formDataTambah[field]}
-                    onChange={(e) =>
-                      setFormDataTambah({
-                        ...formDataTambah,
-                        [field]: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                ))}
+                <input
+                  className="form-control mb-2"
+                  placeholder="NAMA BARANG"
+                  value={formDataTambah.nama_barang}
+                  onChange={(e) =>
+                    setFormDataTambah({
+                      ...formDataTambah,
+                      nama_barang: e.target.value,
+                    })
+                  }
+                  required
+                />
+                <input
+                  type="number"
+                  className="form-control mb-2"
+                  placeholder="JUMLAH"
+                  value={formDataTambah.jumlah}
+                  onChange={(e) =>
+                    setFormDataTambah({
+                      ...formDataTambah,
+                      jumlah: e.target.value,
+                    })
+                  }
+                  required
+                />
+                <select
+                  className="form-control mb-2"
+                  value={formDataTambah.satuan}
+                  onChange={(e) =>
+                    setFormDataTambah({
+                      ...formDataTambah,
+                      satuan: e.target.value,
+                    })
+                  }
+                  required
+                >
+                  <option value="">Pilih Satuan</option>
+                  {satuanOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               </div>
+
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
                   Batal
@@ -282,27 +308,45 @@ const StockOpnamePage = () => {
           <div className="modal-content">
             <form onSubmit={handleSubmitEdit}>
               <div className="modal-body">
-                {["nama_barang", "jumlah", "satuan"].map((field, i) => (
-                  <input
-                    key={i}
-                    // type={
-                    //   field === "harga" || field === "jumlah"
-                    //     ? "number"
-                    //     : "text"
-                    // }
-                    className="form-control mb-2"
-                    placeholder={field.replace("_", " ").toUpperCase()}
-                    value={formDataEdit[field]}
-                    onChange={(e) =>
-                      setFormDataEdit({
-                        ...formDataEdit,
-                        [field]: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                ))}
+                <input
+                  className="form-control mb-2"
+                  placeholder="NAMA BARANG"
+                  value={formDataEdit.nama_barang}
+                  onChange={(e) =>
+                    setFormDataEdit({
+                      ...formDataEdit,
+                      nama_barang: e.target.value,
+                    })
+                  }
+                  required
+                />
+                <input
+                  type="number"
+                  className="form-control mb-2"
+                  placeholder="JUMLAH"
+                  value={formDataEdit.jumlah}
+                  onChange={(e) =>
+                    setFormDataEdit({ ...formDataEdit, jumlah: e.target.value })
+                  }
+                  required
+                />
+                <select
+                  className="form-control mb-2"
+                  value={formDataEdit.satuan}
+                  onChange={(e) =>
+                    setFormDataEdit({ ...formDataEdit, satuan: e.target.value })
+                  }
+                  required
+                >
+                  <option value="">Pilih Satuan</option>
+                  {satuanOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               </div>
+
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
                   Batal

@@ -14,3 +14,95 @@ export const GetAlldata = async () => {
     throw error.response?.data || error;
   }
 };
+
+// Ambil seluruh data verifikasi berdasarkan bidang
+export const GetVerifikasiByBidang = async () => {
+  try {
+    const response = await useAxios.get("/veribid", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// Kirim data verifikasi (store)
+export const PostVerifikasi = async () => {
+  try {
+    const response = await useAxios.post(
+      "/verifikasi",
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    // Tetap lempar respons error backend agar bisa ditangani di frontend
+    throw error.response?.data || { message: "Unknown error" };
+  }
+};
+
+// Verifikasi oleh KABID
+export const SetVerifKabid = async (id) => {
+  try {
+    const response = await useAxios.put(
+      `/verif-kabid/${id}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Unknown error" };
+  }
+};
+
+// Verifikasi oleh SEKRETARIAT
+export const SetVerifSekre = async (id) => {
+  try {
+    const response = await useAxios.put(
+      `/verif-sekre/${id}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Unknown error" };
+  }
+};
+
+// Verifikasi oleh PPTK
+export const SetVerifPptk = async (id) => {
+  try {
+    const response = await useAxios.put(
+      `/verif-pptk/${id}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Unknown error" };
+  }
+};
