@@ -167,37 +167,37 @@ const LinkSidebar = () => {
       {role === "PPTKSEKRETARIAT" && (
         <>
           <Link
-            to="penitip/"
+            to="stock-pptk/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=13042&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAapJREFUSEvt1s+LTnEUx/HXFKVGykbKsGDBxk7MampqNmNnQyksLaSkZCHZWFhYzCxnNQuNFUn5A5hsaAZLCguEjSILP1LcU99H03junfPcW0+Us3q695z7fs7n+z0/RgzZRobM89cCd2JHQo13eNbkl8lwLx5hXQL4E+N4WOfbBNyCKziM0QSs5/INN3ERL1fH1QG34x5uVNANOD0A8Dqe4iSmyu/f4XXA23iCS7hQyXl5AOAszuAUjmBiZWw/4EZ8wgEsYU91JgexKQENOefxHmN4jVDrTS+2H3B3kWFz9U8/JiBNLl8wjbv/gXHLepJOlsuTVTcuza3i3ErSreXiZIFRe6+6ALOgfn6tMozCj3aVtWV87pLhUSxkaaXo4xzDWmU4AOsP138DuAvHGtJ8gWs171tlGD012lOdRfub6QKMuovJvQ1vOxzgenzFPjxu6qXx7gNOVM53OgBDmftleH9fC3iumtbHcQjPW0BDnRjei1VpnF8ZXzeA4/lVnC1rQsy1rMVqEjN0rmwKPzLAnk/ovx/xkazFccQS9aBfQGZry4JSfkMH/gL0K2od+TqpuwAAAABJRU5ErkJggg=="
               alt=""
               width="30"
             />
-            Penitip
+            Stok Opname
           </Link>
           <Link
-            to="diskusi/"
+            to="verifikasi-pptk/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=13042&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAS1JREFUSEvt1L8rxVEYx/HXJbJJ/gAMZkUpFmU0GKwWZTIrWZRSJj8yWkz+BUlMZPIXyGjAqixS3KeOum73q/Ptft1B90yn0+c87+f5nOc5NR1etQ7zdIGVO9619NvSSSxjvV2PcyydwlUdtI2jqoF9GK1X85ACT+MSO9hLZyMYKwH+xC0+4k5zhbO4wBLe0j4q228AnGGhBDCkoT9vBYyztWTdO7ZwWDL4r/KiN1ytgwZxUCWsqMKqGT/i5XRppQnkAnswjvt26TnA0JwgxmH+r4G9OEXMY4zMS9XAGWxiBa8JFj/NHJ4SbDfBc9kx+Bu4a9Wlw7hJsEdMNMHiziLib81dATzGc9FYBPQaA1XZ2JhZUdMMob+KN2u2IadLc63L0nWBWTaVEf1/S78AIpEoHc638QMAAAAASUVORK5CYII="
               alt=""
               width="30"
             />
-            Diskusi
+            Verifikasi
           </Link>
           <Link
-            to="merchandise/"
+            to="history-pptk/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=FYDMKDveHa85&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAmNJREFUSEvV1kmojWEcx/HPRWZJpg0iCyFFkQVCFAvTAslQYqNs7FigrCwUsaIMZSoUWShZiIwZIkmisFAKReYpvP/bc+p473nPfe+9dcpbb53h/3++z3/6PU+TBj9NDeb5L4A9MASD8AbP8bNspspG2B9rsBTj8TK9AzA8+/0RLmBn2kQhPw+M7yPwrMpjNXbhJo7gVC6izpiKFViGLdhdRMwDI4IDmIdr6fOEbNfrcaVE2qbgaOZ/B6vwLe+TB65MUYThbXTHbHwoAauY9E1ZCJ8l+FPtWwSs2KzFwQLYcpzErxr/98QlnMH2esBIw+Eqgx+YnupX7RdRvMforG6PCzYUpbiReuJVxSYfYRT/MjpVLRLfZ+QWLQMMl/O4n9VyUxGwbKnKAhdhT1aWYY0CdkudOgpPAlp28PORl40w/EKJNqYGawHsh0lJNeqlt2u2yNdcrSv2G3KDfw97sa9WhAuSqowsUcyxGFjD7i4+Vv0eqrUZx2sBx+AheqUISnDrmsQ6MT4zMwG5WgvYBW+TLp7rKC2b37k4nWUtat58otRqmlCWUIoQ4o4+J1K2Qpubn1rAaJpbqXlChNv7jMMDTKuks95YHMLE9H5vBzEyFJt9ioXV/kVzGDm/nmQp9PV3G6B9cBZxaMdx9akMMGziGnERrxHH1osS0EhjtP+XTLjnpA79x601pYm2jvTOz6Lcmm1iP97lwHFmRp0WI46zY1hXNFatAStrz8oabBsmpzR/RlwthqY3VCeuHjvS/aYwGWWBlQV6p+6Ne8/gNLOhlTHULa4TtahtBZYoY32ThgP/Anyacx2+gMmVAAAAAElFTkSuQmCC"
               alt=""
               width="30"
             />
-            Merchandise
+            History
           </Link>
         </>
       )}
@@ -205,91 +205,76 @@ const LinkSidebar = () => {
       {role === "KABID" && (
         <>
           <Link
-            to="barang-titipan"
+            to="stock-kabid/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=hSUoULMc0FvV&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAapJREFUSEvt1s+LTnEUx/HXFKVGykbKsGDBxk7MampqNmNnQyksLaSkZCHZWFhYzCxnNQuNFUn5A5hsaAZLCguEjSILP1LcU99H03junfPcW0+Us3q695z7fs7n+z0/RgzZRobM89cCd2JHQo13eNbkl8lwLx5hXQL4E+N4WOfbBNyCKziM0QSs5/INN3ERL1fH1QG34x5uVNANOD0A8Dqe4iSmyu/f4XXA23iCS7hQyXl5AOAszuAUjmBiZWw/4EZ8wgEsYU91JgexKQENOefxHmN4jVDrTS+2H3B3kWFz9U8/JiBNLl8wjbv/gXHLepJOlsuTVTcuza3i3ErSreXiZIFRe6+6ALOgfn6tMozCj3aVtWV87pLhUSxkaaXo4xzDWmU4AOsP138DuAvHGtJ8gWs171tlGD012lOdRfub6QKMuovJvQ1vOxzgenzFPjxu6qXx7gNOVM53OgBDmftleH9fC3iumtbHcQjPW0BDnRjei1VpnF8ZXzeA4/lVnC1rQsy1rMVqEjN0rmwKPzLAnk/ovx/xkazFccQS9aBfQGZry4JSfkMH/gL0K2od+TqpuwAAAABJRU5ErkJggg=="
               alt=""
               width="30"
             />
-            Barang Titipan
+            Stok Opname
           </Link>
           <Link
-            to="pengiriman/pembeli"
+            to="verifikasi-kabid/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=11910&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAS1JREFUSEvt1L8rxVEYx/HXJbJJ/gAMZkUpFmU0GKwWZTIrWZRSJj8yWkz+BUlMZPIXyGjAqixS3KeOum73q/Ptft1B90yn0+c87+f5nOc5NR1etQ7zdIGVO9619NvSSSxjvV2PcyydwlUdtI2jqoF9GK1X85ACT+MSO9hLZyMYKwH+xC0+4k5zhbO4wBLe0j4q228AnGGhBDCkoT9vBYyztWTdO7ZwWDL4r/KiN1ytgwZxUCWsqMKqGT/i5XRppQnkAnswjvt26TnA0JwgxmH+r4G9OEXMY4zMS9XAGWxiBa8JFj/NHJ4SbDfBc9kx+Bu4a9Wlw7hJsEdMNMHiziLib81dATzGc9FYBPQaA1XZ2JhZUdMMob+KN2u2IadLc63L0nWBWTaVEf1/S78AIpEoHc638QMAAAAASUVORK5CYII="
               alt=""
               width="30"
             />
-            Pengiriman
+            Verifikasi
           </Link>
           <Link
-            to="responsi"
+            to="history-kabid/"
             className="d-flex align-items-center gap-2 text-white link-side"
           >
             <img
-              src="https://img.icons8.com/?size=100&id=11910&format=png&color=000000"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAmNJREFUSEvV1kmojWEcx/HPRWZJpg0iCyFFkQVCFAvTAslQYqNs7FigrCwUsaIMZSoUWShZiIwZIkmisFAKReYpvP/bc+p473nPfe+9dcpbb53h/3++z3/6PU+TBj9NDeb5L4A9MASD8AbP8bNspspG2B9rsBTj8TK9AzA8+/0RLmBn2kQhPw+M7yPwrMpjNXbhJo7gVC6izpiKFViGLdhdRMwDI4IDmIdr6fOEbNfrcaVE2qbgaOZ/B6vwLe+TB65MUYThbXTHbHwoAauY9E1ZCJ8l+FPtWwSs2KzFwQLYcpzErxr/98QlnMH2esBIw+Eqgx+YnupX7RdRvMforG6PCzYUpbiReuJVxSYfYRT/MjpVLRLfZ+QWLQMMl/O4n9VyUxGwbKnKAhdhT1aWYY0CdkudOgpPAlp28PORl40w/EKJNqYGawHsh0lJNeqlt2u2yNdcrSv2G3KDfw97sa9WhAuSqowsUcyxGFjD7i4+Vv0eqrUZx2sBx+AheqUISnDrmsQ6MT4zMwG5WgvYBW+TLp7rKC2b37k4nWUtat58otRqmlCWUIoQ4o4+J1K2Qpubn1rAaJpbqXlChNv7jMMDTKuks95YHMLE9H5vBzEyFJt9ioXV/kVzGDm/nmQp9PV3G6B9cBZxaMdx9akMMGziGnERrxHH1osS0EhjtP+XTLjnpA79x601pYm2jvTOz6Lcmm1iP97lwHFmRp0WI46zY1hXNFatAStrz8oabBsmpzR/RlwthqY3VCeuHjvS/aYwGWWBlQV6p+6Ne8/gNLOhlTHULa4TtahtBZYoY32ThgP/Anyacx2+gMmVAAAAAElFTkSuQmCC"
               alt=""
               width="30"
             />
-            Responsi
+            History
           </Link>
         </>
       )}
 
       {role === "SEKRETARIS" && (
         <>
-          {[
-            {
-              to: "request-donasi",
-              label: "Request Donasi",
-              icon: "gEoGYhaNOcQl",
-            },
-            {
-              to: "penjualan-bulanan",
-              label: "Laporan Penjualan Bulanan",
-              icon: "11890",
-            },
-            {
-              to: "komisi-bulanan",
-              label: "Laporan Komisi Bulanan",
-              icon: "JI2bnOlUlrmw",
-            },
-            {
-              to: "stok-gudang",
-              label: "Laporan Stok Gudang",
-              icon: "j87nOIHCmSZK",
-            },
-            { to: "masa-penitipan", label: "Masa Penitipan", icon: "13042" },
-            { to: "kategori-barang", label: "Kategori Barang", icon: "13547" },
-            {
-              to: "donasi-barang",
-              label: "Laporan Donasi",
-              icon: "h3GqI1r0bWil",
-            },
-            {
-              to: "request/donasi",
-              label: "Laporan Request Donasi",
-              icon: "gEoGYhaNOcQl",
-            },
-            { to: "laporan-penitip", label: "Laporan Penitip", icon: "13042" },
-          ].map(({ to, label, icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className="d-flex align-items-center gap-2 text-white link-side"
-            >
-              <img
-                src={`https://img.icons8.com/?size=100&id=${icon}&format=png&color=000000`}
-                alt=""
-                width="30"
-              />
-              {label}
-            </Link>
-          ))}
+          <Link
+            to="stock-sekre/"
+            className="d-flex align-items-center gap-2 text-white link-side"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAapJREFUSEvt1s+LTnEUx/HXFKVGykbKsGDBxk7MampqNmNnQyksLaSkZCHZWFhYzCxnNQuNFUn5A5hsaAZLCguEjSILP1LcU99H03junfPcW0+Us3q695z7fs7n+z0/RgzZRobM89cCd2JHQo13eNbkl8lwLx5hXQL4E+N4WOfbBNyCKziM0QSs5/INN3ERL1fH1QG34x5uVNANOD0A8Dqe4iSmyu/f4XXA23iCS7hQyXl5AOAszuAUjmBiZWw/4EZ8wgEsYU91JgexKQENOefxHmN4jVDrTS+2H3B3kWFz9U8/JiBNLl8wjbv/gXHLepJOlsuTVTcuza3i3ErSreXiZIFRe6+6ALOgfn6tMozCj3aVtWV87pLhUSxkaaXo4xzDWmU4AOsP138DuAvHGtJ8gWs171tlGD012lOdRfub6QKMuovJvQ1vOxzgenzFPjxu6qXx7gNOVM53OgBDmftleH9fC3iumtbHcQjPW0BDnRjei1VpnF8ZXzeA4/lVnC1rQsy1rMVqEjN0rmwKPzLAnk/ovx/xkazFccQS9aBfQGZry4JSfkMH/gL0K2od+TqpuwAAAABJRU5ErkJggg=="
+              alt=""
+              width="30"
+            />
+            Stok Opname
+          </Link>
+          <Link
+            to="verifikasi-sekre/"
+            className="d-flex align-items-center gap-2 text-white link-side"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAS1JREFUSEvt1L8rxVEYx/HXJbJJ/gAMZkUpFmU0GKwWZTIrWZRSJj8yWkz+BUlMZPIXyGjAqixS3KeOum73q/Ptft1B90yn0+c87+f5nOc5NR1etQ7zdIGVO9619NvSSSxjvV2PcyydwlUdtI2jqoF9GK1X85ACT+MSO9hLZyMYKwH+xC0+4k5zhbO4wBLe0j4q228AnGGhBDCkoT9vBYyztWTdO7ZwWDL4r/KiN1ytgwZxUCWsqMKqGT/i5XRppQnkAnswjvt26TnA0JwgxmH+r4G9OEXMY4zMS9XAGWxiBa8JFj/NHJ4SbDfBc9kx+Bu4a9Wlw7hJsEdMNMHiziLib81dATzGc9FYBPQaA1XZ2JhZUdMMob+KN2u2IadLc63L0nWBWTaVEf1/S78AIpEoHc638QMAAAAASUVORK5CYII="
+              alt=""
+              width="30"
+            />
+            Verifikasi
+          </Link>
+          <Link
+            to="history-sekre/"
+            className="d-flex align-items-center gap-2 text-white link-side"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAmNJREFUSEvV1kmojWEcx/HPRWZJpg0iCyFFkQVCFAvTAslQYqNs7FigrCwUsaIMZSoUWShZiIwZIkmisFAKReYpvP/bc+p473nPfe+9dcpbb53h/3++z3/6PU+TBj9NDeb5L4A9MASD8AbP8bNspspG2B9rsBTj8TK9AzA8+/0RLmBn2kQhPw+M7yPwrMpjNXbhJo7gVC6izpiKFViGLdhdRMwDI4IDmIdr6fOEbNfrcaVE2qbgaOZ/B6vwLe+TB65MUYThbXTHbHwoAauY9E1ZCJ8l+FPtWwSs2KzFwQLYcpzErxr/98QlnMH2esBIw+Eqgx+YnupX7RdRvMforG6PCzYUpbiReuJVxSYfYRT/MjpVLRLfZ+QWLQMMl/O4n9VyUxGwbKnKAhdhT1aWYY0CdkudOgpPAlp28PORl40w/EKJNqYGawHsh0lJNeqlt2u2yNdcrSv2G3KDfw97sa9WhAuSqowsUcyxGFjD7i4+Vv0eqrUZx2sBx+AheqUISnDrmsQ6MT4zMwG5WgvYBW+TLp7rKC2b37k4nWUtat58otRqmlCWUIoQ4o4+J1K2Qpubn1rAaJpbqXlChNv7jMMDTKuks95YHMLE9H5vBzEyFJt9ioXV/kVzGDm/nmQp9PV3G6B9cBZxaMdx9akMMGziGnERrxHH1osS0EhjtP+XTLjnpA79x601pYm2jvTOz6Lcmm1iP97lwHFmRp0WI46zY1hXNFatAStrz8oabBsmpzR/RlwthqY3VCeuHjvS/aYwGWWBlQV6p+6Ne8/gNLOhlTHULa4TtahtBZYoY32ThgP/Anyacx2+gMmVAAAAAElFTkSuQmCC"
+              alt=""
+              width="30"
+            />
+            History
+          </Link>
         </>
       )}
     </div>

@@ -21,6 +21,19 @@ import StockInPage from "../Admin/stockin.jsx";
 import DraftPage from "../Admin/draft.jsx";
 import PengajuanPage from "../Admin/pengajuan.jsx";
 
+//Import kabid components
+import StockPage from "../Kabid/stok.jsx";
+import VerifKabidPage from "../Kabid/verifKabid.jsx";
+import RecordPage from "../Kabid/record.jsx";
+
+//Import sekretaris components
+import VerifSekrePage from "../Sekretaris/verifSekre.jsx";
+import RecordSekrePage from "../Sekretaris/recordSekre.jsx";
+
+//import pptk components
+import VerifPPTKPage from "../PPTK/verifPPTK.jsx";
+import RecordPPTKPage from "../PPTK/recordPPTK.jsx";
+
 const router = createBrowserRouter([
   {
     path: "*",
@@ -94,6 +107,78 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  //Kabid
+  {
+    path: "/kabid",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard-kabid",
+        element: <AdminPage />,
+      },
+      {
+        path: "stock-kabid",
+        element: <StockPage />,
+      },
+      {
+        path: "verifikasi-kabid",
+        element: <VerifKabidPage />,
+      },
+      {
+        path: "history-kabid",
+        element: <RecordPage />,
+      }
+    ],
+  },
+
+  //Sekretaris
+  {
+    path: "/sekretaris",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard-sekre",
+        element: <AdminPage />,
+      },
+      {
+        path: "stock-sekre",
+        element: <StockPage />,
+      },
+      {
+        path: "verifikasi-sekre",
+        element: <VerifSekrePage />,
+      },
+      {
+        path: "history-sekre",
+        element: <RecordSekrePage />,
+      }
+    ],
+  },
+
+  //PPTK
+  {
+    path: "/pptk",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard-pptk",
+        element: <AdminPage />,
+      },
+      {
+        path: "stock-pptk",
+        element: <StockPage />,
+      },
+      {
+        path: "verifikasi-pptk",
+        element: <VerifPPTKPage />,
+      },
+      {
+        path: "history-pptk",
+        element: <RecordPPTKPage />,
+      }
+    ],
+  }
 ]);
 
 const AppRouter = () => {

@@ -1,5 +1,4 @@
 import useAxios from ".";
-import axios from "axios";
 
 export const GetAllUsers = async () => {
   try {
@@ -97,6 +96,20 @@ export const ResetUserPassword = async (id) => {
       },
     });
     return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const GetProfile = async () => {
+  try {
+    const response = await useAxios.get("/profile", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
   } catch (error) {
     throw error.response?.data || error;
   }

@@ -106,3 +106,46 @@ export const SetVerifPptk = async (id) => {
     throw error.response?.data || { message: "Unknown error" };
   }
 };
+
+
+export const GetDataProses = async () => {
+  try {
+    const response = await useAxios.get("/verif-kabid", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const GetDataKabid = async () => {
+  try {
+    const response = await useAxios.get("/verif-sekre", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const GetDataSekre = async () => {
+  try {
+    const response = await useAxios.get("/verif-pptk", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

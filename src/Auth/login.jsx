@@ -56,13 +56,13 @@ const LoginPage = () => {
             navigate("admin/dashboard-admin");
             break;
           case "PPTKSEKRETARIAT":
-            navigate("/dashboard-pptk");
+            navigate("pptk/dashboard-pptk");
             break;
           case "KABID":
-            navigate("/dashboard-kabid");
+            navigate("kabid/dashboard-kabid");
             break;
           case "SEKRETARIS":
-            navigate("/dashboard-sekretariat");
+            navigate("sekretaris/dashboard-sekre");
             break;
           default:
             alert("Role tidak dikenali.");
