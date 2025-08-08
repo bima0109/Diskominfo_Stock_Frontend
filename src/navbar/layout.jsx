@@ -277,6 +277,20 @@ const LinkSidebar = () => {
           </Link>
         </>
       )}
+
+      <div className="mt-auto p-2">
+        <Link
+          to="/user/profile"
+          className="d-flex align-items-center gap-2 text-white link-side"
+        >
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAhlJREFUSEvt1surzWEUxvHPESmREIpyKRIKUyJMXFNmSAYuKeQyOQYuGSiFcokZmSAiykQI+Q9Q5JLbgEgUcin3d9W7T9v22/vsfc7ujM47/a31fvd617OetVt08WnpYp5uYC+MxZAGnv4j7uN7UU6tJ12IkxjQAKwU+hUrca4ytxpwPi7jAI7ieQPQeI2N2IFlOFueWw34DGewvQFQZWgrtmJwe8A++JKA4/C4ADgIczASL3Edbwri+uMDxuBp6XtRhQF6mHsXCeVnOs4jLruH8ekVfqT4pbhWAP2GaM+tjgCHZ8hh7Mkq7IlN2I3JeFIB7RRwGxZhakElV3E396z8c6eAp/Au9WVLATDENQPzmlnhwWwAywuAhzA0j0HTKlycFBdVhvO8Lrs1BPQIO3GsmRXGXTHEM3EEdzAJ67OVLcCfZgN7JHWGeFZgBF7lH7ErVfir2WPREdOpS6XRo3CYMO3ywe+LzcmQJ2AYbbs0XOZBio/5rDSKcKxYAjUHvwg4LfXrIn7jZraqUr9GpQtnoV8CL8lWV3qNuoCR+Amj8SJ75m1cwoY03LF6Kk9v7McqTMmOU+jJ1bZFyPwE9uJ48s+JebB/1mhk3HUjqfZt9tZ12QIHlqu3GnAurmAf1qatsAYX6lDN7JwX1YaawyRizbWd9jb+6bwZ6mD9E/IZqxvZ+KXsjvyneZ/XW6yt/07338RGe9du/F9JWIYdg3wfrwAAAABJRU5ErkJggg=="
+            alt="Profile"
+            width="30"
+          />
+          Profile
+        </Link>
+      </div>
     </div>
   );
 };

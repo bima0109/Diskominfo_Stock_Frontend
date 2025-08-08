@@ -114,3 +114,32 @@ export const GetProfile = async () => {
     throw error.response?.data || error;
   }
 };
+
+export const UpdateProfile = async (value) => {
+  try {
+    const response = await useAxios.put("/profile", value, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const UpdatePassword = async (value) => {
+  try {
+    const response = await useAxios.put("/reset", value, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+

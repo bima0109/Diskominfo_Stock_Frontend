@@ -2,6 +2,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "sonner";
 import Login from "../Auth/login.jsx";
 
+//umum
+import ProfilePage from "../Umum/profile.jsx";
+
 //Import layout components
 import Layout from "../navbar/layout.jsx";
 
@@ -42,6 +45,20 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
+  },
+  
+
+  // Umum
+  {
+    path: "/user",
+    element: <Layout />,
+    children: [
+      {
+        path: "profile",
+        element: <ProfilePage />,
+      },
+      
+    ],
   },
 
   //Super Admin
