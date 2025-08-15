@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GetAllhabis } from "../../Api/apiRekap";
+import { GetAllhabis, PostHabis } from "../../Api/apiRekap";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import kopsurat from "../../assets/kopsurat.png";
 import ttdImage from "../../assets/ttd.png";
+import Swal from "sweetalert2";
 
 const monthNames = [
   "",
@@ -33,12 +34,12 @@ const HabisPage = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [availableYears, setAvailableYears] = useState([]);
+  const [loadingPost, setLoadingPost] = useState(false);
 
   const fetchData = async () => {
     try {
-      const data = await GetAllhabis(); // Perbaikan di sini
+      const data = await GetAllhabis();
       setDataMasuk(data);
-
       const years = Array.from(
         new Set(
           data.map((item) => {
@@ -70,7 +71,6 @@ const HabisPage = () => {
 
   const handleCetakPDF = () => {
     const doc = new jsPDF();
-
     doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
@@ -89,8 +89,6 @@ const HabisPage = () => {
     const tableData = filteredData.map((item, index) => [
       index + 1,
       item.nama_barang,
-    //   item.jumlah,
-    //   item.satuan,
       formatTanggalIndo(item.tanggal),
     ]);
 
@@ -113,8 +111,6 @@ const HabisPage = () => {
       columnStyles: {
         0: { halign: "center", cellWidth: 10 },
         2: { halign: "center" },
-        3: { halign: "center" },
-        4: { halign: "center" },
       },
     });
 
@@ -130,6 +126,52 @@ const HabisPage = () => {
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
+
+  const handleAmbilData = async () => {
+    const captchaCode = Math.random()
+      .toString(36)
+      .substring(2, 7)
+      .toUpperCase();
+
+    const { value: userInput } = await Swal.fire({
+      title: "Verifikasi Pengambilan Data",
+      html: `<p>Masukkan kode berikut untuk melanjutkan:</p>
+           <h2 style="font-weight: bold; color: #333;">${captchaCode}</h2>`,
+      input: "text",
+      inputPlaceholder: "Ketik kode di sini",
+      showCancelButton: true,
+      confirmButtonText: "Lanjutkan",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Kode tidak boleh kosong!";
+        }
+        if (value.trim().toUpperCase() !== captchaCode) {
+          return "Kode yang dimasukkan salah!";
+        }
+        return null;
+      },
+    });
+
+    // Jika input valid (captcha benar)
+    if (userInput && userInput.trim().toUpperCase() === captchaCode) {
+      setLoadingPost(true);
+      try {
+        await PostHabis(); // panggil API PostHabis
+        await fetchData(); // refresh data
+        Swal.fire("Berhasil!", "Data berhasil diambil.", "success");
+      } catch (err) {
+        console.error("Gagal mengambil data:", err);
+        Swal.fire("Error", "Gagal mengambil data.", "error");
+      } finally {
+        setLoadingPost(false);
+      }
+    }
+  };
+
+  const isCurrentMonthYear =
+    parseInt(selectedMonth) === new Date().getMonth() + 1 &&
+    parseInt(selectedYear) === new Date().getFullYear();
 
   return (
     <div className="container py-4">
@@ -175,7 +217,18 @@ const HabisPage = () => {
       </div>
 
       {filteredData.length === 0 ? (
-        <div className="alert alert-warning">TIDAK ADA DATA BULAN INI</div>
+        <div className="alert alert-warning">
+          TIDAK ADA DATA BULAN INI
+          {isCurrentMonthYear && (
+            <button
+              className="btn btn-primary btn-sm ms-3"
+              onClick={handleAmbilData}
+              disabled={loadingPost}
+            >
+              {loadingPost ? "Memproses..." : "Ambil Data"}
+            </button>
+          )}
+        </div>
       ) : (
         <table className="table table-bordered">
           <thead className="table-light">

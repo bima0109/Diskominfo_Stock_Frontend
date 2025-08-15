@@ -62,6 +62,14 @@ const DraftPage = () => {
   };
 
   const handleAjukan = async () => {
+    const today = new Date();
+    const dayOfMonth = today.getDate();
+
+    if (dayOfMonth < 1 || dayOfMonth > 15) {
+      alert("Pengajuan hanya dapat dilakukan pada tanggal 1–10 setiap bulan.");
+      return;
+    }
+
     try {
       const response = await PostVerifikasi();
       alert(response.message || "Pengajuan berhasil.");

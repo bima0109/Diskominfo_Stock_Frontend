@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   GetAllStock,
   SearchStock as searchStock,
@@ -7,6 +7,7 @@ import { GetAllCart, AddtoCart } from "../Api/apiCart.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as bootstrap from "bootstrap";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Swal from "sweetalert2";
 
 const StockInPage = () => {
   const [stockList, setStockList] = useState([]);
@@ -16,12 +17,13 @@ const StockInPage = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [jumlahInput, setJumlahInput] = useState("");
   const [cartList, setCartList] = useState([]);
+  const jumlahInputRef = useRef(null);
 
   const itemsPerPage = 20;
   const handleSearchChange = async (value) => {
     setSearchTerm(value);
     if (value.trim() === "") {
-      fetchStock(); // reset ke semua data
+      fetchStock();
       return;
     }
 
@@ -38,11 +40,20 @@ const StockInPage = () => {
   const handleTambahClick = (id_stock_opname) => {
     setSelectedItemId(id_stock_opname);
     setJumlahInput("");
+    setTimeout(() => {
+      jumlahInputRef.current?.focus();
+    }, 0);
   };
 
   const handleSubmitTambah = async () => {
     if (!jumlahInput || parseInt(jumlahInput) <= 0) {
-      alert("Jumlah harus diisi dan lebih dari 0");
+      Swal.fire({
+        icon: "error",
+        title: "Jumlah tidak valid",
+        text: "Jumlah harus diisi dan lebih dari 0",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       return;
     }
 
@@ -51,7 +62,13 @@ const StockInPage = () => {
     );
 
     if (isExist) {
-      alert("Barang ini sudah ada di draft pengajuan Anda.");
+      Swal.fire({
+        icon: "warning",
+        title: "Barang sudah ada",
+        text: "Barang ini sudah ada di draft pengajuan Anda.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       return;
     }
 
@@ -61,13 +78,26 @@ const StockInPage = () => {
         jumlah: parseInt(jumlahInput),
       };
       await AddtoCart(payload);
-      alert("Barang berhasil ditambahkan ke draft pengajuan.");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Barang berhasil ditambahkan ke draft pengajuan",
+        timer: 900,
+        showConfirmButton: false,
+      });
 
       setJumlahInput("");
       setSelectedItemId(null);
-      fetchCart(); // Refresh cart list
+      fetchCart();
     } catch (error) {
-      alert(error.message || "Gagal menambahkan ke draft pengajuan");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message || "Gagal menambahkan ke draft pengajuan",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -135,15 +165,15 @@ const StockInPage = () => {
           <table className="table table-bordered table-hover">
             <thead className="table-light">
               <tr>
-                <th className="text-center" >No</th>
-                <th className="text-center" >Nama Barang</th>
-                <th className="text-center" >Jumlah</th>
+                <th className="text-center">No</th>
+                <th className="text-center">Nama Barang</th>
+                <th className="text-center">Jumlah</th>
                 <th className="text-center">Satuan</th>
                 {/* <th>Harga Satuan (Rp. )</th> */}
                 {/* <th>Total (Rp. )</th> */}
-                <th className="text-center" >Bulan</th>
-                <th className="text-center" >Tahun</th>
-                <th className="text-center" >Aksi</th>
+                <th className="text-center">Bulan</th>
+                <th className="text-center">Tahun</th>
+                <th className="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -165,8 +195,15 @@ const StockInPage = () => {
                           min="1"
                           className="form-control form-control-sm mb-1"
                           placeholder="Jumlah"
+                          ref={jumlahInputRef} // pasang ref di sini
                           value={jumlahInput}
                           onChange={(e) => setJumlahInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleSubmitTambah();
+                            }
+                          }}
                         />
                         <button
                           className="btn btn-success btn-sm"

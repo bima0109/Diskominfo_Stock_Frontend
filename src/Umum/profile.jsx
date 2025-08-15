@@ -51,8 +51,8 @@ export default function ProfilePage() {
       await UpdateProfile({
         nama: nama,
         username: username,
-        id_bidang: parseInt(idBidang),
-        id_role: parseInt(idRole),
+        // id_bidang: parseInt(idBidang),
+        // id_role: parseInt(idRole),
       });
       alert("Profil berhasil diperbarui");
       fetchProfile();
@@ -108,11 +108,7 @@ export default function ProfilePage() {
           </div>
           <div className="mb-3">
             <label className="form-label">Role</label>
-            <select
-              className="form-select"
-              value={idRole}
-              onChange={(e) => setIdRole(e.target.value)}
-            >
+            <select className="form-select" value={idRole} disabled>
               <option value="">-- Pilih Role --</option>
               {roles.map((role, index) => (
                 <option key={index + 1} value={index + 1}>
@@ -121,13 +117,10 @@ export default function ProfilePage() {
               ))}
             </select>
           </div>
+
           <div className="mb-3">
             <label className="form-label">Bidang</label>
-            <select
-              className="form-select"
-              value={idBidang}
-              onChange={(e) => setIdBidang(e.target.value)}
-            >
+            <select className="form-select" value={idBidang} disabled>
               <option value="">-- Pilih Bidang --</option>
               {bidangs.map((bidang, index) => (
                 <option key={index + 1} value={index + 1}>
@@ -136,6 +129,7 @@ export default function ProfilePage() {
               ))}
             </select>
           </div>
+
           <button className="btn btn-primary" type="submit">
             Simpan Profil
           </button>
