@@ -15,7 +15,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 const mockRoles = [
   { id: 1, nama: "SUPERADMIN" },
   { id: 2, nama: "ADMIN" },
-  { id: 3, nama: "PPTKSEKRETARIAT" },
+  { id: 3, nama: "PPTK SEKRETARIAT" },
   { id: 4, nama: "KABID" },
   { id: 5, nama: "SEKRETARIS" },
 ];

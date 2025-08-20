@@ -59,7 +59,7 @@ const allStatuses = [
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
-  "ACC PPTKSEKRETARIAT",
+  "ACC PPTK SEKRETARIAT",
 ];
 
 const renderStatusProgress = (currentStatus) => {
@@ -82,7 +82,7 @@ const renderStatusProgress = (currentStatus) => {
             case "ACC SEKRETARIS":
               badgeClass = "bg-primary";
               break;
-            case "ACC PPTKSEKRETARIAT":
+            case "ACC PPTK SEKRETARIAT":
               badgeClass = "bg-success";
               break;
             default:
@@ -175,7 +175,7 @@ const PermintaanPage = () => {
     doc.setFont("helvetica", "normal");
     doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
     doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
     doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");
@@ -185,24 +185,57 @@ const PermintaanPage = () => {
 
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan_1);
 
-    if (newJumlah !== null && newKeterangan !== null) {
-      try {
-        await UpdatePermintaan(item.id, {
-          jumlah: newJumlah,
-          keterangan: newKeterangan,
-        });
-        alert("Berhasil update permintaan.");
-        // Refresh data
-        const result = await GetAlldata();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Gagal update permintaan.");
-      }
+    // Validate user inputs
+    if (newJumlah === null || newKeterangan === null) {
+      return; // Exit if the user cancels the prompt
+    }
+
+    // Check if 'newJumlah' is a valid number
+    if (isNaN(newJumlah) || newJumlah <= 0) {
+      alert("Jumlah harus berupa angka yang valid.");
+      return;
+    }
+
+    // If no keterangan is entered, use the existing value
+    if (!newKeterangan.trim()) {
+      alert("Keterangan tidak boleh kosong.");
+      return;
+    }
+
+    try {
+      // Make the API call to update the data
+      await UpdatePermintaan(item.id, {
+        jumlah: newJumlah,
+        keterangan_1: newKeterangan,
+      });
+
+      alert("Berhasil update permintaan.");
+
+      // Directly update the state without re-fetching all data
+      const updatedData = verifikasiData.map((verif) => {
+        if (verif.id === item.id) {
+          // Update the specific item
+          return {
+            ...verif,
+            permintaans: verif.permintaans.map((permintaan) =>
+              permintaan.id === item.id
+                ? { ...permintaan, jumlah: newJumlah, keterangan_1: newKeterangan }
+                : permintaan
+            ),
+          };
+        }
+        return verif;
+      });
+
+      setVerifikasiData(updatedData);
+    } catch (error) {
+      console.error(error);
+      alert("Gagal update permintaan. Silakan coba lagi.");
     }
   };
+
 
   const handleDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
@@ -325,7 +358,7 @@ const PermintaanPage = () => {
       ) : (
         filteredData.map((verif, idx) => (
           <div className="mb-5" key={verif.id}>
-            {verif.status === "ACC PPTKSEKRETARIAT" && (
+            {verif.status === "ACC PPTK SEKRETARIAT" && (
               <div className="d-flex justify-content-end mb-2">
                 <button
                   className="btn btn-outline-success"
@@ -352,7 +385,18 @@ const PermintaanPage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th>Keterangan</th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Super
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Kabid
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Sekretaris
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan PPTK
+                  </th>
                   <th className="text-center" style={{ width: "20%" }}>
                     Action
                   </th>
@@ -374,9 +418,12 @@ const PermintaanPage = () => {
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan}</td>
+                      <td>{item.keterangan_1}</td>
+                      <td>{item.keterangan_2}</td>
+                      <td>{item.keterangan_3}</td>
+                      <td>{item.keterangan_4}</td>
                       <td className="text-center">
-                        {verif.status !== "ACC PPTKSEKRETARIAT" ? (
+                        {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>
                             <button
                               className="btn btn-sm btn-warning me-1"

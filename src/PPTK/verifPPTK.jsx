@@ -54,7 +54,7 @@ const allStatuses = [
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
-  "ACC PPTKSEKRETARIAT",
+  "ACC PPTK SEKRETARIAT",
 ];
 
 const renderStatusProgress = (currentStatus) => {
@@ -77,7 +77,7 @@ const renderStatusProgress = (currentStatus) => {
             case "ACC SEKRETARIS":
               badgeClass = "bg-primary";
               break;
-            case "ACC PPTKSEKRETARIAT":
+            case "ACC PPTK SEKRETARIAT":
               badgeClass = "bg-success";
               break;
             default:
@@ -256,7 +256,7 @@ const VerifPPTKPage = () => {
                       <td className="text-center">{item.satuan || "-"}</td>
                       <td>{item.keterangan}</td>
                       <td className="text-center">
-                        {verif.status !== "ACC PPTKSEKRETARIAT" ? (
+                        {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>
                             <button
                               className="btn btn-sm btn-warning me-1"

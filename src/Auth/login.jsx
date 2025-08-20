@@ -55,7 +55,7 @@ const LoginPage = () => {
           case "ADMIN":
             navigate("admin/dashboard-admin");
             break;
-          case "PPTKSEKRETARIAT":
+          case "PPTK SEKRETARIAT":
             navigate("pptk/dashboard-pptk");
             break;
           case "KABID":

@@ -10,7 +10,7 @@ export default function ProfilePage() {
   const roles = [
     "SUPERADMIN",
     "ADMIN",
-    "PPTKSEKRETARIAT",
+    "PPTK SEKRETARIAT",
     "KABID",
     "SEKRETARIS",
   ];

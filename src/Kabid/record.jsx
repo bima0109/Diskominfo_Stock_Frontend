@@ -40,7 +40,7 @@ const allStatuses = [
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
-  "ACC PPTKSEKRETARIAT",
+  "ACC PPTK SEKRETARIAT",
 ];
 
 const renderStatusProgress = (currentStatus) => (
@@ -58,7 +58,7 @@ const renderStatusProgress = (currentStatus) => (
           case "ACC SEKRETARIS":
             badgeClass = "bg-primary";
             break;
-          case "ACC PPTKSEKRETARIAT":
+          case "ACC PPTK SEKRETARIAT":
             badgeClass = "bg-success";
             break;
           default:
@@ -131,7 +131,7 @@ const RecordPage = () => {
     doc.setFont("helvetica", "normal");
     doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
     doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
     doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");
@@ -145,7 +145,7 @@ const RecordPage = () => {
         const result = await GetVerifikasiByBidang();
         const filtered = result
           .filter((item) =>
-            ["ACC KABID", "ACC SEKRETARIS", "ACC PPTKSEKRETARIAT"].includes(
+            ["ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"].includes(
               item.status
             )
           )
@@ -170,7 +170,7 @@ const RecordPage = () => {
       ) : (
         filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
-            {verif.status === "ACC PPTKSEKRETARIAT" && (
+            {verif.status === "ACC PPTK SEKRETARIAT" && (
               <div className="d-flex justify-content-end mb-2">
                 <button
                   className="btn btn-outline-success"

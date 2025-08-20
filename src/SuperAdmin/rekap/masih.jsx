@@ -126,7 +126,7 @@ const MasihPage = () => {
     doc.setFont("helvetica", "normal");
     doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
     doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
     doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");

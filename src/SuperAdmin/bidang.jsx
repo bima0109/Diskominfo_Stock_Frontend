@@ -1,31 +1,39 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Bidang.css"; // opsional untuk styling hover
+import IKP from "../assets/bidang/ikp.png";
+import PDKI from "../assets/bidang/pdki.png";
+import SEKRE from "../assets/bidang/sekretariat.jpg";
+import TIK from "../assets/bidang/TIK.png";
+import EGOV from "../assets/bidang/egov.png";
+import STATIS from "../assets/bidang/statis.webp";
+
+
 
 const bidangList = [
   {
     name: "IKP",
-    icon: "https://icon-library.com/images/img_42309.png",
+    icon: IKP,
   },
   {
     name: "PDKI",
-    icon: "https://images.icon-icons.com/621/PNG/512/padlock-lock-shape_icon-icons.com_56915.png",
+    icon: PDKI,
   },
   {
     name: "Sekretariat",
-    icon: "https://icon-library.com/images/group-icon-png/group-icon-png-4.jpg",
+    icon: SEKRE,
   },
   {
     name: "TIK",
-    icon: "https://images.icon-icons.com/1473/PNG/512/070cloudnetwork_101558.png",
+    icon: TIK,
   },
   {
     name: "EGov",
-    icon: "https://cdn.pixabay.com/photo/2014/03/24/13/40/courthouse-293963_1280.png",
+    icon: EGOV,
   },
   {
     name: "Statistik",
-    icon: "https://static.vecteezy.com/system/resources/previews/031/742/312/original/transparent-background-bar-chart-icon-free-png.png",
+    icon: STATIS,
   },
 ];
 

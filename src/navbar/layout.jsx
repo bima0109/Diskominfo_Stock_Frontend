@@ -102,7 +102,7 @@ const LinkSidebar = () => {
         </>
       )}
 
-      {role === "PPTKSEKRETARIAT" && (
+      {role === "PPTK SEKRETARIAT" && (
         <>
           <PencetanSidebar
             arah="/pptk/stock-pptk/"

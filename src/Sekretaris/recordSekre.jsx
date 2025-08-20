@@ -283,7 +283,7 @@ const allStatuses = [
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
-  "ACC PPTKSEKRETARIAT",
+  "ACC PPTK SEKRETARIAT",
 ];
 
 const renderStatusProgress = (currentStatus) => (
@@ -301,7 +301,7 @@ const renderStatusProgress = (currentStatus) => (
           case "ACC SEKRETARIS":
             badgeClass = "bg-primary";
             break;
-          case "ACC PPTKSEKRETARIAT":
+          case "ACC PPTK SEKRETARIAT":
             badgeClass = "bg-success";
             break;
           default:
@@ -392,7 +392,7 @@ const RecordSekrePage = () => {
     // ganti TTD dengan barcode
     doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
 
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
     doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");
@@ -406,7 +406,7 @@ const RecordSekrePage = () => {
         const result = await GetAlldata();
         const filtered = result
           .filter((item) =>
-            ["ACC SEKRETARIS", "ACC PPTKSEKRETARIAT"].includes(item.status)
+            ["ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"].includes(item.status)
           )
           .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
         setFilteredData(filtered);
@@ -432,7 +432,7 @@ const RecordSekrePage = () => {
       ) : (
         filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
-            {verif.status === "ACC PPTKSEKRETARIAT" && (
+            {verif.status === "ACC PPTK SEKRETARIAT" && (
               <div className="d-flex justify-content-end mb-2">
                 <button
                   className="btn btn-outline-success"
@@ -460,7 +460,18 @@ const RecordSekrePage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th>Keterangan</th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Super
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Kabid
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Sekretaris
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan PPTK
+                  </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Progres
                   </th>
@@ -479,7 +490,10 @@ const RecordSekrePage = () => {
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan}</td>
+                      <td>{item.keterangan_1}</td>
+                      <td>{item.keterangan_2}</td>
+                      <td>{item.keterangan_3}</td>
+                      <td>{item.keterangan_4}</td>
                       {i === 0 && (
                         <td rowSpan={verif.permintaans.length}>
                           {renderStatusProgress(verif.status)}

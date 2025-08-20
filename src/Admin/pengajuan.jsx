@@ -51,11 +51,21 @@ const formatTanggal = (tanggal) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
+const formatTanggalAcc = (tanggal_acc) => {
+  if (!tanggal_acc) {
+    return " ";
+  }
+  const date = new Date(tanggal_acc);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
+};
+
+
 const allStatuses = [
   "DIPROSES",
   "ACC KABID",
   "ACC SEKRETARIS",
-  "ACC PPTKSEKRETARIAT",
+  "ACC PPTK SEKRETARIAT",
 ];
 
 const renderStatusProgress = (currentStatus) => {
@@ -74,7 +84,7 @@ const renderStatusProgress = (currentStatus) => {
             case "ACC SEKRETARIS":
               badgeClass = "bg-primary";
               break;
-            case "ACC PPTKSEKRETARIAT":
+            case "ACC PPTK SEKRETARIAT":
               badgeClass = "bg-success";
               break;
             default:
@@ -153,7 +163,7 @@ const PengajuanPage = () => {
     doc.setFont("helvetica", "normal");
     doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
     doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
-    doc.text("PPTKSEKRETARIAT", centerX, finalY + 56, { align: "center" });
+    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
     doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
 
     const blob = doc.output("blob");
@@ -249,7 +259,7 @@ const PengajuanPage = () => {
       ) : (
         filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
-            {verif.status === "ACC PPTKSEKRETARIAT" && (
+            {verif.status === "ACC PPTK SEKRETARIAT" && (
               <div className="d-flex justify-content-end mb-2">
                 <button
                   className="btn btn-outline-success"
@@ -267,7 +277,7 @@ const PengajuanPage = () => {
                   <th className="text-center" style={{ width: "3%" }}>
                     NO
                   </th>
-                  <th style={{ width: "12%" }}>Tanggal</th>
+                  <th style={{ width: "9%" }}>Tanggal Pengajuan</th>
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
                   <th className="text-center" style={{ width: "7%" }}>
@@ -276,7 +286,24 @@ const PengajuanPage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th>Keterangan</th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Super
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Kabid
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Sekretaris
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan PPTK
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Menyetujui
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Tanggal Penyetujuan
+                  </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Progres
                   </th>
@@ -294,7 +321,12 @@ const PengajuanPage = () => {
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan}</td>
+                      <td>{item.keterangan_1}</td>
+                      <td>{item.keterangan_2}</td>
+                      <td>{item.keterangan_3}</td>
+                      <td>{item.keterangan_4}</td>
+                      <td>{verif.menyetujui}</td>
+                      <td>{i === 0 ? formatTanggalAcc(verif.tanggal_acc) : ""}</td>
                       {i === 0 && (
                         <td rowSpan={verif.permintaans.length}>
                           {renderStatusProgress(verif.status)}
