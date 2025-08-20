@@ -3,11 +3,6 @@ import { GetDataProses, SetVerifKabid } from "../Api/apiVerifikasi";
 import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import ttdImage from "../assets/ttd.png";
-import kopsurat from "../assets/kopsurat.png";
-import { useLocation } from "react-router-dom";
 
 const romanMonths = [
   "",
@@ -112,7 +107,6 @@ const VerifKabidPage = () => {
   //   const selectedBidangFromNav = location.state?.selectedBidang || null;
   //   const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
 
-
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
     const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan);
@@ -214,7 +208,6 @@ const VerifKabidPage = () => {
       ) : (
         filteredData.map((verif, idx) => (
           <div className="mb-5" key={verif.id}>
-
             <table className="table table-bordered">
               <thead className="table-light">
                 <tr>
@@ -225,7 +218,10 @@ const VerifKabidPage = () => {
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
                   <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
+                    Jumlah Permintaan
+                  </th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Jumlah Stock
                   </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
@@ -254,6 +250,7 @@ const VerifKabidPage = () => {
                       </td>
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
+                      <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
                       <td>{item.keterangan}</td>
                       <td className="text-center">

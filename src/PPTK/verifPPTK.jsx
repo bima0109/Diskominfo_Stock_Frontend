@@ -219,7 +219,10 @@ const VerifPPTKPage = () => {
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
                   <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
+                    Jumlah Permintaan
+                  </th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Jumlah Stock
                   </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
@@ -249,6 +252,7 @@ const VerifPPTKPage = () => {
                       </td>
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
+                      <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
                       <td>{item.keterangan}</td>
                       <td className="text-center">

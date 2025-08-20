@@ -97,7 +97,10 @@ const DraftPage = () => {
             </th>
             <th>Nama Barang</th>
             <th className="text-center" style={{ width: "15%" }}>
-              Jumlah
+              Jumlah Yang Diajukan
+            </th>
+            <th className="text-center" style={{ width: "15%" }}>
+              Jumlah Stock
             </th>
             <th className="text-center" style={{ width: "10%" }}>
               Satuan
@@ -125,6 +128,9 @@ const DraftPage = () => {
                   ) : (
                     item.jumlah
                   )}
+                </td>
+                <td className="text-center">
+                  {item.stock_opname?.jumlah || "-"}
                 </td>
                 <td className="text-center">
                   {item.stock_opname?.satuan || "-"}
