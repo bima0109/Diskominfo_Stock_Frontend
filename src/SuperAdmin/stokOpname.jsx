@@ -19,13 +19,13 @@ const StockOpnamePage = () => {
     nama_barang: "",
     jumlah: "",
     satuan: "",
-    // harga: "",
+    harga: "",
   });
   const [formDataEdit, setFormDataEdit] = useState({
     nama_barang: "",
     jumlah: "",
     satuan: "",
-    // harga: "",
+    harga: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -88,39 +88,63 @@ const StockOpnamePage = () => {
   const handleSubmitTambah = async (e) => {
     e.preventDefault();
     try {
-      await createStock(formDataTambah);
+      const payload = {
+        nama_barang: formDataTambah.nama_barang,
+        jumlah: formDataTambah.jumlah,
+        satuan: formDataTambah.satuan,
+        harga: formDataTambah.harga,
+      };
+
+      await createStock(payload);
       alert("Data berhasil ditambahkan");
-      setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "" });
+
+      // Reset form
+      setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       fetchStock();
-      bootstrap.Modal.getInstance(
-        document.getElementById("modalTambahStock")
-      )?.hide();
+
+      // Tutup modal dengan Bootstrap API
+      const modalEl = document.getElementById("modalTambahStock");
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) {
+        modal.hide();
+      }
+
+      // Pastikan backdrop dihapus
+      document.body.classList.remove("modal-open");
+      const backdrops = document.getElementsByClassName("modal-backdrop");
+      while (backdrops.length > 0) {
+        backdrops[0].parentNode.removeChild(backdrops[0]);
+      }
     } catch {
       alert("Gagal menambahkan data");
     }
   };
 
+
+
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    console.log("SUBMIT EDIT ID:", editId);
-
-    if (!formDataEdit.nama_barang || !formDataEdit.jumlah) {
-      alert("Nama barang dan jumlah wajib diisi");
-      return;
-    }
-
     if (!editId) {
       alert("Edit ID tidak ditemukan");
       return;
     }
 
     try {
-      await updateStock(editId, formDataEdit);
+      const payload = {
+        nama_barang: formDataEdit.nama_barang,
+        jumlah: formDataEdit.jumlah,
+        satuan: formDataEdit.satuan,
+        harga: formDataEdit.harga,
+      };
+
+      await updateStock(editId, payload);
       alert("Data berhasil diperbarui");
+
       bootstrap.Modal.getInstance(
         document.getElementById("modalEditStock")
       )?.hide();
-      setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "" });
+
+      setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       setEditId(null);
       fetchStock();
     } catch (err) {
@@ -129,20 +153,21 @@ const StockOpnamePage = () => {
     }
   };
 
+
   const handleEdit = (stock) => {
-    console.log("DATA STOCK:", stock);
     setEditId(stock.id);
     setFormDataEdit({
       nama_barang: stock.nama_barang,
-      jumlah: stock.Jumlah,
+      jumlah: stock.Jumlah,              // API pakai "Jumlah"
       satuan: stock.satuan,
-      // harga: stock["Harga Satuan"],
+      harga: stock["Harga Satuan"],      // API pakai "Harga Satuan"
     });
-    console.log("EDIT ID:", stock.id);
+
     const modalEl = document.getElementById("modalEditStock");
     const modal = new bootstrap.Modal(modalEl);
     modal.show();
   };
+
 
   return (
     <div className="stock-page-wrapper">
@@ -178,8 +203,8 @@ const StockOpnamePage = () => {
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
                 <th>Satuan</th>
-                {/* <th>Harga Satuan (Rp. )</th> */}
-                {/* <th>Total (Rp. )</th> */}
+                <th>Harga Satuan (Rp. )</th>
+                <th>Total (Rp. )</th>
                 <th>Bulan</th>
                 <th>Tahun</th>
                 <th>Aksi</th>
@@ -192,10 +217,11 @@ const StockOpnamePage = () => {
                   <td>{item.nama_barang}</td>
                   <td>{item.Jumlah}</td>
                   <td>{item.satuan}</td>
-                  {/* <td>{item["Harga Satuan"]}</td> */}
-                  {/* <td>{item.jumlah}</td> */}
+                  <td>{item["Harga Satuan"]}</td>
+                  <td>{item.Jumlah * parseFloat(item["Harga Satuan"] || 0)}</td>
                   <td>{item.bulan}</td>
                   <td>{item.tahun}</td>
+
                   <td>
                     <button
                       className="btn btn-sm btn-warning me-2"
@@ -221,9 +247,8 @@ const StockOpnamePage = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <li
                   key={i}
-                  className={`page-item ${
-                    currentPage === i + 1 ? "active" : ""
-                  }`}
+                  className={`page-item ${currentPage === i + 1 ? "active" : ""
+                    }`}
                 >
                   <button
                     className="page-link"
@@ -265,6 +290,20 @@ const StockOpnamePage = () => {
                     setFormDataTambah({
                       ...formDataTambah,
                       jumlah: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+                <input
+                  type="number"
+                  className="form-control mb-2"
+                  placeholder="HARGA"
+                  value={formDataTambah.harga}
+                  onChange={(e) =>
+                    setFormDataTambah({
+                      ...formDataTambah,
+                      harga: e.target.value,
                     })
                   }
                   required
@@ -327,6 +366,17 @@ const StockOpnamePage = () => {
                   value={formDataEdit.jumlah}
                   onChange={(e) =>
                     setFormDataEdit({ ...formDataEdit, jumlah: e.target.value })
+                  }
+                  required
+                />
+
+                <input
+                  type="number"
+                  className="form-control mb-2"
+                  placeholder="HARGA"
+                  value={formDataEdit.harga}
+                  onChange={(e) =>
+                    setFormDataEdit({ ...formDataEdit, harga: e.target.value })
                   }
                   required
                 />

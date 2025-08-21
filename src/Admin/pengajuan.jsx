@@ -270,43 +270,26 @@ const PengajuanPage = () => {
                 </button>
               </div>
             )}
-
-            <table className="table table-bordered">
-              <thead className="table-light">
+            <table className="table table-bordered align-middle">
+              <thead className="text-center">
                 <tr>
-                  <th className="text-center" style={{ width: "3%" }}>
-                    NO
-                  </th>
-                  <th style={{ width: "9%" }}>Tanggal Pengajuan</th>
-                  <th style={{ width: "20%" }}>No Surat</th>
-                  <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Satuan
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Super
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Kabid
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Sekretaris
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan PPTK
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Menyetujui
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Tanggal Penyetujuan
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Progres
-                  </th>
+                  <th style={{ width: "3%" }}>No</th>
+                  <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
+                  <th style={{ width: "15%" }}>No Surat</th>
+                  <th style={{ width: "18%" }}>Nama Barang</th>
+                  <th style={{ width: "6%" }}>Jumlah</th>
+                  <th style={{ width: "8%" }}>Satuan</th>
+                  {/* <th style={{ width: "10%" }}>Ket. Super</th> */}
+                  <th style={{ width: "10%" }}>Ket. Kabid</th>
+                  <th style={{ width: "10%" }}>Ket. Sekretaris</th>
+                  <th style={{ width: "10%" }}>Ket. PPTK</th>
+                  {verif.status === "ACC PPTK SEKRETARIAT" && (
+                    <>
+                      <th style={{ width: "10%" }}>Menyetujui</th>
+                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                    </>
+                  )}
+                  <th style={{ width: "12%" }}>Progres</th>
                 </tr>
               </thead>
               <tbody>
@@ -314,21 +297,57 @@ const PengajuanPage = () => {
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>
                       <td className="text-center">{i + 1}</td>
-                      <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
-                      <td>
-                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                      </td>
+
+                      {/* Tanggal Pengajuan */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatTanggal(verif.tanggal)}
+                        </td>
+                      )}
+
+                      {/* No Surat */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatNoSurat(verif.id, verif.tanggal)}
+                        </td>
+                      )}
+
+                      {/* Nama Barang */}
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_1}</td>
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
-                      <td>{verif.menyetujui}</td>
-                      <td>{i === 0 ? formatTanggalAcc(verif.tanggal_acc) : ""}</td>
+                      {/* <td className="text-center">{item.keterangan_1}</td> */}
+                      <td className="text-center">{item.keterangan_2}</td>
+                      <td className="text-center">{item.keterangan_3}</td>
+                      <td className="text-center">{item.keterangan_4}</td>
+
+                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
+                        <>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {verif.menyetujui}
+                          </td>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {formatTanggalAcc(verif.tanggal_acc)}
+                          </td>
+                        </>
+                      )}
                       {i === 0 && (
-                        <td rowSpan={verif.permintaans.length}>
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
                           {renderStatusProgress(verif.status)}
                         </td>
                       )}
@@ -336,13 +355,14 @@ const PengajuanPage = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center">
+                    <td colSpan="13" className="text-center text-muted">
                       Tidak ada permintaan
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+
           </div>
         ))
       )}

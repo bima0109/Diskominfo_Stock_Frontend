@@ -54,6 +54,15 @@ const formatTanggal = (tanggal) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
+const formatTanggalAcc = (tanggal_acc) => {
+  if (!tanggal_acc) {
+    return " ";
+  }
+  const date = new Date(tanggal_acc);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
+};
+
 const allStatuses = [
   // "DITOLAK",
   "DIPROSES",
@@ -350,6 +359,15 @@ const PermintaanPage = () => {
         </div>
       </div>
 
+      {selectedBidang && (
+        <div className="mb-3">
+          <h5>
+            Halaman Bidang:{" "}
+            <span className="badge bg-primary">{selectedBidang.toUpperCase()}</span>
+          </h5>
+        </div>
+      )}
+
       {/* Data Table */}
       {filteredData.length === 0 ? (
         <div className="alert alert-warning text-center mt-4" role="alert">
@@ -370,39 +388,26 @@ const PermintaanPage = () => {
               </div>
             )}
 
-            <table className="table table-bordered">
-              <thead className="table-light">
+            <table className="table table-bordered align-middle">
+              <thead className="table-light text-center">
                 <tr>
-                  <th className="text-center" style={{ width: "3%" }}>
-                    NO
-                  </th>
-                  <th style={{ width: "12%" }}>Tanggal</th>
-                  <th style={{ width: "20%" }}>No Surat</th>
-                  <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Satuan
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Super
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Kabid
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Sekretaris
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan PPTK
-                  </th>
-                  <th className="text-center" style={{ width: "20%" }}>
-                    Action
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Progres
-                  </th>
+                  <th style={{ width: "3%" }}>No</th>
+                  <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
+                  <th style={{ width: "15%" }}>No Surat</th>
+                  <th style={{ width: "18%" }}>Nama Barang</th>
+                  <th style={{ width: "6%" }}>Jumlah</th>
+                  <th style={{ width: "8%" }}>Satuan</th>
+                  <th style={{ width: "10%" }}>Ket. Kabid</th>
+                  <th style={{ width: "10%" }}>Ket. Sekretaris</th>
+                  <th style={{ width: "10%" }}>Ket. PPTK</th>
+                  {verif.status === "ACC PPTK SEKRETARIAT" && (
+                    <>
+                      <th style={{ width: "10%" }}>Menyetujui</th>
+                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                    </>
+                  )}
+                  <th style={{ width: "12%" }}>Action</th>
+                  <th style={{ width: "10%" }}>Progres</th>
                 </tr>
               </thead>
 
@@ -411,17 +416,53 @@ const PermintaanPage = () => {
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>
                       <td className="text-center">{i + 1}</td>
-                      <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
-                      <td>
-                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                      </td>
+
+                      {/* Tanggal Pengajuan */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatTanggal(verif.tanggal)}
+                        </td>
+                      )}
+
+                      {/* No Surat */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatNoSurat(verif.id, verif.tanggal)}
+                        </td>
+                      )}
+
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_1}</td>
                       <td>{item.keterangan_2}</td>
                       <td>{item.keterangan_3}</td>
                       <td>{item.keterangan_4}</td>
+
+                      {/* Menyetujui + Tanggal Penyetujuan */}
+                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
+                        <>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {verif.menyetujui}
+                          </td>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {formatTanggalAcc(verif.tanggal_acc)}
+                          </td>
+                        </>
+                      )}
+
+                      {/* Action */}
                       <td className="text-center">
                         {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>
@@ -439,11 +480,16 @@ const PermintaanPage = () => {
                             </button>
                           </>
                         ) : (
-                          <span className="text-bold">Pengajuan DITERIMA</span>
+                          <span className="fw-bold text">DITERIMA</span>
                         )}
                       </td>
+
+                      {/* Progres */}
                       {i === 0 && (
-                        <td rowSpan={verif.permintaans.length}>
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
                           {renderStatusProgress(verif.status)}
                         </td>
                       )}
@@ -451,13 +497,14 @@ const PermintaanPage = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">
+                    <td colSpan="12" className="text-center">
                       Tidak ada permintaan
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+
           </div>
         ))
       )}

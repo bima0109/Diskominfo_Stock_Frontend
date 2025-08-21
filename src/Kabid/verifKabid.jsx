@@ -48,7 +48,6 @@ const formatTanggal = (tanggal) => {
   const options = { day: "2-digit", month: "long", year: "numeric" };
   return date.toLocaleDateString("id-ID", options);
 };
-
 const allStatuses = [
   // "DITOLAK",
   "DIPROSES",
@@ -107,45 +106,29 @@ const VerifKabidPage = () => {
   //   const selectedBidangFromNav = location.state?.selectedBidang || null;
   //   const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
 
-  const handleUpdate = async (item) => {
+  const handleUpdate = async (item, parentId) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
     const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan_2);
 
-    // Validate user inputs
-    if (newJumlah === null || newKeterangan === null) {
-      return; // Exit if the user cancels the prompt
-    }
-
-    // Check if 'newJumlah' is a valid number
-    if (isNaN(newJumlah) || newJumlah <= 0) {
-      alert("Jumlah harus berupa angka yang valid.");
-      return;
-    }
-
-    // If no keterangan is entered, use the existing value
-    if (!newKeterangan.trim()) {
-      alert("Keterangan tidak boleh kosong.");
-      return;
-    }
+    if (!newJumlah || !newKeterangan) return;
 
     try {
-      // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
         keterangan_2: newKeterangan,
       });
 
-      alert("Berhasil update permintaan.");
-
-      // Directly update the state without re-fetching all data
       const updatedData = verifikasiData.map((verif) => {
-        if (verif.id === item.id) {
-          // Update the specific item
+        if (verif.id === parentId) {
           return {
             ...verif,
             permintaans: verif.permintaans.map((permintaan) =>
               permintaan.id === item.id
-                ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
+                ? {
+                  ...permintaan,
+                  jumlah: newJumlah,
+                  keterangan_2: newKeterangan,
+                }
                 : permintaan
             ),
           };
@@ -155,10 +138,10 @@ const VerifKabidPage = () => {
 
       setVerifikasiData(updatedData);
     } catch (error) {
-      console.error(error);
-      alert("Gagal update permintaan. Silakan coba lagi.");
+      console.error("Gagal update permintaan:", error);
     }
   };
+
 
   const handleDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
@@ -258,9 +241,9 @@ const VerifKabidPage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th className="text-center" style={{ width: "10%" }}>
+                  {/* <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Super
-                  </th>
+                  </th> */}
                   <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Kabid
                   </th>
@@ -295,7 +278,7 @@ const VerifKabidPage = () => {
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_1}</td>
+                      {/* <td>{item.keterangan_1}</td> */}
                       <td>{item.keterangan_2}</td>
                       <td>{item.keterangan_3}</td>
                       <td>{item.keterangan_4}</td>
@@ -304,10 +287,11 @@ const VerifKabidPage = () => {
                           <>
                             <button
                               className="btn btn-sm btn-warning me-1"
-                              onClick={() => handleUpdate(item)}
+                              onClick={() => handleUpdate(item, verif.id)}
                             >
                               <i className="bi bi-pencil" />
                             </button>
+
                             <button
                               className="btn btn-sm btn-danger"
                               onClick={() => handleDelete(item.id)}
@@ -323,7 +307,7 @@ const VerifKabidPage = () => {
                       {i === 0 && (
                         <td
                           rowSpan={verif.permintaans.length}
-                          className="text-center align-middle"
+                          className="text-center"
                         >
                           {verif.status === "DIPROSES" && (
                             <button

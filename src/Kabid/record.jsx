@@ -36,6 +36,15 @@ const formatTanggal = (tanggal) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
+const formatTanggalAcc = (tanggal_acc) => {
+  if (!tanggal_acc) {
+    return " ";
+  }
+  const date = new Date(tanggal_acc);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
+};
+
 const allStatuses = [
   "DIPROSES",
   "ACC KABID",
@@ -185,19 +194,21 @@ const RecordPage = () => {
             <table className="table table-bordered">
               <thead className="table-light">
                 <tr>
-                  <th className="text-center" style={{ width: "3%" }}>
-                    NO
-                  </th>
-                  <th style={{ width: "12%" }}>Tanggal</th>
-                  <th style={{ width: "20%" }}>No Surat</th>
-                  <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Satuan
-                  </th>
-                  <th>Keterangan</th>
+                  <th style={{ width: "3%" }}>No</th>
+                  <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
+                  <th style={{ width: "15%" }}>No Surat</th>
+                  <th style={{ width: "18%" }}>Nama Barang</th>
+                  <th style={{ width: "6%" }}>Jumlah</th>
+                  <th style={{ width: "8%" }}>Satuan</th>
+                  <th style={{ width: "10%" }}>Ket. Kabid</th>
+                  <th style={{ width: "10%" }}>Ket. Sekretaris</th>
+                  <th style={{ width: "10%" }}>Ket. PPTK</th>
+                  {verif.status === "ACC PPTK SEKRETARIAT" && (
+                    <>
+                      <th style={{ width: "10%" }}>Menyetujui</th>
+                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                    </>
+                  )}
                   <th className="text-center" style={{ width: "10%" }}>
                     Progres
                   </th>
@@ -208,14 +219,51 @@ const RecordPage = () => {
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>
                       <td className="text-center">{i + 1}</td>
-                      <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
-                      <td>
-                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                      </td>
+
+                      {/* Tanggal Pengajuan */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatTanggal(verif.tanggal)}
+                        </td>
+                      )}
+
+                      {/* No Surat */}
+                      {i === 0 && (
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center align-top"
+                        >
+                          {formatNoSurat(verif.id, verif.tanggal)}
+                        </td>
+                      )}
+
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan}</td>
+                      <td>{item.keterangan_2}</td>
+                      <td>{item.keterangan_3}</td>
+                      <td>{item.keterangan_4}</td>
+
+                      {/* Menyetujui + Tanggal Penyetujuan */}
+                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
+                        <>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {verif.menyetujui}
+                          </td>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {formatTanggalAcc(verif.tanggal_acc)}
+                          </td>
+                        </>
+                      )}
                       {i === 0 && (
                         <td rowSpan={verif.permintaans.length}>
                           {renderStatusProgress(verif.status)}
