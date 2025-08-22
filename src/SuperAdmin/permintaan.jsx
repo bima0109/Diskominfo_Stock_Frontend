@@ -194,7 +194,7 @@ const PermintaanPage = () => {
 
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan_1);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.ketSuper);
 
     // Validate user inputs
     if (newJumlah === null || newKeterangan === null) {
@@ -217,7 +217,7 @@ const PermintaanPage = () => {
       // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
-        keterangan_1: newKeterangan,
+        ketSuper: newKeterangan,
       });
 
       alert("Berhasil update permintaan.");
@@ -230,7 +230,7 @@ const PermintaanPage = () => {
             ...verif,
             permintaans: verif.permintaans.map((permintaan) =>
               permintaan.id === item.id
-                ? { ...permintaan, jumlah: newJumlah, keterangan_1: newKeterangan }
+                ? { ...permintaan, jumlah: newJumlah, ketSuper: newKeterangan }
                 : permintaan
             ),
           };
@@ -238,7 +238,8 @@ const PermintaanPage = () => {
         return verif;
       });
 
-      setVerifikasiData(updatedData);
+      const result = await GetAlldata();
+      setVerifikasiData(result);
     } catch (error) {
       console.error(error);
       alert("Gagal update permintaan. Silakan coba lagi.");
@@ -396,7 +397,11 @@ const PermintaanPage = () => {
                   <th style={{ width: "15%" }}>No Surat</th>
                   <th style={{ width: "18%" }}>Nama Barang</th>
                   <th style={{ width: "6%" }}>Jumlah</th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Jumlah Stock
+                  </th>
                   <th style={{ width: "8%" }}>Satuan</th>
+                  <th style={{ width: "10%" }}>Ket. Super</th>
                   <th style={{ width: "10%" }}>Ket. Kabid</th>
                   <th style={{ width: "10%" }}>Ket. Sekretaris</th>
                   <th style={{ width: "10%" }}>Ket. PPTK</th>
@@ -439,10 +444,12 @@ const PermintaanPage = () => {
 
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
+                      <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
+                      <td>{item.ketSuper}</td>
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
 
                       {/* Menyetujui + Tanggal Penyetujuan */}
                       {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (

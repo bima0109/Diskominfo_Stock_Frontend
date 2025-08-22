@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {GetDataSekre, SetVerifPptk } from "../Api/apiVerifikasi";
-import {UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
+import { GetDataSekre, SetVerifPptk } from "../Api/apiVerifikasi";
+import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -109,22 +109,55 @@ const VerifPPTKPage = () => {
 
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.ketPptk);
 
-    if (newJumlah !== null && newKeterangan !== null) {
-      try {
-        await UpdatePermintaan(item.id, {
-          jumlah: newJumlah,
-          keterangan: newKeterangan,
-        });
-        alert("Berhasil update permintaan.");
-        // Refresh data
-        const result = await GetDataSekre();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Gagal update permintaan.");
-      }
+    // Validate user inputs
+    if (newJumlah === null || newKeterangan === null) {
+      return; // Exit if the user cancels the prompt
+    }
+
+    // Check if 'newJumlah' is a valid number
+    if (isNaN(newJumlah) || newJumlah <= 0) {
+      alert("Jumlah harus berupa angka yang valid.");
+      return;
+    }
+
+    // If no keterangan is entered, use the existing value
+    if (!newKeterangan.trim()) {
+      alert("Keterangan tidak boleh kosong.");
+      return;
+    }
+
+    try {
+      // Make the API call to update the data
+      await UpdatePermintaan(item.id, {
+        jumlah: newJumlah,
+        ketPptk: newKeterangan,
+      });
+
+      alert("Berhasil update permintaan.");
+
+      // Directly update the state without re-fetching all data
+      // const updatedData = verifikasiData.map((verif) => {
+      //   if (verif.id === item.id) {
+      //     // Update the specific item
+      //     return {
+      //       ...verif,
+      //       permintaans: verif.permintaans.map((permintaan) =>
+      //         permintaan.id === item.id
+      //           ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
+      //           : permintaan
+      //       ),
+      //     };
+      //   }
+      //   return verif;
+      // });
+
+      const result = await GetDataSekre();
+      setVerifikasiData(result);
+    } catch (error) {
+      console.error(error);
+      alert("Gagal update permintaan. Silakan coba lagi.");
     }
   };
 
@@ -227,7 +260,18 @@ const VerifPPTKPage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th>Keterangan</th>
+                  {/* <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Super
+                  </th> */}
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Kabid
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Sekretaris
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan PPTK
+                  </th>
                   <th className="text-center" style={{ width: "20%" }}>
                     Action
                   </th>
@@ -254,7 +298,10 @@ const VerifPPTKPage = () => {
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan}</td>
+                      {/* <td>{item.keterangan_1}</td> */}
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
                       <td className="text-center">
                         {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>

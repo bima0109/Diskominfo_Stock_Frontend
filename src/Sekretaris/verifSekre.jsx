@@ -109,7 +109,7 @@ const VerifSekrePage = () => {
 
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan_2);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.ketSekre);
 
     // Validate user inputs
     if (newJumlah === null || newKeterangan === null) {
@@ -132,28 +132,29 @@ const VerifSekrePage = () => {
       // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
-        keterangan_2: newKeterangan,
+        ketSekre: newKeterangan,
       });
 
       alert("Berhasil update permintaan.");
 
       // Directly update the state without re-fetching all data
-      const updatedData = verifikasiData.map((verif) => {
-        if (verif.id === item.id) {
-          // Update the specific item
-          return {
-            ...verif,
-            permintaans: verif.permintaans.map((permintaan) =>
-              permintaan.id === item.id
-                ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
-                : permintaan
-            ),
-          };
-        }
-        return verif;
-      });
+      // const updatedData = verifikasiData.map((verif) => {
+      //   if (verif.id === item.id) {
+      //     // Update the specific item
+      //     return {
+      //       ...verif,
+      //       permintaans: verif.permintaans.map((permintaan) =>
+      //         permintaan.id === item.id
+      //           ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
+      //           : permintaan
+      //       ),
+      //     };
+      //   }
+      //   return verif;
+      // });
 
-      setVerifikasiData(updatedData);
+      const result = await GetDataKabid();
+      setVerifikasiData(result);
     } catch (error) {
       console.error(error);
       alert("Gagal update permintaan. Silakan coba lagi.");
@@ -259,9 +260,9 @@ const VerifSekrePage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th className="text-center" style={{ width: "10%" }}>
+                  {/* <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Super
-                  </th>
+                  </th> */}
                   <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Kabid
                   </th>
@@ -297,10 +298,10 @@ const VerifSekrePage = () => {
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_1}</td>
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
+                      {/* <td>{item.keterangan_1}</td> */}
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
                       <td className="text-center">
                         {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>

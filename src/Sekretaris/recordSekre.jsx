@@ -278,6 +278,14 @@ const formatTanggal = (tanggal) => {
   const options = { day: "2-digit", month: "long", year: "numeric" };
   return date.toLocaleDateString("id-ID", options);
 };
+const formatTanggalAcc = (tanggal_acc) => {
+  if (!tanggal_acc) {
+    return " ";
+  }
+  const date = new Date(tanggal_acc);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("id-ID", options);
+};
 
 const allStatuses = [
   "DIPROSES",
@@ -455,14 +463,14 @@ const RecordSekrePage = () => {
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
                   <th className="text-center" style={{ width: "7%" }}>
-                    Vol.
+                    Jumlah
                   </th>
                   <th className="text-center" style={{ width: "10%" }}>
                     Satuan
                   </th>
-                  <th className="text-center" style={{ width: "10%" }}>
+                  {/* <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Super
-                  </th>
+                  </th> */}
                   <th className="text-center" style={{ width: "10%" }}>
                     Keterangan Kabid
                   </th>
@@ -472,6 +480,12 @@ const RecordSekrePage = () => {
                   <th className="text-center" style={{ width: "10%" }}>
                     Keterangan PPTK
                   </th>
+                  {verif.status === "ACC PPTK SEKRETARIAT" && (
+                    <>
+                      <th style={{ width: "10%" }}>Menyetujui</th>
+                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                    </>
+                  )}
                   <th className="text-center" style={{ width: "10%" }}>
                     Progres
                   </th>
@@ -490,10 +504,26 @@ const RecordSekrePage = () => {
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_1}</td>
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
+                      {/* <td>{item.keterangan_1}</td> */}
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
+                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
+                        <>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {verif.menyetujui}
+                          </td>
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {formatTanggalAcc(verif.tanggal_acc)}
+                          </td>
+                        </>
+                      )}
                       {i === 0 && (
                         <td rowSpan={verif.permintaans.length}>
                           {renderStatusProgress(verif.status)}

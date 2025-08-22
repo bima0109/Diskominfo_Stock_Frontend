@@ -243,9 +243,9 @@ const RecordPage = () => {
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
 
                       {/* Menyetujui + Tanggal Penyetujuan */}
                       {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (

@@ -119,8 +119,46 @@ const LinkSidebar = () => {
             nama="History"
             linkGambar="https://img.icons8.com/?size=100&id=74556&format=png&color=000000"
           />
+
+          {/* Rekap menu */}
+          <div
+            onClick={toggleRekap}
+            style={{ cursor: "pointer" }}
+            className="d-flex align-items-center gap-2 text-white link-side mt-2"
+          >
+            <img
+              src="https://img.icons8.com/?size=100&id=13760&format=png&color=000000"
+              alt=""
+              width="30"
+            />
+            Rekap
+          </div>
+
+          {/* Submenu Rekap */}
+          {showRekapSubmenu && (
+            <div className="ps-4 d-flex flex-column gap-1">
+              <PencetansubSidebar
+                arah="/pptk/masuk/"
+                nama="Barang Masuk"
+                linkGambar={iconMasuk}
+              />
+
+              <PencetansubSidebar
+                arah="/pptk/habis/"
+                nama="Barang Habis"
+                linkGambar={iconHabis}
+              />
+
+              <PencetansubSidebar
+                arah="/pptk/masih/"
+                nama="Barang Masih"
+                linkGambar={iconMasih}
+              />
+            </div>
+          )}
         </>
       )}
+
 
       {role === "KABID" && (
         <>

@@ -108,15 +108,17 @@ const VerifKabidPage = () => {
 
   const handleUpdate = async (item, parentId) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    const newKeterangan = prompt("Masukkan keterangan baru:", item.keterangan_2);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.ketKabid);
 
     if (!newJumlah || !newKeterangan) return;
 
     try {
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
-        keterangan_2: newKeterangan,
+        ketKabid: newKeterangan,
       });
+
+      alert("Berhasil update permintaan.");
 
       const updatedData = verifikasiData.map((verif) => {
         if (verif.id === parentId) {
@@ -127,7 +129,7 @@ const VerifKabidPage = () => {
                 ? {
                   ...permintaan,
                   jumlah: newJumlah,
-                  keterangan_2: newKeterangan,
+                  ketKabid: newKeterangan,
                 }
                 : permintaan
             ),
@@ -136,7 +138,8 @@ const VerifKabidPage = () => {
         return verif;
       });
 
-      setVerifikasiData(updatedData);
+      const result = await GetDataProses();
+      setVerifikasiData(result);
     } catch (error) {
       console.error("Gagal update permintaan:", error);
     }
@@ -279,9 +282,9 @@ const VerifKabidPage = () => {
                       <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
                       {/* <td>{item.keterangan_1}</td> */}
-                      <td>{item.keterangan_2}</td>
-                      <td>{item.keterangan_3}</td>
-                      <td>{item.keterangan_4}</td>
+                      <td>{item.ketKabid}</td>
+                      <td>{item.ketSekre}</td>
+                      <td>{item.ketPptk}</td>
                       <td className="text-center">
                         {verif.status !== "ACC PPTK SEKRETARIAT" ? (
                           <>
