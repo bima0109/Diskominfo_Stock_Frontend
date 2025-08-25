@@ -65,7 +65,7 @@ const DraftPage = () => {
     const today = new Date();
     const dayOfMonth = today.getDate();
 
-    if (dayOfMonth < 1 || dayOfMonth > 15) {
+    if (dayOfMonth < 1 || dayOfMonth > 29) {
       alert("Pengajuan hanya dapat dilakukan pada tanggal 1–10 setiap bulan.");
       return;
     }

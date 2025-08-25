@@ -30,6 +30,25 @@ export const GetVerifikasiByBidang = async () => {
   }
 };
 
+export const GetRekapTahunan = async (tahun) => {
+  try {
+    const response = await useAxios.post(
+      "/rekap-tahunan",
+      {
+        tahun: tahun, // bisa dikosongin kalau mau tahun sekarang
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data; // langsung return semua response JSON
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
 // Kirim data verifikasi (store)
 export const PostVerifikasi = async () => {
   try {
@@ -43,7 +62,7 @@ export const PostVerifikasi = async () => {
         },
       }
     );
-    return response.data; 
+    return response.data;
   } catch (error) {
     // Tetap lempar respons error backend agar bisa ditangani di frontend
     throw error.response?.data || { message: "Unknown error" };
@@ -106,7 +125,6 @@ export const SetVerifPptk = async (id) => {
     throw error.response?.data || { message: "Unknown error" };
   }
 };
-
 
 export const GetDataProses = async () => {
   try {

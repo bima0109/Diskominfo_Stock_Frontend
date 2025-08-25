@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { GetAlldata } from "../Api/apiVerifikasi";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import ttdImage from "../assets/ttd.png";
 import kopsurat from "../assets/kopsurat.png";
+import JsBarcode from "jsbarcode";
 
 const romanMonths = [
   "",
@@ -85,18 +85,33 @@ const renderStatusProgress = (currentStatus) => (
 
 const RecordSekrePage = () => {
   const [filteredData, setFilteredData] = useState([]);
+  const barcodeCanvas = useRef(null);
 
   const handleCetak = (verif) => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
+    // link yang ingin diarahkan saat scan barcode
+    const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
+
+    // generate barcode di canvas hidden
+    JsBarcode(barcodeCanvas.current, pdfUrl, {
+      format: "CODE128",
+      displayValue: false,
+      width: 2,
+      height: 60,
+      margin: 0,
+    });
+
+    const barcodeDataUrl = barcodeCanvas.current.toDataURL("image/png");
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
+    doc.addImage(kopsurat, "PNG", 15, 12, 25, 25);
     doc.setFont("helvetica", "bold");
-    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 40, 20);
-    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
+    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 43, 20);
+    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 43, 27);
     doc.setFontSize(14);
     doc.text("Form Permintaan Barang", 70, 40);
     doc.setFontSize(11);
@@ -110,12 +125,24 @@ const RecordSekrePage = () => {
       item.nama_barang,
       item.jumlah,
       item.satuan || "-",
-      item.keterangan || "-",
+      item.ketKabid || "-",
+      item.ketSekre || "-",
+      item.ketPptk || "-",
     ]);
 
     autoTable(doc, {
       startY: 68,
-      head: [["No", "Nama Barang", "Vol.", "Satuan", "Keterangan"]],
+      head: [
+        [
+          "No",
+          "Nama Barang",
+          "Jumlah",
+          "Satuan",
+          "Ket Kabid",
+          "Ket Sekre",
+          "Ket PPTK",
+        ],
+      ],
       body: tableData,
       styles: {
         fontSize: 10,
@@ -123,6 +150,7 @@ const RecordSekrePage = () => {
         lineColor: [0, 0, 0],
         halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],
@@ -138,10 +166,19 @@ const RecordSekrePage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
-    doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
-    doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
+
+    const tanggalAcc = verif.tanggal_acc
+      ? formatTanggal(verif.tanggal_acc)
+      : "-";
+    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
+      align: "center",
+    });
+
+    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
     doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
+    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -153,9 +190,7 @@ const RecordSekrePage = () => {
       try {
         const result = await GetAlldata();
         const filtered = result
-          .filter((item) =>
-            ["ACC PPTK SEKRETARIAT"].includes(item.status)
-          )
+          .filter((item) => ["ACC PPTK SEKRETARIAT"].includes(item.status))
           .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
         setFilteredData(filtered);
       } catch (err) {
@@ -280,6 +315,7 @@ const RecordSekrePage = () => {
           </div>
         ))
       )}
+      <canvas ref={barcodeCanvas} style={{ display: "none" }}></canvas>
     </div>
   );
 };

@@ -36,6 +36,7 @@ import RecordSekrePage from "../Sekretaris/recordSekre.jsx";
 //import pptk components
 import VerifPPTKPage from "../PPTK/verifPPTK.jsx";
 import RecordPPTKPage from "../PPTK/recordPPTK.jsx";
+import RekapTahunanPage from "../Admin/tahunan.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,6 @@ const router = createBrowserRouter([
     path: "/",
     element: <Login />,
   },
-  
 
   // Umum
   {
@@ -57,7 +57,6 @@ const router = createBrowserRouter([
         path: "profile",
         element: <ProfilePage />,
       },
-      
     ],
   },
 
@@ -122,6 +121,10 @@ const router = createBrowserRouter([
         path: "pengajuan",
         element: <PengajuanPage />,
       },
+      {
+        path: "rekap-tahunan",
+        element: <RekapTahunanPage />,
+      },
     ],
   },
 
@@ -145,7 +148,7 @@ const router = createBrowserRouter([
       {
         path: "history-kabid",
         element: <RecordPage />,
-      }
+      },
     ],
   },
 
@@ -169,7 +172,7 @@ const router = createBrowserRouter([
       {
         path: "history-sekre",
         element: <RecordSekrePage />,
-      }
+      },
     ],
   },
 
@@ -193,9 +196,9 @@ const router = createBrowserRouter([
       {
         path: "history-pptk",
         element: <RecordPPTKPage />,
-      }
+      },
     ],
-  }
+  },
 ]);
 
 const AppRouter = () => {

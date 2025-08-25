@@ -367,12 +367,24 @@ const RecordSekrePage = () => {
       item.nama_barang,
       item.jumlah,
       item.satuan || "-",
-      item.keterangan || "-",
+      item.ketKabid || "-",
+      item.ketSekre || "-",
+      item.ketPptk || "-",
     ]);
 
     autoTable(doc, {
       startY: 68,
-      head: [["No", "Nama Barang", "Vol.", "Satuan", "Keterangan"]],
+      head: [
+        [
+          "No",
+          "Nama Barang",
+          "Jumlah",
+          "Satuan",
+          "Ket Kabid",
+          "Ket Sekre",
+          "Ket PPTK",
+        ],
+      ],
       body: tableData,
       styles: {
         fontSize: 10,
@@ -380,6 +392,7 @@ const RecordSekrePage = () => {
         lineColor: [0, 0, 0],
         halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],
@@ -395,13 +408,19 @@ const RecordSekrePage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
-    doc.text("Barcode Dokumen", centerX, finalY + 20, { align: "center" });
 
-    // ganti TTD dengan barcode
+    const tanggalAcc = verif.tanggal_acc
+      ? formatTanggal(verif.tanggal_acc)
+      : "-";
+    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
+      align: "center",
+    });
+
     doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
-
     doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
+    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);

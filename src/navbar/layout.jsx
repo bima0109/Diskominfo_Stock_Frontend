@@ -95,8 +95,8 @@ const LinkSidebar = () => {
             linkGambar="https://img.icons8.com/?size=100&id=13549&format=png&color=000000"
           />
           <PencetanSidebar
-            arah="/admin/dashboard-admin/"
-            nama="Rekap Tahunan (Beta)"
+            arah="/admin/rekap-tahunan/"
+            nama="Rekap Tahunan"
             linkGambar="https://img.icons8.com/?size=100&id=104092&format=png&color=000000"
           />
         </>
@@ -158,7 +158,6 @@ const LinkSidebar = () => {
           )}
         </>
       )}
-
 
       {role === "KABID" && (
         <>
@@ -339,8 +338,9 @@ const Sidebar = () => {
 };
 
 // === Navbar Component ===
+// === Navbar Component ===
 const Navbar = ({ logoutFun }) => (
-  <nav className="navbar" style={{ backgroundColor: "#667eea" }}>
+  <nav className="navbar fixed-top" style={{ backgroundColor: "#667eea" }}>
     <div className="container-fluid">
       <Sidebar />
       <button
@@ -398,6 +398,7 @@ const Layout = () => {
         {`
           html, body {
             margin: 0;
+            padding-top: 30px;
             padding-left: 0 !important;
             padding-right: 0 !important;
             min-height: 101vh;

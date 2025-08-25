@@ -326,7 +326,7 @@ const VerifPPTKPage = () => {
                       {i === 0 && (
                         <td
                           rowSpan={verif.permintaans.length}
-                          className="text-center align-middle"
+                          className="text-center"
                         >
                           {verif.status === "ACC SEKRETARIS" && (
                             <button

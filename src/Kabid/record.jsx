@@ -4,8 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import ttdImage from "../assets/ttd.png";
 import kopsurat from "../assets/kopsurat.png";
+import JsBarcode from "jsbarcode";
 
 const romanMonths = [
   "",
@@ -91,6 +91,20 @@ const RecordPage = () => {
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
+    // link yang ingin diarahkan saat scan barcode
+    const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
+
+    // generate barcode di canvas hidden
+    JsBarcode(barcodeCanvas.current, pdfUrl, {
+      format: "CODE128",
+      displayValue: false,
+      width: 2,
+      height: 60,
+      margin: 0,
+    });
+
+    const barcodeDataUrl = barcodeCanvas.current.toDataURL("image/png");
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
@@ -110,12 +124,24 @@ const RecordPage = () => {
       item.nama_barang,
       item.jumlah,
       item.satuan || "-",
-      item.keterangan || "-",
+      item.ketKabid || "-",
+      item.ketSekre || "-",
+      item.ketPptk || "-",
     ]);
 
     autoTable(doc, {
       startY: 68,
-      head: [["No", "Nama Barang", "Vol.", "Satuan", "Keterangan"]],
+      head: [
+        [
+          "No",
+          "Nama Barang",
+          "Jumlah",
+          "Satuan",
+          "Ket Kabid",
+          "Ket Sekre",
+          "Ket PPTK",
+        ],
+      ],
       body: tableData,
       styles: {
         fontSize: 10,
@@ -123,6 +149,7 @@ const RecordPage = () => {
         lineColor: [0, 0, 0],
         halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],
@@ -138,10 +165,19 @@ const RecordPage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
-    doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
-    doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
+
+    const tanggalAcc = verif.tanggal_acc
+      ? formatTanggal(verif.tanggal_acc)
+      : "-";
+    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
+      align: "center",
+    });
+
+    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
     doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
+    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
