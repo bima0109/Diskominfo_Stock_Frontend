@@ -197,6 +197,18 @@ const router = createBrowserRouter([
         path: "history-pptk",
         element: <RecordPPTKPage />,
       },
+      {
+        path: "masuk",
+        element: <MasukPage />,
+      },
+      {
+        path: "masih",
+        element: <MasihPage />,
+      },
+      {
+        path: "habis",
+        element: <HabisPage />,
+      },
     ],
   },
 ]);

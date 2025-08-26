@@ -117,18 +117,6 @@ const RekapTahunanPage = () => {
       margin: 0,
     });
 
-    const barcodeDataUrl = barcodeCanvasEl.toDataURL("image/png");
-
-    // TTD + Barcode
-    doc.setFont("helvetica", "normal");
-    doc.text(`Semarang, ${tanggalSurat}`, centerX, finalY + 15, {
-      align: "center",
-    });
-    doc.text("Menyetujui", centerX, finalY + 25, { align: "center" });
-    doc.addImage(barcodeDataUrl, "PNG", centerX - 15, finalY + 28, 30, 30);
-    doc.text("PPTK SEKRETARIAT", centerX, finalY + 62, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 70, { align: "center" });
-
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GetAllMasih, PostMasih } from "../../Api/apiRekap";
+import { GetAllMasih } from "../../Api/apiRekap";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import kopsurat from "../../assets/kopsurat.png";
@@ -28,30 +28,24 @@ const formatTanggalIndo = (tanggalString) => {
   return `${parseInt(day)} ${bulan} ${year}`;
 };
 
+const parseTanggal = (tanggalString) => {
+  const [day, month, year] = tanggalString.split("-");
+  return new Date(`${year}-${month}-${day}`);
+};
+
 const MasihPage = () => {
   const [dataMasuk, setDataMasuk] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [availableYears, setAvailableYears] = useState([]);
-  const [loadingPost, setLoadingPost] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const fetchData = async () => {
     try {
-      const data = await GetAllMasih(); // Perbaikan di sini
+      const data = await GetAllMasih();
       setDataMasuk(data);
-
-      const years = Array.from(
-        new Set(
-          data.map((item) => {
-            const [day, month, year] = item.tanggal.split("-");
-            return parseInt(year);
-          })
-        )
-      );
-      setAvailableYears(years.sort((a, b) => b - a));
     } catch (err) {
       console.error("Gagal fetch data:", err);
+      Swal.fire("Error", "Gagal memuat data dari server", "error");
     }
   };
 
@@ -60,17 +54,26 @@ const MasihPage = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = dataMasuk.filter((item) => {
-      const [day, month, year] = item.tanggal.split("-");
-      return (
-        parseInt(month) === parseInt(selectedMonth) &&
-        parseInt(year) === parseInt(selectedYear)
-      );
-    });
-    setFilteredData(filtered);
-  }, [selectedMonth, selectedYear, dataMasuk]);
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      const filtered = dataMasuk.filter((item) => {
+        const itemDate = parseTanggal(item.tanggal);
+        return itemDate >= start && itemDate <= end;
+      });
+
+      setFilteredData(filtered);
+    } else {
+      setFilteredData([]);
+    }
+  }, [startDate, endDate, dataMasuk]);
 
   const handleCetakPDF = () => {
+    if (filteredData.length === 0) {
+      return Swal.fire("Info", "Tidak ada data untuk dicetak", "info");
+    }
+
     const doc = new jsPDF();
 
     doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
@@ -84,10 +87,13 @@ const MasihPage = () => {
       align: "center",
     });
 
-    const bulan = monthNames[selectedMonth];
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    doc.text(`Bulan    : ${bulan} ${selectedYear}`, 17, 50);
+    doc.text(
+      `Periode: ${formatTanggalIndo(startDate.split("-").reverse().join("-"))} s.d. ${formatTanggalIndo(endDate.split("-").reverse().join("-"))}`,
+      17,
+      50
+    );
 
     const tableData = filteredData.map((item, index) => [
       index + 1,
@@ -107,6 +113,7 @@ const MasihPage = () => {
         lineColor: [0, 0, 0],
         halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],
@@ -121,65 +128,10 @@ const MasihPage = () => {
       },
     });
 
-    const finalY = doc.lastAutoTable?.finalY ?? 90;
-    const centerX = 105;
-    doc.setFont("helvetica", "normal");
-    doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
-    doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
-    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
-
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
-
-  const handleAmbilData = async () => {
-    // Generate kode captcha sederhana
-    const captchaCode = Math.random()
-      .toString(36)
-      .substring(2, 7)
-      .toUpperCase();
-
-    const { value: userInput } = await Swal.fire({
-      title: "Verifikasi Pengambilan Data",
-      html: `<p>Masukkan kode berikut untuk melanjutkan:</p>
-           <h2 style="font-weight: bold; color: #333;">${captchaCode}</h2>`,
-      input: "text",
-      inputPlaceholder: "Ketik kode di sini",
-      showCancelButton: true,
-      confirmButtonText: "Lanjutkan",
-      cancelButtonText: "Batal",
-      inputValidator: (value) => {
-        if (!value) {
-          return "Kode tidak boleh kosong!";
-        }
-        if (value.trim().toUpperCase() !== captchaCode) {
-          return "Kode yang dimasukkan salah!";
-        }
-        return null;
-      },
-    });
-
-    // Jika input valid (captcha benar)
-    if (userInput && userInput.trim().toUpperCase() === captchaCode) {
-      setLoadingPost(true);
-      try {
-        await PostMasih(); // panggil API PostMasih
-        await fetchData(); // refresh data
-        Swal.fire("Berhasil!", "Data berhasil diambil.", "success");
-      } catch (err) {
-        console.error("Gagal mengambil data:", err);
-        Swal.fire("Error", "Gagal mengambil data.", "error");
-      } finally {
-        setLoadingPost(false);
-      }
-    }
-  };
-
-  const isCurrentMonthYear =
-    parseInt(selectedMonth) === new Date().getMonth() + 1 &&
-    parseInt(selectedYear) === new Date().getFullYear();
 
   return (
     <div className="container py-4">
@@ -187,37 +139,29 @@ const MasihPage = () => {
 
       <div className="row mb-3">
         <div className="col-md-3">
-          <select
-            className="form-select"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-          >
-            <option value="">-- Pilih Bulan --</option>
-            {monthNames.map((name, index) =>
-              index > 0 ? (
-                <option key={index} value={index}>
-                  {name}
-                </option>
-              ) : null
-            )}
-          </select>
+          <label className="form-label">Tanggal Mulai</label>
+          <input
+            type="date"
+            className="form-control"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
         </div>
         <div className="col-md-3">
-          <select
-            className="form-select"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-          >
-            <option value="">-- Pilih Tahun --</option>
-            {availableYears.map((year, idx) => (
-              <option key={idx} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+          <label className="form-label">Tanggal Akhir</label>
+          <input
+            type="date"
+            className="form-control"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
-        <div className="col-md-3">
-          <button className="btn btn-outline-success" onClick={handleCetakPDF}>
+        <div className="col-md-3 d-flex align-items-end">
+          <button
+            className="btn btn-outline-success w-100"
+            onClick={handleCetakPDF}
+            disabled={filteredData.length === 0}
+          >
             <i className="bi bi-printer me-1" />
             Cetak PDF
           </button>
@@ -226,16 +170,7 @@ const MasihPage = () => {
 
       {filteredData.length === 0 ? (
         <div className="alert alert-warning">
-          TIDAK ADA DATA BULAN INI
-          {isCurrentMonthYear && (
-            <button
-              className="btn btn-primary btn-sm ms-3"
-              onClick={handleAmbilData}
-              disabled={loadingPost}
-            >
-              {loadingPost ? "Memproses..." : "Ambil Data"}
-            </button>
-          )}
+          Tidak ada data untuk rentang tanggal ini.
         </div>
       ) : (
         <table className="table table-bordered">
@@ -252,7 +187,7 @@ const MasihPage = () => {
           </thead>
           <tbody>
             {filteredData.map((item, idx) => (
-              <tr key={item.id}>
+              <tr key={item.id || idx}>
                 <td className="text-center">{idx + 1}</td>
                 <td>{item.nama_barang}</td>
                 <td className="text-center">{item.jumlah}</td>
