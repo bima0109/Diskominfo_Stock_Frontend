@@ -10,6 +10,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as bootstrap from "bootstrap";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Swal from "sweetalert2";
 
 // Mock untuk role dan bidang
 const mockRoles = [
@@ -59,7 +60,7 @@ const UserPage = () => {
       const data = await GetAllUsers();
       setUsers(data);
     } catch (error) {
-      alert("Gagal mengambil data user");
+      Swal.fire("Error", "Gagal mengambil data user", "error");
     } finally {
       setLoading(false);
     }
@@ -67,21 +68,20 @@ const UserPage = () => {
 
   const handleSearchClick = async () => {
     if (!searchTerm.trim()) {
-      fetchUsers(); // jika input kosong, tampilkan semua user
+      fetchUsers();
       return;
     }
     try {
       const result = await GetUserByusername(searchTerm);
       setUsers(result ? [result] : []);
     } catch (err) {
-      alert("Gagal mencari user");
-      setUsers([]); // reset tampilan
+      Swal.fire("Error", "Gagal mencari user", "error");
+      setUsers([]);
     }
   };
 
   useEffect(() => {
     fetchUsers();
-    // Anda bisa ganti ini dengan fetch dari API
     setRoles(mockRoles);
     setBidangs(mockBidangs);
   }, []);
@@ -96,7 +96,7 @@ const UserPage = () => {
       const result = await GetUserByusername(value);
       setUsers(result ? [result] : []);
     } catch (err) {
-      alert("Gagal mencari user");
+      Swal.fire("Error", "Gagal mencari user", "error");
     }
   };
 
@@ -110,7 +110,7 @@ const UserPage = () => {
         id_role: formTambah.role,
         id_bidang: formTambah.bidang,
       });
-      alert("User berhasil ditambahkan");
+      Swal.fire("Berhasil", "User berhasil ditambahkan", "success");
       setFormTambah({
         nama: "",
         username: "",
@@ -123,7 +123,7 @@ const UserPage = () => {
         document.getElementById("modalTambahUser")
       )?.hide();
     } catch (err) {
-      alert("Gagal menambahkan user");
+      Swal.fire("Error", "Gagal menambahkan user", "error");
     }
   };
 
@@ -140,7 +140,10 @@ const UserPage = () => {
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    if (!editId) return alert("ID user tidak ditemukan");
+    if (!editId) {
+      Swal.fire("Error", "ID user tidak ditemukan", "error");
+      return;
+    }
     try {
       await UpdateUser(editId, {
         nama: formEdit.nama,
@@ -148,34 +151,52 @@ const UserPage = () => {
         id_role: formEdit.role,
         id_bidang: formEdit.bidang,
       });
-      alert("User berhasil diubah");
+      Swal.fire("Berhasil", "User berhasil diubah", "success");
       fetchUsers();
       bootstrap.Modal.getInstance(
         document.getElementById("modalEditUser")
       )?.hide();
     } catch (err) {
-      alert("Gagal mengubah user");
+      Swal.fire("Error", "Gagal mengubah user", "error");
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus user ini?")) return;
+    const confirm = await Swal.fire({
+      title: "Yakin ingin menghapus user ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal",
+    });
+
+    if (!confirm.isConfirmed) return;
+
     try {
       await DeleteUser(id);
-      alert("User berhasil dihapus");
+      Swal.fire("Berhasil", "User berhasil dihapus", "success");
       fetchUsers();
     } catch (err) {
-      alert("Gagal menghapus user");
+      Swal.fire("Error", "Gagal menghapus user", "error");
     }
   };
 
   const handleResetPassword = async (id) => {
-    if (!window.confirm("Reset password user ini ke default?")) return;
+    const confirm = await Swal.fire({
+      title: "Reset password user ini ke default?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Reset",
+      cancelButtonText: "Batal",
+    });
+
+    if (!confirm.isConfirmed) return;
+
     try {
       await ResetUserPassword(id);
-      alert("Password berhasil direset ke 'password123'");
+      Swal.fire("Berhasil", "Password berhasil direset ke 'password123'", "success");
     } catch (err) {
-      alert("Gagal reset password");
+      Swal.fire("Error", "Gagal reset password", "error");
     }
   };
 
@@ -201,7 +222,7 @@ const UserPage = () => {
             const value = e.target.value;
             setSearchTerm(value);
             if (!value.trim()) {
-              fetchUsers(); // otomatis load semua user
+              fetchUsers();
             }
           }}
           onKeyDown={(e) => {

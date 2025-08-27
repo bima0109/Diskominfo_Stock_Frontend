@@ -52,7 +52,7 @@ const RekapTahunanPage = () => {
     const today = new Date();
     const options = { day: "2-digit", month: "long", year: "numeric" };
     const tanggalSurat = today.toLocaleDateString("id-ID", options);
-    const noSurat = `000.2.3.1/REKAP/${tahun}`;
+    // const noSurat = `000.2.3.1/REKAP/${tahun}`;
 
     // Kop Surat
     doc.setFont("helvetica", "normal");
@@ -67,9 +67,9 @@ const RekapTahunanPage = () => {
     doc.text("Rekapitulasi Permintaan Barang", 70, 42);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    doc.text(`Nomor   : ${noSurat}`, 17, 52);
-    doc.text(`Tanggal : ${tanggalSurat}`, 17, 59);
-    doc.text(`Tahun   : ${tahun}`, 17, 66);
+    // doc.text(`Nomor   : ${noSurat}`, 17, 52);
+    doc.text(`Tanggal Cetak   : ${tanggalSurat}`, 17, 59);
+    doc.text(`Tahun                : ${tahun}`, 17, 66);
 
     // Tabel data rekap
     const tableData = rekapData.map((item, idx) => [
@@ -89,6 +89,7 @@ const RekapTahunanPage = () => {
         lineColor: [0, 0, 0],
         halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetAllCart, DeleteCart, UpdateCart } from "../Api/apiCart";
 import { PostVerifikasi } from "../Api/apiVerifikasi";
+import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -15,7 +16,7 @@ const DraftPage = () => {
       setCartData(response || []);
     } catch (error) {
       console.error("Gagal mengambil data cart:", error);
-      alert("Terjadi kesalahan saat mengambil data.");
+      Swal.fire("Error", "Terjadi kesalahan saat mengambil data.", "error");
     }
   };
 
@@ -36,28 +37,39 @@ const DraftPage = () => {
     try {
       const jumlahBaru = parseInt(newJumlah[id]);
       if (isNaN(jumlahBaru) || jumlahBaru <= 0) {
-        alert("Jumlah harus lebih dari 0");
+        Swal.fire("Peringatan", "Jumlah harus lebih dari 0", "warning");
         return;
       }
 
       await UpdateCart(id, { jumlah: jumlahBaru });
       setEditingId(null);
       fetchCart();
+      Swal.fire("Berhasil", "Jumlah berhasil diperbarui.", "success");
     } catch (error) {
       console.error("Gagal mengubah jumlah:", error);
-      alert("Gagal mengupdate jumlah, jumlah melebihi stock");
+      Swal.fire("Gagal", "Jumlah melebihi stock!", "error");
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus item ini dari draft?")) return;
+    const result = await Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Item ini akan dihapus dari draft",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await DeleteCart(id);
       fetchCart();
+      Swal.fire("Berhasil", "Item berhasil dihapus.", "success");
     } catch (error) {
       console.error("Gagal menghapus item:", error);
-      alert("Gagal menghapus item.");
+      Swal.fire("Error", "Gagal menghapus item.", "error");
     }
   };
 
@@ -65,22 +77,28 @@ const DraftPage = () => {
     const today = new Date();
     const dayOfMonth = today.getDate();
 
-    if (dayOfMonth < 1 || dayOfMonth > 29) {
-      alert("Pengajuan hanya dapat dilakukan pada tanggal 1–10 setiap bulan.");
+    if (dayOfMonth < 1 || dayOfMonth > 10) {
+      Swal.fire(
+        "Peringatan",
+        "Pengajuan hanya dapat dilakukan pada tanggal 1–10 setiap bulan.",
+        "warning"
+      );
       return;
     }
 
     try {
       const response = await PostVerifikasi();
-      alert(response.message || "Pengajuan berhasil.");
-      window.location.href = "/admin/pengajuan/";
+      Swal.fire("Berhasil", response.message || "Pengajuan berhasil.", "success")
+        .then(() => {
+          window.location.href = "/admin/pengajuan/";
+        });
     } catch (error) {
       console.error("Gagal mengajukan:", error);
       if (error.errors) {
-        const messages = Object.values(error.errors).flat().join("\n");
-        alert("Validasi gagal:\n" + messages);
+        const messages = Object.values(error.errors).flat().join("<br/>");
+        Swal.fire("Validasi gagal", messages, "error");
       } else {
-        alert(error.message || "Terjadi kesalahan saat mengajukan.");
+        Swal.fire("Error", error.message || "Terjadi kesalahan saat mengajukan.", "error");
       }
     }
   };
@@ -172,7 +190,7 @@ const DraftPage = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">
+              <td colSpan="6" className="text-center">
                 Belum ada barang dalam draft.
               </td>
             </tr>

@@ -3,6 +3,7 @@ import { GetDataSekre, SetVerifPptk } from "../Api/apiVerifikasi";
 import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Swal from "sweetalert2";
 
 const romanMonths = [
   "",
@@ -103,94 +104,84 @@ const VerifPPTKPage = () => {
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [availableYears, setAvailableYears] = useState([]);
 
-  //   const location = useLocation();
-  //   const selectedBidangFromNav = location.state?.selectedBidang || null;
-  //   const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
-
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
     const newKeterangan = prompt("Masukkan keterangan baru:", item.ketPptk);
 
-    // Validate user inputs
     if (newJumlah === null || newKeterangan === null) {
-      return; // Exit if the user cancels the prompt
-    }
-
-    // Check if 'newJumlah' is a valid number
-    if (isNaN(newJumlah) || newJumlah <= 0) {
-      alert("Jumlah harus berupa angka yang valid.");
       return;
     }
 
-    // If no keterangan is entered, use the existing value
+    if (isNaN(newJumlah) || newJumlah <= 0) {
+      Swal.fire("Oops!", "Jumlah harus berupa angka yang valid.", "warning");
+      return;
+    }
+
     if (!newKeterangan.trim()) {
-      alert("Keterangan tidak boleh kosong.");
+      Swal.fire("Oops!", "Keterangan tidak boleh kosong.", "warning");
       return;
     }
 
     try {
-      // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
         ketPptk: newKeterangan,
       });
 
-      alert("Berhasil update permintaan.");
-
-      // Directly update the state without re-fetching all data
-      // const updatedData = verifikasiData.map((verif) => {
-      //   if (verif.id === item.id) {
-      //     // Update the specific item
-      //     return {
-      //       ...verif,
-      //       permintaans: verif.permintaans.map((permintaan) =>
-      //         permintaan.id === item.id
-      //           ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
-      //           : permintaan
-      //       ),
-      //     };
-      //   }
-      //   return verif;
-      // });
+      Swal.fire("Sukses", "Berhasil update permintaan.", "success");
 
       const result = await GetDataSekre();
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      alert("Gagal update permintaan. Silakan coba lagi.");
+      Swal.fire("Error", "Gagal update permintaan. Silakan coba lagi.", "error");
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
-      try {
-        await DeletePermintaan(id);
-        alert("Berhasil menghapus permintaan.");
-        // Refresh data
-        const result = await GetDataSekre();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Gagal menghapus permintaan.");
+    Swal.fire({
+      title: "Yakin?",
+      text: "Ingin menghapus permintaan ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await DeletePermintaan(id);
+          Swal.fire("Terhapus!", "Berhasil menghapus permintaan.", "success");
+          const result = await GetDataSekre();
+          setVerifikasiData(result);
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "Gagal menghapus permintaan.", "error");
+        }
       }
-    }
+    });
   };
 
   const handleVerifikasi = async (verifId) => {
-    if (
-      window.confirm("Apakah Anda yakin ingin memverifikasi pengajuan ini?")
-    ) {
-      try {
-        await SetVerifPptk(verifId);
-        alert("Verifikasi berhasil!");
-
-        const result = await GetDataSekre();
-        setVerifikasiData(result);
-      } catch (error) {
-        console.error(error);
-        alert("Verifikasi gagal.");
+    Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin memverifikasi pengajuan ini?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Verifikasi",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await SetVerifPptk(verifId);
+          Swal.fire("Sukses", "Verifikasi berhasil!", "success");
+          const result = await GetDataSekre();
+          setVerifikasiData(result);
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "Verifikasi gagal.", "error");
+        }
       }
-    }
+    });
   };
 
   useEffect(() => {
@@ -208,7 +199,6 @@ const VerifPPTKPage = () => {
         uniqueYears.sort((a, b) => b - a);
         setAvailableYears(uniqueYears);
 
-        // Filter langsung saat fetch data
         const initialFiltered = result.filter((item) => {
           const date = new Date(item.tanggal);
           return (
@@ -218,7 +208,7 @@ const VerifPPTKPage = () => {
         });
         setFilteredData(initialFiltered);
       } catch (err) {
-        alert("Gagal mengambil data");
+        Swal.fire("Error", "Gagal mengambil data", "error");
         console.error(err);
       }
     };

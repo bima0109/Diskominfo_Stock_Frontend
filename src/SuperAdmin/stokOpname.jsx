@@ -9,6 +9,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as bootstrap from "bootstrap";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Swal from "sweetalert2";
 
 const satuanOptions = ["rim", "buah", "slop", "dus", "pack", "botol"];
 
@@ -32,6 +33,7 @@ const StockOpnamePage = () => {
   const [editId, setEditId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
+
   const handleSearchChange = async (value) => {
     setSearchTerm(value);
     if (value.trim() === "") {
@@ -45,7 +47,7 @@ const StockOpnamePage = () => {
       setCurrentPage(1);
     } catch (error) {
       console.error("Gagal mencari:", error);
-      alert("Terjadi kesalahan saat mencari data.");
+      Swal.fire("Error", "Terjadi kesalahan saat mencari data.", "error");
     }
   };
 
@@ -54,7 +56,7 @@ const StockOpnamePage = () => {
       const data = await GetAllStock();
       setStockList(data);
     } catch (error) {
-      alert("Gagal mengambil data stok");
+      Swal.fire("Error", "Gagal mengambil data stok", "error");
     } finally {
       setLoading(false);
     }
@@ -75,81 +77,85 @@ const StockOpnamePage = () => {
   );
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    const result = await Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await deleteStock(id);
-      alert("Data berhasil dihapus");
+      Swal.fire("Berhasil", "Data berhasil dihapus", "success");
       fetchStock();
     } catch {
-      alert("Gagal menghapus data");
+      Swal.fire("Error", "Gagal menghapus data", "error");
     }
   };
+
+  const closeModal = (id) => {
+    const modalEl = document.getElementById(id);
+    let modal = bootstrap.Modal.getInstance(modalEl);
+    if (!modal) {
+      modal = new bootstrap.Modal(modalEl);
+    }
+    modal.hide();
+    modal.dispose(); // reset instance biar bisa dipakai lagi
+
+    // bersihkan backdrop & reset body
+    document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+    document.body.classList.remove("modal-open");
+    document.body.style.overflow = "auto";
+    document.body.style.paddingRight = "0px";
+  };
+
+
 
   const handleSubmitTambah = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        nama_barang: formDataTambah.nama_barang,
-        jumlah: formDataTambah.jumlah,
-        satuan: formDataTambah.satuan,
-        harga: formDataTambah.harga,
-      };
-
+      const payload = { ...formDataTambah };
       await createStock(payload);
-      alert("Data berhasil ditambahkan");
+      Swal.fire("Berhasil", "Data berhasil ditambahkan", "success");
 
-      // Reset form
       setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       fetchStock();
 
-      // Tutup modal dengan Bootstrap API
-      const modalEl = document.getElementById("modalTambahStock");
-      const modal = bootstrap.Modal.getInstance(modalEl);
-      if (modal) {
-        modal.hide();
+      const modalTambahEl = document.getElementById("modalTambahStock");
+      let modalTambah = bootstrap.Modal.getInstance(modalTambahEl);
+      if (!modalTambah) {
+        modalTambah = new bootstrap.Modal(modalTambahEl);
       }
-
-      // Pastikan backdrop dihapus
-      document.body.classList.remove("modal-open");
-      const backdrops = document.getElementsByClassName("modal-backdrop");
-      while (backdrops.length > 0) {
-        backdrops[0].parentNode.removeChild(backdrops[0]);
-      }
+      closeModal("modalTambahStock");
     } catch {
-      alert("Gagal menambahkan data");
+      Swal.fire("Error", "Gagal menambahkan data", "error");
     }
   };
 
 
-
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    if (!editId) {
-      alert("Edit ID tidak ditemukan");
-      return;
-    }
-
     try {
-      const payload = {
-        nama_barang: formDataEdit.nama_barang,
-        jumlah: formDataEdit.jumlah,
-        satuan: formDataEdit.satuan,
-        harga: formDataEdit.harga,
-      };
-
+      const payload = { ...formDataEdit };
       await updateStock(editId, payload);
-      alert("Data berhasil diperbarui");
+      Swal.fire("Berhasil", "Data berhasil diperbarui", "success");
 
-      bootstrap.Modal.getInstance(
-        document.getElementById("modalEditStock")
-      )?.hide();
+      const modalEditEl = document.getElementById("modalEditStock");
+      let modalEdit = bootstrap.Modal.getInstance(modalEditEl);
+      if (!modalEdit) {
+        modalEdit = new bootstrap.Modal(modalEditEl);
+      }
+      modalEdit.hide();
 
       setFormDataEdit({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
       setEditId(null);
       fetchStock();
-    } catch (err) {
-      console.error(err);
-      alert("Gagal memperbarui data");
+    } catch {
+      Swal.fire("Error", "Gagal memperbarui data", "error");
     }
   };
 
@@ -158,9 +164,9 @@ const StockOpnamePage = () => {
     setEditId(stock.id);
     setFormDataEdit({
       nama_barang: stock.nama_barang,
-      jumlah: stock.Jumlah,              // API pakai "Jumlah"
+      jumlah: stock.Jumlah,
       satuan: stock.satuan,
-      harga: stock["Harga Satuan"],      // API pakai "Harga Satuan"
+      harga: stock["Harga Satuan"],
     });
 
     const modalEl = document.getElementById("modalEditStock");

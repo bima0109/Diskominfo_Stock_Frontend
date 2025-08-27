@@ -3,6 +3,7 @@ import { GetDataKabid, SetVerifSekre } from "../Api/apiVerifikasi";
 import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Swal from "sweetalert2";
 
 const romanMonths = [
   "",
@@ -49,13 +50,7 @@ const formatTanggal = (tanggal) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
-const allStatuses = [
-  // "DITOLAK",
-  "DIPROSES",
-  "ACC KABID",
-  "ACC SEKRETARIS",
-  "ACC PPTK SEKRETARIAT",
-];
+const allStatuses = ["DIPROSES", "ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"];
 
 const renderStatusProgress = (currentStatus) => {
   return (
@@ -65,9 +60,6 @@ const renderStatusProgress = (currentStatus) => {
 
         if (status === currentStatus) {
           switch (status) {
-            // case "DITOLAK":
-            //   badgeClass = "bg-danger";
-            //   break;
             case "DIPROSES":
               badgeClass = "bg-info text-dark";
               break;
@@ -103,92 +95,81 @@ const VerifSekrePage = () => {
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [availableYears, setAvailableYears] = useState([]);
 
-  //   const location = useLocation();
-  //   const selectedBidangFromNav = location.state?.selectedBidang || null;
-  //   const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
-
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
     const newKeterangan = prompt("Masukkan keterangan baru:", item.ketSekre);
 
-    // Validate user inputs
-    if (newJumlah === null || newKeterangan === null) {
-      return; // Exit if the user cancels the prompt
-    }
+    if (newJumlah === null || newKeterangan === null) return;
 
-    // Check if 'newJumlah' is a valid number
     if (isNaN(newJumlah) || newJumlah <= 0) {
-      alert("Jumlah harus berupa angka yang valid.");
+      Swal.fire("Gagal", "Jumlah harus berupa angka yang valid.", "error");
       return;
     }
 
-    // If no keterangan is entered, use the existing value
     if (!newKeterangan.trim()) {
-      alert("Keterangan tidak boleh kosong.");
+      Swal.fire("Gagal", "Keterangan tidak boleh kosong.", "error");
       return;
     }
 
     try {
-      // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
         ketSekre: newKeterangan,
       });
 
-      alert("Berhasil update permintaan.");
-
-      // Directly update the state without re-fetching all data
-      // const updatedData = verifikasiData.map((verif) => {
-      //   if (verif.id === item.id) {
-      //     // Update the specific item
-      //     return {
-      //       ...verif,
-      //       permintaans: verif.permintaans.map((permintaan) =>
-      //         permintaan.id === item.id
-      //           ? { ...permintaan, jumlah: newJumlah, keterangan_2: newKeterangan }
-      //           : permintaan
-      //       ),
-      //     };
-      //   }
-      //   return verif;
-      // });
+      Swal.fire("Berhasil", "Berhasil update permintaan.", "success");
 
       const result = await GetDataKabid();
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      alert("Gagal update permintaan. Silakan coba lagi.");
+      Swal.fire("Error", "Gagal update permintaan. Silakan coba lagi.", "error");
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Ingin menghapus permintaan ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
       try {
         await DeletePermintaan(id);
-        alert("Berhasil menghapus permintaan.");
-        // Refresh data
-        const result = await GetDataKabid();
-        setVerifikasiData(result);
+        Swal.fire("Berhasil", "Permintaan berhasil dihapus.", "success");
+        const data = await GetDataKabid();
+        setVerifikasiData(data);
       } catch (error) {
         console.error(error);
-        alert("Gagal menghapus permintaan.");
+        Swal.fire("Error", "Gagal menghapus permintaan.", "error");
       }
     }
   };
 
   const handleVerifikasi = async (verifId) => {
-    if (
-      window.confirm("Apakah Anda yakin ingin memverifikasi pengajuan ini?")
-    ) {
+    const result = await Swal.fire({
+      title: "Konfirmasi",
+      text: "Apakah Anda yakin ingin memverifikasi pengajuan ini?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, verifikasi",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
       try {
         await SetVerifSekre(verifId);
-        alert("Verifikasi berhasil!");
+        Swal.fire("Berhasil", "Verifikasi berhasil!", "success");
 
-        const result = await GetDataKabid();
-        setVerifikasiData(result);
+        const data = await GetDataKabid();
+        setVerifikasiData(data);
       } catch (error) {
         console.error(error);
-        alert("Verifikasi gagal.");
+        Swal.fire("Error", "Verifikasi gagal.", "error");
       }
     }
   };
@@ -202,13 +183,10 @@ const VerifSekrePage = () => {
         const years = result.map((item) =>
           new Date(item.tanggal).getFullYear()
         );
-        const uniqueYears = Array.from(
-          new Set([...years, today.getFullYear()])
-        );
+        const uniqueYears = Array.from(new Set([...years, today.getFullYear()]));
         uniqueYears.sort((a, b) => b - a);
         setAvailableYears(uniqueYears);
 
-        // Filter langsung saat fetch data
         const initialFiltered = result.filter((item) => {
           const date = new Date(item.tanggal);
           return (
@@ -218,7 +196,7 @@ const VerifSekrePage = () => {
         });
         setFilteredData(initialFiltered);
       } catch (err) {
-        alert("Gagal mengambil data");
+        Swal.fire("Error", "Gagal mengambil data", "error");
         console.error(err);
       }
     };
@@ -231,56 +209,32 @@ const VerifSekrePage = () => {
 
   return (
     <div className="container py-4">
-      <h3 className="mb-4">Data Pengajuan Barang </h3>
+      <h3 className="mb-4">Data Pengajuan Barang</h3>
 
-      {/* Data Table */}
       {filteredData.length === 0 ? (
         <div className="alert alert-warning text-center mt-4" role="alert">
           TIDAK ADA DATA TERSEDIA
         </div>
       ) : (
-        filteredData.map((verif, idx) => (
+        filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
             <table className="table table-bordered">
               <thead className="table-light">
                 <tr>
-                  <th className="text-center" style={{ width: "3%" }}>
-                    NO
-                  </th>
+                  <th className="text-center" style={{ width: "3%" }}>NO</th>
                   <th style={{ width: "12%" }}>Tanggal</th>
                   <th style={{ width: "15%" }}>Bidang</th>
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Jumlah Permintaan
-                  </th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Jumlah Stock
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Satuan
-                  </th>
-                  {/* <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Super
-                  </th> */}
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Kabid
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Sekretaris
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan PPTK
-                  </th>
-                  <th className="text-center" style={{ width: "20%" }}>
-                    Action
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Verifikasi
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Progres
-                  </th>
+                  <th className="text-center" style={{ width: "7%" }}>Jumlah Permintaan</th>
+                  <th className="text-center" style={{ width: "7%" }}>Jumlah Stock</th>
+                  <th className="text-center" style={{ width: "10%" }}>Satuan</th>
+                  <th className="text-center" style={{ width: "10%" }}>Keterangan Kabid</th>
+                  <th className="text-center" style={{ width: "10%" }}>Keterangan Sekretaris</th>
+                  <th className="text-center" style={{ width: "10%" }}>Keterangan PPTK</th>
+                  <th className="text-center" style={{ width: "20%" }}>Action</th>
+                  <th className="text-center" style={{ width: "10%" }}>Verifikasi</th>
+                  <th className="text-center" style={{ width: "10%" }}>Progres</th>
                 </tr>
               </thead>
 
@@ -291,14 +245,11 @@ const VerifSekrePage = () => {
                       <td className="text-center">{i + 1}</td>
                       <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
                       <td>{i === 0 ? verif.bidang?.nama || "-" : ""}</td>
-                      <td>
-                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                      </td>
+                      <td>{i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}</td>
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.jumlah_stock}</td>
                       <td className="text-center">{item.satuan || "-"}</td>
-                      {/* <td>{item.keterangan_1}</td> */}
                       <td>{item.ketKabid}</td>
                       <td>{item.ketSekre}</td>
                       <td>{item.ketPptk}</td>
@@ -324,10 +275,7 @@ const VerifSekrePage = () => {
                       </td>
 
                       {i === 0 && (
-                        <td
-                          rowSpan={verif.permintaans.length}
-                          className="text-center"
-                        >
+                        <td rowSpan={verif.permintaans.length} className="text-center">
                           {verif.status === "ACC KABID" && (
                             <button
                               className="btn btn-sm btn-primary"
@@ -348,9 +296,7 @@ const VerifSekrePage = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">
-                      Tidak ada permintaan
-                    </td>
+                    <td colSpan="9" className="text-center">Tidak ada permintaan</td>
                   </tr>
                 )}
               </tbody>

@@ -87,6 +87,10 @@ const RecordSekrePage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const barcodeCanvas = useRef(null);
 
+  // ✅ Tambah state untuk pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // jumlah data per halaman
+
   const handleCetak = (verif) => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
@@ -201,6 +205,11 @@ const RecordSekrePage = () => {
     fetchData();
   }, []);
 
+  // ✅ Logic pagination
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="container py-4">
       <h3 className="mb-4">Data Pengajuan Barang</h3>
@@ -210,110 +219,150 @@ const RecordSekrePage = () => {
           TIDAK ADA DATA YANG TERSEDIA
         </div>
       ) : (
-        filteredData.map((verif) => (
-          <div className="mb-5" key={verif.id}>
-            {verif.status === "ACC PPTK SEKRETARIAT" && (
-              <div className="d-flex justify-content-end mb-2">
-                <button
-                  className="btn btn-outline-success"
-                  onClick={() => handleCetak(verif)}
-                >
-                  <i className="bi bi-printer me-1" />
-                  Cetak
-                </button>
-              </div>
-            )}
+        <>
+          {currentData.map((verif) => (
+            <div className="mb-5" key={verif.id}>
+              {verif.status === "ACC PPTK SEKRETARIAT" && (
+                <div className="d-flex justify-content-end mb-2">
+                  <button
+                    className="btn btn-outline-success"
+                    onClick={() => handleCetak(verif)}
+                  >
+                    <i className="bi bi-printer me-1" />
+                    Cetak
+                  </button>
+                </div>
+              )}
 
-            <table className="table table-bordered">
-              <thead className="table-light">
-                <tr>
-                  <th className="text-center" style={{ width: "3%" }}>
-                    NO
-                  </th>
-                  <th style={{ width: "12%" }}>Tanggal</th>
-                  <th style={{ width: "15%" }}>Bidang</th>
-                  <th style={{ width: "20%" }}>No Surat</th>
-                  <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Jumlah
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Satuan
-                  </th>
-                  {/* <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Super
-                  </th> */}
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Kabid
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan Sekretaris
-                  </th>
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Keterangan PPTK
-                  </th>
-                  {verif.status === "ACC PPTK SEKRETARIAT" && (
-                    <>
-                      <th style={{ width: "10%" }}>Menyetujui</th>
-                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
-                    </>
-                  )}
-                  <th className="text-center" style={{ width: "10%" }}>
-                    Progres
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {verif.permintaans.length > 0 ? (
-                  verif.permintaans.map((item, i) => (
-                    <tr key={item.id}>
-                      <td className="text-center">{i + 1}</td>
-                      <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
-                      <td>{i === 0 ? verif.bidang?.nama || "-" : ""}</td>
-                      <td>
-                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
-                      </td>
-                      <td>{item.nama_barang}</td>
-                      <td className="text-center">{item.jumlah}</td>
-                      <td className="text-center">{item.satuan || "-"}</td>
-                      {/* <td>{item.keterangan_1}</td> */}
-                      <td>{item.ketKabid}</td>
-                      <td>{item.ketSekre}</td>
-                      <td>{item.ketPptk}</td>
-                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
-                        <>
-                          <td
-                            rowSpan={verif.permintaans.length}
-                            className="text-center align-top"
-                          >
-                            {verif.menyetujui}
-                          </td>
-                          <td
-                            rowSpan={verif.permintaans.length}
-                            className="text-center align-top"
-                          >
-                            {formatTanggalAcc(verif.tanggal_acc)}
-                          </td>
-                        </>
-                      )}
-                      {i === 0 && (
-                        <td rowSpan={verif.permintaans.length}>
-                          {renderStatusProgress(verif.status)}
-                        </td>
-                      )}
-                    </tr>
-                  ))
-                ) : (
+              <table className="table table-bordered">
+                <thead className="table-light">
                   <tr>
-                    <td colSpan="9" className="text-center">
-                      Tidak ada permintaan
-                    </td>
+                    <th className="text-center" style={{ width: "3%" }}>
+                      NO
+                    </th>
+                    <th style={{ width: "12%" }}>Tanggal</th>
+                    <th style={{ width: "15%" }}>Bidang</th>
+                    <th style={{ width: "20%" }}>No Surat</th>
+                    <th>Nama Barang</th>
+                    <th className="text-center" style={{ width: "7%" }}>
+                      Jumlah
+                    </th>
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Satuan
+                    </th>
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Keterangan Kabid
+                    </th>
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Keterangan Sekretaris
+                    </th>
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Keterangan PPTK
+                    </th>
+                    {verif.status === "ACC PPTK SEKRETARIAT" && (
+                      <>
+                        <th style={{ width: "10%" }}>Menyetujui</th>
+                        <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                      </>
+                    )}
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Progres
+                    </th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {verif.permintaans.length > 0 ? (
+                    verif.permintaans.map((item, i) => (
+                      <tr key={item.id}>
+                        <td className="text-center">{i + 1}</td>
+                        <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
+                        <td>{i === 0 ? verif.bidang?.nama || "-" : ""}</td>
+                        <td>
+                          {i === 0
+                            ? formatNoSurat(verif.id, verif.tanggal)
+                            : ""}
+                        </td>
+                        <td>{item.nama_barang}</td>
+                        <td className="text-center">{item.jumlah}</td>
+                        <td className="text-center">{item.satuan || "-"}</td>
+                        <td>{item.ketKabid}</td>
+                        <td>{item.ketSekre}</td>
+                        <td>{item.ketPptk}</td>
+                        {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
+                          <>
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
+                              {verif.menyetujui}
+                            </td>
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
+                              {formatTanggalAcc(verif.tanggal_acc)}
+                            </td>
+                          </>
+                        )}
+                        {i === 0 && (
+                          <td rowSpan={verif.permintaans.length}>
+                            {renderStatusProgress(verif.status)}
+                          </td>
+                        )}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="9" className="text-center">
+                        Tidak ada permintaan
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ))}
+
+          {/* ✅ Pagination Controls */}
+          <div className="mt-4">
+            <nav>
+              <ul className="pagination">
+                <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage((p) => p - 1)}
+                  >
+                    Previous
+                  </button>
+                </li>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${currentPage === i + 1 && "active"}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(i + 1)}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+                <li
+                  className={`page-item ${currentPage === totalPages && "disabled"
+                    }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage((p) => p + 1)}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
-        ))
+        </>
       )}
       <canvas ref={barcodeCanvas} style={{ display: "none" }}></canvas>
     </div>
