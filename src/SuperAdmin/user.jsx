@@ -110,18 +110,15 @@ const UserPage = () => {
         id_role: formTambah.role,
         id_bidang: formTambah.bidang,
       });
-      Swal.fire("Berhasil", "User berhasil ditambahkan", "success");
-      setFormTambah({
-        nama: "",
-        username: "",
-        password: "",
-        role: "",
-        bidang: "",
+      Swal.fire({
+        title: "Berhasil",
+        text: "User berhasil ditambahkan",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.reload();
       });
-      fetchUsers();
-      bootstrap.Modal.getInstance(
-        document.getElementById("modalTambahUser")
-      )?.hide();
     } catch (err) {
       Swal.fire("Error", "Gagal menambahkan user", "error");
     }
@@ -194,7 +191,11 @@ const UserPage = () => {
 
     try {
       await ResetUserPassword(id);
-      Swal.fire("Berhasil", "Password berhasil direset ke 'password123'", "success");
+      Swal.fire(
+        "Berhasil",
+        "Password berhasil direset ke 'password123'",
+        "success"
+      );
     } catch (err) {
       Swal.fire("Error", "Gagal reset password", "error");
     }

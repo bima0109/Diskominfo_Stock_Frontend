@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { GetProfile, UpdateProfile, UpdatePassword } from "../Api/apiUser";
+import Swal from "sweetalert2";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Data static dari backend
   const bidangs = ["IKP", "PDKI", "Sekretariat", "TIK", "EGov", "Statistik"];
   const roles = [
     "SUPERADMIN",
@@ -15,13 +15,11 @@ export default function ProfilePage() {
     "SEKRETARIS",
   ];
 
-  // State untuk update profil
   const [nama, setNama] = useState("");
   const [username, setUsername] = useState("");
   const [idBidang, setIdBidang] = useState("");
   const [idRole, setIdRole] = useState("");
 
-  // State untuk update password
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -39,7 +37,11 @@ export default function ProfilePage() {
       setIdBidang(data.id_bidang || "");
       setIdRole(data.id_role || "");
     } catch (err) {
-      alert("Gagal mengambil profil: " + (err.message || "Error"));
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Gagal mengambil profil: " + (err.message || "Error"),
+      });
     } finally {
       setLoading(false);
     }
@@ -51,13 +53,21 @@ export default function ProfilePage() {
       await UpdateProfile({
         nama: nama,
         username: username,
-        // id_bidang: parseInt(idBidang),
-        // id_role: parseInt(idRole),
       });
-      alert("Profil berhasil diperbarui");
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Profil berhasil diperbarui",
+        timer: 1500,
+        showConfirmButton: false,
+      });
       fetchProfile();
     } catch (err) {
-      alert("Gagal update profil: " + (err.message || "Error"));
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Gagal update profil: " + (err.message || "Error"),
+      });
     }
   };
 
@@ -69,12 +79,22 @@ export default function ProfilePage() {
         new_password: newPassword,
         new_password_confirmation: confirmNewPassword,
       });
-      alert("Password berhasil diperbarui");
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Password berhasil diperbarui",
+        timer: 1500,
+        showConfirmButton: false,
+      });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
     } catch (err) {
-      alert("Gagal update password: " + (err.message || "Error"));
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Gagal update password: " + (err.message || "Error"),
+      });
     }
   };
 

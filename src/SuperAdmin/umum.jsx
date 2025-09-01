@@ -1,12 +1,23 @@
-import React from 'react';
-
-const BlankPage = () => {
+import React from "react";
+import sipbImage from "../assets/1.png";
+function BlankPage() {
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Halaman Kosong</h1>
-      <p>Silakan isi konten halaman ini sesuai kebutuhan.</p>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      <img
+        src={sipbImage}
+        alt="SIPB"
+        style={{ maxWidth: "1500px", width: "100%", height: "auto" }}
+      />
     </div>
   );
-};
+}
 
 export default BlankPage;

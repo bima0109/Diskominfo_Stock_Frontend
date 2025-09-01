@@ -11,7 +11,7 @@ import * as bootstrap from "bootstrap";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Swal from "sweetalert2";
 
-const satuanOptions = ["rim", "buah", "slop", "dus", "pack", "botol"];
+const satuanOptions = ["Rim", "Buah", "Slop", "Dus", "Pack", "Botol"];
 
 const StockOpnamePage = () => {
   const [stockList, setStockList] = useState([]);
@@ -113,29 +113,27 @@ const StockOpnamePage = () => {
     document.body.style.paddingRight = "0px";
   };
 
-
-
   const handleSubmitTambah = async (e) => {
     e.preventDefault();
     try {
       const payload = { ...formDataTambah };
       await createStock(payload);
-      Swal.fire("Berhasil", "Data berhasil ditambahkan", "success");
+      Swal.fire({
+        title: "Berhasil",
+        text: "Data berhasil ditambahkan",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.reload();
+      });
 
       setFormDataTambah({ nama_barang: "", jumlah: "", satuan: "", harga: "" });
-      fetchStock();
-
-      const modalTambahEl = document.getElementById("modalTambahStock");
-      let modalTambah = bootstrap.Modal.getInstance(modalTambahEl);
-      if (!modalTambah) {
-        modalTambah = new bootstrap.Modal(modalTambahEl);
-      }
       closeModal("modalTambahStock");
     } catch {
       Swal.fire("Error", "Gagal menambahkan data", "error");
     }
   };
-
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
@@ -159,7 +157,6 @@ const StockOpnamePage = () => {
     }
   };
 
-
   const handleEdit = (stock) => {
     setEditId(stock.id);
     setFormDataEdit({
@@ -173,7 +170,6 @@ const StockOpnamePage = () => {
     const modal = new bootstrap.Modal(modalEl);
     modal.show();
   };
-
 
   return (
     <div className="stock-page-wrapper">
@@ -253,8 +249,9 @@ const StockOpnamePage = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <li
                   key={i}
-                  className={`page-item ${currentPage === i + 1 ? "active" : ""
-                    }`}
+                  className={`page-item ${
+                    currentPage === i + 1 ? "active" : ""
+                  }`}
                 >
                   <button
                     className="page-link"

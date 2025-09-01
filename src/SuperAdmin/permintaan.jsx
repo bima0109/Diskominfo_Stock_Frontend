@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { GetAlldata } from "../Api/apiVerifikasi";
 import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import ttdImage from "../assets/ttd.png";
+import JsBarcode from "jsbarcode";
 import kopsurat from "../assets/kopsurat.png";
 import { useLocation } from "react-router-dom";
 
@@ -119,29 +119,35 @@ const PermintaanPage = () => {
   const location = useLocation();
   const selectedBidangFromNav = location.state?.selectedBidang || null;
   const [selectedBidang, setSelectedBidang] = useState(selectedBidangFromNav);
+  const barcodeCanvas = useRef(null);
 
   const handleCetak = (verif) => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
+    // link yang ingin diarahkan saat scan barcode
+    const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
+
+    // generate barcode di canvas hidden
+    JsBarcode(barcodeCanvas.current, pdfUrl, {
+      format: "CODE128",
+      displayValue: false,
+      width: 2,
+      height: 60,
+      margin: 0,
+    });
+
+    const barcodeDataUrl = barcodeCanvas.current.toDataURL("image/png");
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-
-    // Logo kiri atas
-    doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
-
-    // Teks di sebelah kanan logo
+    doc.addImage(kopsurat, "PNG", 15, 12, 25, 25);
     doc.setFont("helvetica", "bold");
-    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 40, 20);
-    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
-
-    // Judul di kanan atas
-    doc.setFont("helvetica", "bold");
+    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 43, 20);
+    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 43, 27);
     doc.setFontSize(14);
-    doc.text("Form Permintaan Barang", 70, 40); // Sesuaikan X dan Y
-
-    // Info surat
+    doc.text("Form Permintaan Barang", 70, 40);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
     doc.text(`No Surat  : ${noSurat}`, 17, 50);
@@ -153,19 +159,32 @@ const PermintaanPage = () => {
       item.nama_barang,
       item.jumlah,
       item.satuan || "-",
-      item.keterangan || "-",
+      item.ketKabid || "-",
+      item.ketSekre || "-",
+      item.ketPptk || "-",
     ]);
 
     autoTable(doc, {
       startY: 68,
-      head: [["No", "Nama Barang", "Vol.", "Satuan", "Keterangan"]],
+      head: [
+        [
+          "No",
+          "Nama Barang",
+          "Jumlah",
+          "Satuan",
+          "Ket Kabid",
+          "Ket Sekre",
+          "Ket PPTK",
+        ],
+      ],
       body: tableData,
       styles: {
         fontSize: 10,
         lineWidth: 0.1,
         lineColor: [0, 0, 0],
-        halign: "left", // default
+        halign: "left",
         valign: "middle",
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [240, 240, 240],
@@ -173,19 +192,27 @@ const PermintaanPage = () => {
         halign: "center",
       },
       columnStyles: {
-        0: { halign: "center" }, // kolom "No"
-        2: { halign: "center" }, // kolom "Vol."
+        0: { halign: "center" },
+        2: { halign: "center" },
       },
     });
 
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
-
     doc.setFont("helvetica", "normal");
-    doc.text("Menyetujui", centerX, finalY + 20, { align: "center" });
-    doc.addImage(ttdImage, "PNG", centerX - 15, finalY + 23, 30, 30);
+
+    const tanggalAcc = verif.tanggal_acc
+      ? formatTanggal(verif.tanggal_acc)
+      : "-";
+    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
+      align: "center",
+    });
+
+    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
     doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text("(Galih Wibowo)", centerX, finalY + 64, { align: "center" });
+    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -245,7 +272,6 @@ const PermintaanPage = () => {
       alert("Gagal update permintaan. Silakan coba lagi.");
     }
   };
-
 
   const handleDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus permintaan ini?")) {
@@ -364,7 +390,9 @@ const PermintaanPage = () => {
         <div className="mb-3">
           <h5>
             Halaman Bidang:{" "}
-            <span className="badge bg-primary">{selectedBidang.toUpperCase()}</span>
+            <span className="badge bg-primary">
+              {selectedBidang.toUpperCase()}
+            </span>
           </h5>
         </div>
       )}
@@ -511,10 +539,10 @@ const PermintaanPage = () => {
                 )}
               </tbody>
             </table>
-
           </div>
         ))
       )}
+      <canvas ref={barcodeCanvas} style={{ display: "none" }} />
     </div>
   );
 };

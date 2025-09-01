@@ -6,6 +6,7 @@ import iconMasuk from "../assets/masuk.png";
 import iconHabis from "../assets/habis.png";
 import iconMasih from "../assets/masih.png";
 import Swal from "sweetalert2";
+import sipbLogo from "../assets/2.png";
 
 // === LinkSidebar Component ===
 const LinkSidebar = () => {
@@ -321,7 +322,11 @@ const Sidebar = () => {
         id="staticBackdrop"
       >
         <div className="offcanvas-header">
-          <div className="fw-bold fs-2 text-white">SiPB</div>
+          <img
+            src={sipbLogo}
+            alt="SIPB Logo"
+            style={{ height: "80px", objectFit: "contain" }}
+          />
           <button
             type="button"
             className="btn-close"
@@ -329,6 +334,7 @@ const Sidebar = () => {
             aria-label="Close"
           ></button>
         </div>
+
         <div className="offcanvas-body">
           <LinkSidebar />
         </div>

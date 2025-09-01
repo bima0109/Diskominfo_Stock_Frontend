@@ -118,7 +118,7 @@ const LoginPage = () => {
             e.target.src = "https://placehold.co/80x80?text=No+Logo";
           }}
         />
-        <h1 style={styles.title}>Diskominfo</h1>
+        <h1 style={styles.title}>SIPB</h1>
         <div style={styles.subtitle}>Sign in to your account to continue</div>
       </div>
 
@@ -239,8 +239,8 @@ const LoginPage = () => {
 
 const styles = {
   container: {
-    minHeight: "40vh",
-    width: "100vw",
+    minHeight: "100vh",
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -252,21 +252,19 @@ const styles = {
   headerSection: {
     textAlign: "center",
     marginBottom: "20px",
-    paddingTop: "5px",
   },
   logo: {
-    width: "150px",
-    height: "150px",
+    width: "120px",
+    height: "120px",
     borderRadius: "50%",
     objectFit: "cover",
-    backgroundSize: "300px 300px",
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: "10px",
   },
   title: {
     margin: "0",
     fontWeight: "900",
-    fontSize: "32px",
+    fontSize: "28px",
     color: "white",
   },
   subtitle: {
@@ -276,11 +274,10 @@ const styles = {
   },
   innerContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    padding: "42px 36px",
+    padding: "32px 24px",
     borderRadius: "15px",
     width: "100%",
-    maxWidth: "700px",
-    maxHeight: "550px",
+    maxWidth: "420px",
     boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
     textAlign: "center",
     color: "white",
@@ -289,27 +286,28 @@ const styles = {
   form: {
     display: "flex",
     flexDirection: "column",
+    gap: "16px",
   },
   label: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    marginBottom: "8px",
-    fontSize: "14px",
     textAlign: "left",
+    fontSize: "14px",
     color: "white",
+    marginBottom: "4px",
   },
   input: {
     borderRadius: "10px",
     border: "1.5px solid rgba(255, 255, 255, 0.4)",
     outline: "none",
-    padding: "15px 15px",
-    width: "40.5vw",
+    padding: "14px",
+    width: "100%", // <- bikin responsif
     fontSize: "15px",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     color: "white",
-    transition: "border-color 0.3s ease",
-    marginTop: "0.5px",
+    transition: "all 0.3s ease",
+  },
+  inputFocus: {
+    borderColor: "#fff",
+    backgroundColor: "rgba(255,255,255,0.3)",
   },
   passwordWrapper: {
     position: "relative",
@@ -317,19 +315,16 @@ const styles = {
   },
   showPassButton: {
     position: "absolute",
-    right: "8px",
+    right: "12px",
     top: "50%",
     transform: "translateY(-50%)",
     background: "transparent",
     border: "none",
-    color: "white",
-    fontSize: "18px",
     cursor: "pointer",
-    userSelect: "none",
   },
   submitButton: {
-    marginTop: "24px",
-    padding: "12px 0",
+    marginTop: "8px",
+    padding: "14px 0",
     borderRadius: "10px",
     border: "none",
     backgroundColor: "white",
@@ -337,21 +332,15 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
     fontSize: "16px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "6px",
-    transition: "background-color 0.3s ease",
+    transition: "all 0.3s ease",
   },
-  footerIcon: {
-    marginTop: "2px",
-    fontSize: "22px",
-    opacity: 0.6,
+  submitButtonHover: {
+    backgroundColor: "#f0f0f0",
   },
   footerText: {
-    marginTop: "1px",
-    fontSize: "13px",
-    opacity: 0.5,
+    marginTop: "12px",
+    fontSize: "12px",
+    opacity: 0.6,
   },
 };
 
