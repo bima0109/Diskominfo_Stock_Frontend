@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { GetDataProses, SetVerifKabid } from "../Api/apiVerifikasi";
 import { UpdatePermintaan, DeletePermintaan } from "../Api/apiPermintaan";
-import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Swal from "sweetalert2";
 
 const romanMonths = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 const monthNames = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -56,53 +56,38 @@ const VerifKabidPage = () => {
   const [availableYears, setAvailableYears] = useState([]);
 
   const handleUpdate = async (item, parentId) => {
-    const { value: formValues } = await Swal.fire({
-      title: "Update Permintaan",
-      html: `
-        <input id="jumlah" type="number" min="1" class="swal2-input" placeholder="Jumlah Baru" value="${item.jumlah}">
-        <input id="keterangan" type="text" class="swal2-input" placeholder="Keterangan Baru" value="${item.ketKabid || ""}">
-      `,
-      focusConfirm: false,
-      showCancelButton: true,
-      preConfirm: () => {
-        const jumlah = document.getElementById("jumlah").value;
-        const keterangan = document.getElementById("keterangan").value;
-        if (!jumlah || !keterangan) {
-          Swal.showValidationMessage("Semua field wajib diisi");
-        }
-        return { jumlah, keterangan };
-      }
-    });
+    const jumlah = prompt("Masukkan Jumlah Baru:", item.jumlah);
+    if (jumlah === null) return;
 
-    if (!formValues) return;
+    const keterangan = prompt("Masukkan Keterangan Baru:", item.ketKabid || "");
+    if (keterangan === null) return;
 
     try {
       await UpdatePermintaan(item.id, {
-        jumlah: formValues.jumlah,
-        ketKabid: formValues.keterangan,
+        jumlah,
+        ketKabid: keterangan,
       });
 
       Swal.fire("Berhasil", "Permintaan berhasil diperbarui.", "success");
-
       const result = await GetDataProses();
       setVerifikasiData(result);
     } catch (error) {
       console.error("Gagal update permintaan:", error);
-      Swal.fire("Error", "Gagal update permintaan.", "error");
+      Swal.fire("Gagal", "Gagal update permintaan.", "error");
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: "Hapus Permintaan?",
-      text: "Data permintaan akan dihapus permanen.",
+    const confirm = await Swal.fire({
+      title: "Yakin hapus?",
+      text: "Data yang sudah dihapus tidak bisa dikembalikan.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Ya, hapus",
       cancelButtonText: "Batal",
     });
 
-    if (!result.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
       await DeletePermintaan(id);
@@ -111,13 +96,13 @@ const VerifKabidPage = () => {
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Gagal menghapus permintaan.", "error");
+      Swal.fire("Gagal", "Gagal menghapus permintaan.", "error");
     }
   };
 
   const handleVerifikasi = async (verifId) => {
-    const result = await Swal.fire({
-      title: "Verifikasi Pengajuan?",
+    const confirm = await Swal.fire({
+      title: "Konfirmasi",
       text: "Apakah Anda yakin ingin memverifikasi pengajuan ini?",
       icon: "question",
       showCancelButton: true,
@@ -125,7 +110,7 @@ const VerifKabidPage = () => {
       cancelButtonText: "Batal",
     });
 
-    if (!result.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
       await SetVerifKabid(verifId);
@@ -134,7 +119,7 @@ const VerifKabidPage = () => {
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Verifikasi gagal.", "error");
+      Swal.fire("Gagal", "Verifikasi gagal.", "error");
     }
   };
 
@@ -160,7 +145,7 @@ const VerifKabidPage = () => {
         });
         setFilteredData(initialFiltered);
       } catch (err) {
-        Swal.fire("Error", "Gagal mengambil data", "error");
+        Swal.fire("Gagal", "Gagal mengambil data", "error");
         console.error(err);
       }
     };
@@ -180,7 +165,7 @@ const VerifKabidPage = () => {
           TIDAK ADA DATA TERSEDIA
         </div>
       ) : (
-        filteredData.map((verif, idx) => (
+        filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
             <table className="table table-bordered">
               <thead className="table-light">

@@ -87,19 +87,19 @@ const RecordSekrePage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const barcodeCanvas = useRef(null);
 
-  // ✅ Tambah state untuk pagination
+  
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // jumlah data per halaman
+  const itemsPerPage = 5;
 
   const handleCetak = (verif) => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
-    // link yang ingin diarahkan saat scan barcode
+    
     const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
 
-    // generate barcode di canvas hidden
+    
     JsBarcode(barcodeCanvas.current, pdfUrl, {
       format: "CODE128",
       displayValue: false,
@@ -205,7 +205,7 @@ const RecordSekrePage = () => {
     fetchData();
   }, []);
 
-  // ✅ Logic pagination
+ 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
@@ -323,7 +323,7 @@ const RecordSekrePage = () => {
             </div>
           ))}
 
-          {/* ✅ Pagination Controls */}
+        
           <div className="mt-4">
             <nav>
               <ul className="pagination">

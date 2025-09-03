@@ -312,7 +312,10 @@ const RecordSekrePage = () => {
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
+
     const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
+
+    // generate barcode di canvas hidden
     JsBarcode(barcodeCanvas.current, pdfUrl, {
       format: "CODE128",
       displayValue: false,
@@ -325,10 +328,10 @@ const RecordSekrePage = () => {
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.addImage(kopsurat, "PNG", 15, 12, 20, 20);
+    doc.addImage(kopsurat, "PNG", 15, 12, 25, 25);
     doc.setFont("helvetica", "bold");
-    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 40, 20);
-    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
+    doc.text("DINAS KOMUNIKASI DAN INFORMATIKA", 43, 20);
+    doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 43, 27);
     doc.setFontSize(14);
     doc.text("Form Permintaan Barang", 70, 40);
     doc.setFontSize(11);
@@ -349,23 +352,53 @@ const RecordSekrePage = () => {
 
     autoTable(doc, {
       startY: 68,
-      head: [["No", "Nama Barang", "Jumlah", "Satuan", "Ket Kabid", "Ket Sekre", "Ket PPTK"]],
+      head: [
+        [
+          "No",
+          "Nama Barang",
+          "Jumlah",
+          "Satuan",
+          "Ket Kabid",
+          "Ket Sekre",
+          "Ket PPTK",
+        ],
+      ],
       body: tableData,
-      styles: { fontSize: 10, halign: "left", valign: "middle", textColor: [0, 0, 0] },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], halign: "center" },
-      columnStyles: { 0: { halign: "center" }, 2: { halign: "center" } },
+      styles: {
+        fontSize: 10,
+        lineWidth: 0.1,
+        lineColor: [0, 0, 0],
+        halign: "left",
+        valign: "middle",
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        halign: "center",
+      },
+      columnStyles: {
+        0: { halign: "center" },
+        2: { halign: "center" },
+      },
     });
 
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
 
-    const tanggalAcc = verif.tanggal_acc ? formatTanggal(verif.tanggal_acc) : "-";
-    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, { align: "center" });
+    const tanggalAcc = verif.tanggal_acc
+      ? formatTanggal(verif.tanggal_acc)
+      : "-";
+    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
+      align: "center",
+    });
 
     doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
     doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, { align: "center" });
+    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
+      align: "center",
+    });
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
