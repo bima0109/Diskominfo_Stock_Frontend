@@ -108,6 +108,18 @@ const LoginPage = () => {
 
   return (
     <div style={styles.container}>
+      <style>
+        {`
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="password"]::-webkit-clear-button,
+        input[type="password"]::-webkit-inner-spin-button,
+        input[type="password"]::-webkit-textfield-decoration-container {
+          display: none !important;
+          appearance: none;
+        }
+      `}
+      </style>
       <div style={styles.headerSection}>
         <img
           src={logoJateng}
@@ -299,7 +311,7 @@ const styles = {
     border: "1.5px solid rgba(255, 255, 255, 0.4)",
     outline: "none",
     padding: "14px",
-    width: "100%", // <- bikin responsif
+    width: "100%",
     fontSize: "15px",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     color: "white",
@@ -311,7 +323,8 @@ const styles = {
   },
   passwordWrapper: {
     position: "relative",
-    display: "flex",
+    // display: "flex",
+    width: "100%"
   },
   showPassButton: {
     position: "absolute",

@@ -425,10 +425,14 @@ const PermintaanPage = () => {
                   <th style={{ width: "15%" }}>No Surat</th>
                   <th style={{ width: "18%" }}>Nama Barang</th>
                   <th style={{ width: "6%" }}>Jumlah</th>
-                  <th className="text-center" style={{ width: "7%" }}>
-                    Jumlah Stock
-                  </th>
+                  {verif.status !== "ACC PPTK SEKRETARIAT" && (
+                    <th className="text-center" style={{ width: "7%" }}>
+                      Jumlah Stock
+                    </th>
+                  )}
                   <th style={{ width: "8%" }}>Satuan</th>
+                  <th style={{ width: "8%" }}>Harga Satuan</th>
+                  <th style={{ width: "10%" }}>Total Harga</th>
                   <th style={{ width: "10%" }}>Ket. Super</th>
                   <th style={{ width: "10%" }}>Ket. Kabid</th>
                   <th style={{ width: "10%" }}>Ket. Sekretaris</th>
@@ -439,68 +443,89 @@ const PermintaanPage = () => {
                       <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
                     </>
                   )}
-                  <th style={{ width: "12%" }}>Action</th>
+                  {verif.status !== "ACC PPTK SEKRETARIAT" && (
+                    <th style={{ width: "12%" }}>Action</th>
+                  )}
                   <th style={{ width: "10%" }}>Progres</th>
                 </tr>
               </thead>
 
               <tbody>
                 {verif.permintaans.length > 0 ? (
-                  verif.permintaans.map((item, i) => (
-                    <tr key={item.id}>
-                      <td className="text-center">{i + 1}</td>
+                  verif.permintaans.map((item, i) => {
+                    const totalHarga = item.harga * item.jumlah;
+                    return (
+                      <tr key={item.id}>
+                        <td className="text-center">{i + 1}</td>
 
-                      {/* Tanggal Pengajuan */}
-                      {i === 0 && (
-                        <td
-                          rowSpan={verif.permintaans.length}
-                          className="text-center align-top"
-                        >
-                          {formatTanggal(verif.tanggal)}
-                        </td>
-                      )}
-
-                      {/* No Surat */}
-                      {i === 0 && (
-                        <td
-                          rowSpan={verif.permintaans.length}
-                          className="text-center align-top"
-                        >
-                          {formatNoSurat(verif.id, verif.tanggal)}
-                        </td>
-                      )}
-
-                      <td>{item.nama_barang}</td>
-                      <td className="text-center">{item.jumlah}</td>
-                      <td className="text-center">{item.jumlah_stock}</td>
-                      <td className="text-center">{item.satuan || "-"}</td>
-                      <td>{item.ketSuper}</td>
-                      <td>{item.ketKabid}</td>
-                      <td>{item.ketSekre}</td>
-                      <td>{item.ketPptk}</td>
-
-                      {/* Menyetujui + Tanggal Penyetujuan */}
-                      {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
-                        <>
+                        {/* Tanggal Pengajuan */}
+                        {i === 0 && (
                           <td
                             rowSpan={verif.permintaans.length}
                             className="text-center align-top"
                           >
-                            {verif.menyetujui}
+                            {formatTanggal(verif.tanggal)}
                           </td>
+                        )}
+
+                        {/* No Surat */}
+                        {i === 0 && (
                           <td
                             rowSpan={verif.permintaans.length}
                             className="text-center align-top"
                           >
-                            {formatTanggalAcc(verif.tanggal_acc)}
+                            {formatNoSurat(verif.id, verif.tanggal)}
                           </td>
-                        </>
-                      )}
+                        )}
 
-                      {/* Action */}
-                      <td className="text-center">
-                        {verif.status !== "ACC PPTK SEKRETARIAT" ? (
+                        <td>{item.nama_barang}</td>
+                        <td className="text-center">{item.jumlah}</td>
+                        {verif.status !== "ACC PPTK SEKRETARIAT" && (
+                          <td className="text-center">{item.jumlah_stock}</td>
+                        )}
+                        <td className="text-center">{item.satuan || "-"}</td>
+                        <td className="text-center">
+                          {item.harga
+                            ? new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                            }).format(item.harga)
+                            : "-"}
+                        </td>
+                        <td className="text-center">
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          }).format(totalHarga)}
+                        </td>
+
+                        <td>{item.ketSuper}</td>
+                        <td>{item.ketKabid}</td>
+                        <td>{item.ketSekre}</td>
+                        <td>{item.ketPptk}</td>
+
+                        {/* Menyetujui + Tanggal Penyetujuan */}
+                        {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
                           <>
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
+                              {verif.menyetujui}
+                            </td>
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
+                              {formatTanggalAcc(verif.tanggal_acc)}
+                            </td>
+                          </>
+                        )}
+
+                        {verif.status !== "ACC PPTK SEKRETARIAT" && (
+                          <td className="text-center">
                             <button
                               className="btn btn-sm btn-warning me-1"
                               onClick={() => handleUpdate(item)}
@@ -513,23 +538,21 @@ const PermintaanPage = () => {
                             >
                               <i className="bi bi-trash" />
                             </button>
-                          </>
-                        ) : (
-                          <span className="fw-bold text">DITERIMA</span>
+                          </td>
                         )}
-                      </td>
 
-                      {/* Progres */}
-                      {i === 0 && (
-                        <td
-                          rowSpan={verif.permintaans.length}
-                          className="text-center align-top"
-                        >
-                          {renderStatusProgress(verif.status)}
-                        </td>
-                      )}
-                    </tr>
-                  ))
+                        {/* Progres */}
+                        {i === 0 && (
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
+                            {renderStatusProgress(verif.status)}
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="12" className="text-center">
@@ -538,7 +561,32 @@ const PermintaanPage = () => {
                   </tr>
                 )}
               </tbody>
+
+              {/* Total Keseluruhan */}
+              {verif.permintaans.length > 0 && (
+                <tfoot>
+                  <tr>
+                    <td colSpan={9} className="text-end fw-bold">
+                      Total Keseluruhan
+                    </td>
+                    <td className="text-center fw-bold">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(
+                        verif.permintaans.reduce(
+                          (sum, item) => sum + item.harga * item.jumlah,
+                          0
+                        )
+                      )}
+                    </td>
+                    <td colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 5 : 4}></td>
+                  </tr>
+                </tfoot>
+              )}
             </table>
+
           </div>
         ))
       )}
