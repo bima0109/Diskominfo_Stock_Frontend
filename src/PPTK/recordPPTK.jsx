@@ -87,7 +87,6 @@ const RecordSekrePage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const barcodeCanvas = useRef(null);
 
-  
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -96,10 +95,8 @@ const RecordSekrePage = () => {
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
-    
     const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
 
-    
     JsBarcode(barcodeCanvas.current, pdfUrl, {
       format: "CODE128",
       displayValue: false,
@@ -170,19 +167,19 @@ const RecordSekrePage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
+    const leftX = centerX - 30 + 28.35;
 
     const tanggalAcc = verif.tanggal_acc
       ? formatTanggal(verif.tanggal_acc)
       : "-";
-    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
-      align: "center",
-    });
 
-    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
-    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
-      align: "center",
-    });
+    // Teks rata kiri sejajar PNG
+    doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
+
+    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+
+    doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
+    doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -205,7 +202,6 @@ const RecordSekrePage = () => {
     fetchData();
   }, []);
 
- 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
@@ -323,7 +319,6 @@ const RecordSekrePage = () => {
             </div>
           ))}
 
-        
           <div className="mt-4">
             <nav>
               <ul className="pagination">
@@ -349,8 +344,9 @@ const RecordSekrePage = () => {
                   </li>
                 ))}
                 <li
-                  className={`page-item ${currentPage === totalPages && "disabled"
-                    }`}
+                  className={`page-item ${
+                    currentPage === totalPages && "disabled"
+                  }`}
                 >
                   <button
                     className="page-link"

@@ -7,7 +7,21 @@ import autoTable from "jspdf-autotable";
 import kopsurat from "../assets/kopsurat.png";
 import JsBarcode from "jsbarcode";
 
-const romanMonths = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+const romanMonths = [
+  "",
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+  "XI",
+  "XII",
+];
 
 const formatNoSurat = (id, tanggal) => {
   const date = new Date(tanggal);
@@ -29,7 +43,12 @@ const formatTanggalAcc = (tanggal_acc) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
-const allStatuses = ["DIPROSES", "ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"];
+const allStatuses = [
+  "DIPROSES",
+  "ACC KABID",
+  "ACC SEKRETARIS",
+  "ACC PPTK SEKRETARIAT",
+];
 
 const renderStatusProgress = (currentStatus) => (
   <div className="d-flex flex-column gap-1">
@@ -37,11 +56,20 @@ const renderStatusProgress = (currentStatus) => (
       let badgeClass = "bg-secondary";
       if (status === currentStatus) {
         switch (status) {
-          case "DIPROSES": badgeClass = "bg-info text-dark"; break;
-          case "ACC KABID": badgeClass = "bg-warning text-dark"; break;
-          case "ACC SEKRETARIS": badgeClass = "bg-primary"; break;
-          case "ACC PPTK SEKRETARIAT": badgeClass = "bg-success"; break;
-          default: badgeClass = "bg-secondary";
+          case "DIPROSES":
+            badgeClass = "bg-info text-dark";
+            break;
+          case "ACC KABID":
+            badgeClass = "bg-warning text-dark";
+            break;
+          case "ACC SEKRETARIS":
+            badgeClass = "bg-primary";
+            break;
+          case "ACC PPTK SEKRETARIAT":
+            badgeClass = "bg-success";
+            break;
+          default:
+            badgeClass = "bg-secondary";
         }
       }
       return (
@@ -63,7 +91,6 @@ const RecordPage = () => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
-
 
     const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
 
@@ -138,19 +165,19 @@ const RecordPage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
+    const leftX = centerX - 30 + 28.35;
 
     const tanggalAcc = verif.tanggal_acc
       ? formatTanggal(verif.tanggal_acc)
       : "-";
-    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
-      align: "center",
-    });
 
-    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
-    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
-      align: "center",
-    });
+    // Teks rata kiri sejajar PNG
+    doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
+
+    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+
+    doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
+    doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -163,7 +190,9 @@ const RecordPage = () => {
         const result = await GetVerifikasiByBidang();
         const filtered = result
           .filter((item) =>
-            ["ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"].includes(item.status)
+            ["ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"].includes(
+              item.status
+            )
           )
           .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
         setFilteredData(filtered);
@@ -186,14 +215,19 @@ const RecordPage = () => {
       <canvas ref={barcodeCanvas} style={{ display: "none" }} />
 
       {filteredData.length === 0 ? (
-        <div className="alert alert-warning text-center mt-4">TIDAK ADA DATA YANG TERSEDIA</div>
+        <div className="alert alert-warning text-center mt-4">
+          TIDAK ADA DATA YANG TERSEDIA
+        </div>
       ) : (
         <>
           {currentData.map((verif) => (
             <div className="mb-5" key={verif.id}>
               {verif.status === "ACC PPTK SEKRETARIAT" && (
                 <div className="d-flex justify-content-end mb-2">
-                  <button className="btn btn-outline-success" onClick={() => handleCetak(verif)}>
+                  <button
+                    className="btn btn-outline-success"
+                    onClick={() => handleCetak(verif)}
+                  >
                     <i className="bi bi-printer me-1" /> Cetak
                   </button>
                 </div>
@@ -217,7 +251,9 @@ const RecordPage = () => {
                         <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
                       </>
                     )}
-                    <th className="text-center" style={{ width: "10%" }}>Progres</th>
+                    <th className="text-center" style={{ width: "10%" }}>
+                      Progres
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -226,12 +262,18 @@ const RecordPage = () => {
                       <tr key={item.id}>
                         <td className="text-center">{i + 1}</td>
                         {i === 0 && (
-                          <td rowSpan={verif.permintaans.length} className="text-center align-top">
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
                             {formatTanggal(verif.tanggal)}
                           </td>
                         )}
                         {i === 0 && (
-                          <td rowSpan={verif.permintaans.length} className="text-center align-top">
+                          <td
+                            rowSpan={verif.permintaans.length}
+                            className="text-center align-top"
+                          >
                             {formatNoSurat(verif.id, verif.tanggal)}
                           </td>
                         )}
@@ -243,10 +285,16 @@ const RecordPage = () => {
                         <td>{item.ketPptk}</td>
                         {verif.status === "ACC PPTK SEKRETARIAT" && i === 0 && (
                           <>
-                            <td rowSpan={verif.permintaans.length} className="text-center align-top">
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
                               {verif.menyetujui}
                             </td>
-                            <td rowSpan={verif.permintaans.length} className="text-center align-top">
+                            <td
+                              rowSpan={verif.permintaans.length}
+                              className="text-center align-top"
+                            >
                               {formatTanggalAcc(verif.tanggal_acc)}
                             </td>
                           </>
@@ -260,7 +308,9 @@ const RecordPage = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="8" className="text-center">Tidak ada permintaan</td>
+                      <td colSpan="8" className="text-center">
+                        Tidak ada permintaan
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -272,20 +322,40 @@ const RecordPage = () => {
           <div className="mt-4">
             <nav>
               <ul className="pagination">
-                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                  <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
                     Previous
                   </button>
                 </li>
                 {Array.from({ length: totalPages }, (_, i) => (
-                  <li key={i} className={`page-item ${currentPage === i + 1 ? "active" : ""}`}>
-                    <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                  <li
+                    key={i}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(i + 1)}
+                    >
                       {i + 1}
                     </button>
                   </li>
                 ))}
-                <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                  <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
                     Next
                   </button>
                 </li>

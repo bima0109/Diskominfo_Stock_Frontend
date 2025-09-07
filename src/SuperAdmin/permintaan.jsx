@@ -200,19 +200,19 @@ const PermintaanPage = () => {
     const finalY = doc.lastAutoTable?.finalY ?? 90;
     const centerX = 105;
     doc.setFont("helvetica", "normal");
+    const leftX = centerX - 30 + 28.35;
 
     const tanggalAcc = verif.tanggal_acc
       ? formatTanggal(verif.tanggal_acc)
       : "-";
-    doc.text(`Semarang, ${tanggalAcc}`, centerX, finalY + 20, {
-      align: "center",
-    });
 
-    doc.addImage(barcodeDataUrl, "PNG", centerX - 30, finalY + 25, 60, 20);
-    doc.text("PPTK SEKRETARIAT", centerX, finalY + 56, { align: "center" });
-    doc.text(`(${verif.menyetujui || "-"})`, centerX, finalY + 64, {
-      align: "center",
-    });
+    // Teks rata kiri sejajar PNG
+    doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
+
+    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+
+    doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
+    doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
 
     const blob = doc.output("blob");
     const url = URL.createObjectURL(blob);
@@ -487,10 +487,10 @@ const PermintaanPage = () => {
                         <td className="text-center">
                           {item.harga
                             ? new Intl.NumberFormat("id-ID", {
-                              style: "currency",
-                              currency: "IDR",
-                              minimumFractionDigits: 0,
-                            }).format(item.harga)
+                                style: "currency",
+                                currency: "IDR",
+                                minimumFractionDigits: 0,
+                              }).format(item.harga)
                             : "-"}
                         </td>
                         <td className="text-center">
@@ -566,7 +566,10 @@ const PermintaanPage = () => {
               {verif.permintaans.length > 0 && (
                 <tfoot>
                   <tr>
-                    <td colSpan={9} className="text-end fw-bold">
+                    <td
+                      colSpan={verif.status !== "ACC PPTK SEKRETARIAT" ? 8 : 7}
+                      className="text-end fw-bold"
+                    >
                       Total Keseluruhan
                     </td>
                     <td className="text-center fw-bold">
@@ -581,12 +584,18 @@ const PermintaanPage = () => {
                         )
                       )}
                     </td>
-                    <td colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 5 : 4}></td>
+                    <td
+                      colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 6 : 5}
+                      className="border-end"
+                    ></td>
+                    <td
+                      colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 6 : 5}
+                      className="border-end"
+                    ></td>
                   </tr>
                 </tfoot>
               )}
             </table>
-
           </div>
         ))
       )}

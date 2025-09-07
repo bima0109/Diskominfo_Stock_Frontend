@@ -205,8 +205,8 @@ const StockOpnamePage = () => {
                 <th className="text-start">Nama Barang</th>
                 <th className="text-center">Jumlah</th>
                 <th className="text-center">Satuan</th>
-                <th className="text-center">Harga Satuan (Rp.)</th>
-                <th className="text-center">Total (Rp.)</th>
+                <th className="text-center">Harga Satuan</th>
+                <th className="text-center">Total </th>
                 <th className="text-center">Bulan</th>
                 <th className="text-center">Tahun</th>
                 <th className="text-center">Aksi</th>
@@ -215,12 +215,30 @@ const StockOpnamePage = () => {
             <tbody>
               {paginatedStock.map((item, i) => (
                 <tr key={i}>
-                  <td className="text-center">{(currentPage - 1) * itemsPerPage + i + 1}</td>
+                  <td className="text-center">
+                    {(currentPage - 1) * itemsPerPage + i + 1}
+                  </td>
                   <td className="text-start">{item.nama_barang}</td>
                   <td className="text-center">{item.Jumlah}</td>
                   <td className="text-center">{item.satuan}</td>
-                  <td className="text-center">{item["Harga Satuan"]}</td>
-                  <td className="text-center">{item.Jumlah * parseFloat(item["Harga Satuan"] || 0)}</td>
+                  <td className="text-center">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(item["Harga Satuan"])}
+                  </td>
+
+                  <td className="text-center">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(
+                      item.Jumlah * parseFloat(item["Harga Satuan"] || 0)
+                    )}
+                  </td>
+
                   <td className="text-center">{item.bulan}</td>
                   <td className="text-center">{item.tahun}</td>
                   <td className="text-center">
@@ -248,8 +266,9 @@ const StockOpnamePage = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <li
                   key={i}
-                  className={`page-item ${currentPage === i + 1 ? "active" : ""
-                    }`}
+                  className={`page-item ${
+                    currentPage === i + 1 ? "active" : ""
+                  }`}
                 >
                   <button
                     className="page-link"
