@@ -183,6 +183,7 @@ const HabisPage = () => {
               <th>Nama</th>
               <th className="text-center">Jumlah</th>
               <th className="text-center">Satuan</th>
+              <th className="text-center">Harga</th>
               <th className="text-center">Tanggal</th>
             </tr>
           </thead>
@@ -193,6 +194,15 @@ const HabisPage = () => {
                 <td>{item.nama_barang}</td>
                 <td className="text-center">{item.jumlah}</td>
                 <td className="text-center">{item.satuan}</td>
+                <td className="text-center">
+                  {item.harga
+                    ? new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(item.harga)
+                    : "-"}
+                </td>
                 <td className="text-center">
                   {formatTanggalIndo(item.tanggal)}
                 </td>

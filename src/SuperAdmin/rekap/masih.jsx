@@ -182,22 +182,60 @@ const MasihPage = () => {
               <th>Nama</th>
               <th className="text-center">Jumlah</th>
               <th className="text-center">Satuan</th>
+              <th className="text-center">Harga Satuan</th>
+              <th className="text-center">Total Harga</th>
               <th className="text-center">Tanggal</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item, idx) => (
-              <tr key={item.id || idx}>
-                <td className="text-center">{idx + 1}</td>
-                <td>{item.nama_barang}</td>
-                <td className="text-center">{item.jumlah}</td>
-                <td className="text-center">{item.satuan}</td>
-                <td className="text-center">
-                  {formatTanggalIndo(item.tanggal)}
-                </td>
-              </tr>
-            ))}
+            {filteredData.map((item, idx) => {
+              const totalHarga = item.jumlah * item.harga;
+              return (
+                <tr key={item.id || idx}>
+                  <td className="text-center">{idx + 1}</td>
+                  <td>{item.nama_barang}</td>
+                  <td className="text-center">{item.jumlah}</td>
+                  <td className="text-center">{item.satuan}</td>
+                  <td className="text-center">
+                    {item.harga
+                      ? new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(item.harga)
+                      : "-"}
+                  </td>
+                  <td className="text-center">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(totalHarga)}
+                  </td>
+                  <td className="text-center">{formatTanggalIndo(item.tanggal)}</td>
+                </tr>
+              );
+            })}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="5" className="text-end fw-bold">
+                Total Keseluruhan:
+              </td>
+              <td className="text fw-bold" colSpan="2">
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                }).format(
+                  filteredData.reduce(
+                    (acc, item) => acc + item.jumlah * item.harga,
+                    0
+                  )
+                )}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       )}
     </div>
