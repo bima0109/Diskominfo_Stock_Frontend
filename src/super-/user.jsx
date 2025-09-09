@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  GetAllUsers,
+  GetUsers,
   CreateUser,
   UpdateUser,
   DeleteUser,
@@ -18,7 +18,6 @@ const mockRoles = [
   { id: 3, nama: "PPTK SEKRETARIAT" },
   { id: 4, nama: "KABID" },
   { id: 5, nama: "SEKRETARIS" },
-  { id: 6, nama: "MASTERADMIN" },
 ];
 
 const mockBidangs = [
@@ -30,7 +29,7 @@ const mockBidangs = [
   { id: 6, nama: "Statistik" },
 ];
 
-const UserPage = () => {
+const UserSuperPage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -58,7 +57,7 @@ const UserPage = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await GetAllUsers();
+      const data = await GetUsers();
       setUsers(data);
     } catch (error) {
       Swal.fire("Error", "Gagal mengambil data user", "error");
@@ -497,4 +496,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default UserSuperPage;

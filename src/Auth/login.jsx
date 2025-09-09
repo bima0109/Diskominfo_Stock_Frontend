@@ -72,8 +72,8 @@ const LoginPage = () => {
 
         setTimeout(() => {
           switch (user.role.nama) {
-            case "SUPERADMIN":
-              navigate("super/dashboard-super");
+            case "MASTERADMIN":
+              navigate("master/dashboard-master");
               break;
             case "ADMIN":
               navigate("admin/dashboard-admin");
@@ -86,6 +86,9 @@ const LoginPage = () => {
               break;
             case "SEKRETARIS":
               navigate("sekretaris/dashboard-sekre");
+              break;
+            case "SUPERADMIN" :
+              navigate("super/dashboard-super");
               break;
             default:
               Swal.fire("Role tidak dikenali.", "", "warning");

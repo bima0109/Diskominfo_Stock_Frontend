@@ -19,6 +19,65 @@ const LinkSidebar = () => {
 
   return (
     <div className="d-flex flex-column h-100 gap-3">
+      {role === "MASTERADMIN" && (
+        <>
+          <PencetanSidebar
+            arah="/master/index-stok-opname/"
+            nama="Data Stock Opname"
+            linkGambar="https://img.icons8.com/?size=100&id=iPqKoSmxmAyJ&format=png&color=000000"
+          />
+
+          <PencetanSidebar
+            arah="/master/bidang/"
+            nama="Bidang"
+            linkGambar="https://img.icons8.com/?size=100&id=13547&format=png&color=000000"
+          />
+
+          <PencetanSidebar
+            arah="/master/user/"
+            nama="Manajemen User"
+            linkGambar="https://img.icons8.com/?size=100&id=13042&format=png&color=000000"
+          />
+
+          {/* Rekap menu */}
+          <div
+            onClick={toggleRekap}
+            style={{ cursor: "pointer" }}
+            className="d-flex align-items-center gap-2 text-white link-side mt-2"
+          >
+            <img
+              src="https://img.icons8.com/?size=100&id=13760&format=png&color=000000"
+              alt=""
+              width="30"
+            />
+            Rekap
+          </div>
+
+          {/* Submenu Rekap */}
+          {showRekapSubmenu && (
+            <div className="ps-4 d-flex flex-column gap-1">
+              <PencetansubSidebar
+                arah="/master/masuk/"
+                nama="Barang Masuk"
+                linkGambar={iconMasuk}
+              />
+
+              <PencetansubSidebar
+                arah="/master/habis/"
+                nama="Barang Habis"
+                linkGambar={iconHabis}
+              />
+
+              <PencetansubSidebar
+                arah="/master/masih/"
+                nama="Barang Masih"
+                linkGambar={iconMasih}
+              />
+            </div>
+          )}
+        </>
+      )}
+
       {role === "SUPERADMIN" && (
         <>
           <PencetanSidebar

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Bidang.css"; // opsional untuk styling hover
+import "./Bidang.css";
 import IKP from "../assets/bidang/ikp.png";
 import PDKI from "../assets/bidang/pdki.png";
 import SEKRE from "../assets/bidang/sekretariat.jpg";
@@ -37,11 +37,11 @@ const bidangList = [
   },
 ];
 
-const Bidang = () => {
+const BidangSuper = () => {
   const navigate = useNavigate();
 
   const handleClick = (bidangName) => {
-    navigate("/master/permintaan", { state: { selectedBidang: bidangName } });
+    navigate("/super/permintaan", { state: { selectedBidang: bidangName } });
   };
 
   return (
@@ -87,4 +87,4 @@ const Bidang = () => {
   );
 };
 
-export default Bidang;
+export default BidangSuper;

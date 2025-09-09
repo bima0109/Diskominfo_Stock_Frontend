@@ -17,6 +17,9 @@ import UserPage from "../SuperAdmin/user.jsx";
 import MasukPage from "../SuperAdmin/rekap/masuk.jsx";
 import MasihPage from "../SuperAdmin/rekap/masih.jsx";
 import HabisPage from "../SuperAdmin/rekap/habis.jsx";
+import UserSuperPage from "../super-/user.jsx";
+import BidangSuper from "../super-/bidang.jsx";
+import PermintaanSuperPage from "../super-/permintaan.jsx";
 
 //Import admin components
 import AdminPage from "../Admin/admin.jsx";
@@ -37,6 +40,7 @@ import RecordSekrePage from "../Sekretaris/recordSekre.jsx";
 import VerifPPTKPage from "../PPTK/verifPPTK.jsx";
 import RecordPPTKPage from "../PPTK/recordPPTK.jsx";
 import RekapTahunanPage from "../Admin/tahunan.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -60,13 +64,13 @@ const router = createBrowserRouter([
     ],
   },
 
-  //Super Admin
+  //Master Admin
   {
-    path: "/super",
+    path: "/master",
     element: <Layout />,
     children: [
       {
-        path: "dashboard-super",
+        path: "dashboard-master",
         element: <BlankPage />,
       },
       {
@@ -84,6 +88,46 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <UserPage />,
+      },
+      {
+        path: "masuk",
+        element: <MasukPage />,
+      },
+      {
+        path: "masih",
+        element: <MasihPage />,
+      },
+      {
+        path: "habis",
+        element: <HabisPage />,
+      },
+    ],
+  },
+
+  //Super Admin
+  {
+    path: "/super",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard-super",
+        element: <BlankPage />,
+      },
+      {
+        path: "index-stok-opname",
+        element: <StockOpnamePage />,
+      },
+      {
+        path: "permintaan",
+        element: <PermintaanSuperPage />,
+      },
+      {
+        path: "bidang",
+        element: <BidangSuper />,
+      },
+      {
+        path: "user",
+        element: <UserSuperPage />,
       },
       {
         path: "masuk",

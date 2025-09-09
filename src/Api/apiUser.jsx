@@ -14,6 +14,20 @@ export const GetAllUsers = async () => {
   }
 };
 
+export const GetUsers = async () => {
+  try {
+    const response = await useAxios.get("/users-master", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
 // Tambah user baru
 export const CreateUser = async (value) => {
   try {
