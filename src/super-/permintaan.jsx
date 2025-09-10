@@ -109,11 +109,6 @@ const renderStatusProgress = (currentStatus) => {
   );
 };
 
-const jumlahStockColumn = verif.status !== "ACC PPTK SEKRETARIAT" ? 1 : 0;
-const menyetujuiColumns = verif.status === "ACC PPTK SEKRETARIAT" ? 2 : 0;
-const actionColumn = verif.status !== "ACC PPTK SEKRETARIAT" ? 1 : 0;
-const totalColumns = 9 + jumlahStockColumn + menyetujuiColumns + actionColumn + 1;
-
 const PermintaanSuperPage = () => {
   const today = new Date();
   const [verifikasiData, setVerifikasiData] = useState([]);
@@ -226,10 +221,10 @@ const PermintaanSuperPage = () => {
 
   const handleUpdate = async (item) => {
     const newJumlah = prompt("Masukkan jumlah baru:", item.jumlah);
-    // const newKeterangan = prompt("Masukkan keterangan baru:", item.ketSuper);
+    const newKeterangan = prompt("Masukkan keterangan baru:", item.ketSuper);
 
     // Validate user inputs
-    if (newJumlah === null) {
+    if (newJumlah === null || newKeterangan === null) {
       return; // Exit if the user cancels the prompt
     }
 
@@ -240,16 +235,16 @@ const PermintaanSuperPage = () => {
     }
 
     // If no keterangan is entered, use the existing value
-    // if (!newKeterangan.trim()) {
-    //   alert("Keterangan tidak boleh kosong.");
-    //   return;
-    // }
+    if (!newKeterangan.trim()) {
+      alert("Keterangan tidak boleh kosong.");
+      return;
+    }
 
     try {
       // Make the API call to update the data
       await UpdatePermintaan(item.id, {
         jumlah: newJumlah,
-        // ketSuper: newKeterangan,
+        ketSuper: newKeterangan,
       });
 
       alert("Berhasil update permintaan.");
@@ -262,7 +257,7 @@ const PermintaanSuperPage = () => {
             ...verif,
             permintaans: verif.permintaans.map((permintaan) =>
               permintaan.id === item.id
-                ? { ...permintaan, jumlah: newJumlah }
+                ? { ...permintaan, jumlah: newJumlah, ketSuper: newKeterangan }
                 : permintaan
             ),
           };
@@ -422,8 +417,10 @@ const PermintaanSuperPage = () => {
               </div>
             )}
 
-            <table className="table table-bordered align-middle">
-              <thead className="table-light text-center">
+            <table className="table table-bordered align-middle"
+              style={{ fontSize: "13px" }}
+            >
+              <thead className="table-light text-center" style={{ fontSize: "13px" }}>
                 <tr>
                   <th style={{ width: "3%" }}>No</th>
                   <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
@@ -455,7 +452,7 @@ const PermintaanSuperPage = () => {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody style={{ fontSize: "13px" }}>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => {
                     const totalHarga = item.harga * item.jumlah;
@@ -560,11 +557,10 @@ const PermintaanSuperPage = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={totalColumns} className="text-center">
+                    <td colSpan="12" className="text-center">
                       Tidak ada permintaan
                     </td>
                   </tr>
-
                 )}
               </tbody>
 
@@ -572,7 +568,10 @@ const PermintaanSuperPage = () => {
               {verif.permintaans.length > 0 && (
                 <tfoot>
                   <tr>
-                    <td colSpan={totalColumns - 2} className="text-end fw-bold">
+                    <td
+                      colSpan={verif.status !== "ACC PPTK SEKRETARIAT" ? 8 : 7}
+                      className="text-end fw-bold"
+                    >
                       Total Keseluruhan
                     </td>
                     <td className="text-center fw-bold">
@@ -587,7 +586,14 @@ const PermintaanSuperPage = () => {
                         )
                       )}
                     </td>
-                    <td></td>
+                    <td
+                      colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 6 : 5}
+                      className="border-end"
+                    ></td>
+                    {/* <td
+                      colSpan={verif.status === "ACC PPTK SEKRETARIAT" ? 6 : 5}
+                      className="border-end"
+                    ></td> */}
                   </tr>
                 </tfoot>
               )}

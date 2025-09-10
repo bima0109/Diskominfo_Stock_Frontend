@@ -307,7 +307,8 @@ const PengajuanPage = () => {
                 </button>
               </div>
             )}
-            <table className="table table-bordered align-middle">
+            <table className="table table-bordered align-middle"
+              style={{ fontSize: "13px" }}>
               <thead className="text-center">
                 <tr>
                   <th style={{ width: "3%" }}>No</th>
@@ -329,7 +330,7 @@ const PengajuanPage = () => {
                   <th style={{ width: "12%" }}>Progres</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style={{ fontSize: "13px" }}>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>
