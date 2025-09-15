@@ -233,8 +233,11 @@ const RecordPage = () => {
                 </div>
               )}
 
-              <table className="table table-bordered">
-                <thead className="table-light">
+              <table
+                className="table table-bordered"
+                style={{ fontSize: "13px" }}
+              >
+                <thead className="table-light" style={{ fontSize: "13px" }}>
                   <tr>
                     <th style={{ width: "3%" }}>No</th>
                     <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
@@ -256,7 +259,7 @@ const RecordPage = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style={{ fontSize: "13px" }}>
                   {verif.permintaans.length > 0 ? (
                     verif.permintaans.map((item, i) => (
                       <tr key={item.id}>

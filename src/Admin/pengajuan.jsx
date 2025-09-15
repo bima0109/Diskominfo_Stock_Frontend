@@ -307,9 +307,11 @@ const PengajuanPage = () => {
                 </button>
               </div>
             )}
-            <table className="table table-bordered align-middle"
-              style={{ fontSize: "13px" }}>
-              <thead className="text-center">
+            <table
+              className="table table-bordered align-middle"
+              style={{ fontSize: "13px" }}
+            >
+              <thead className="text-center" style={{ fontSize: "13px" }}>
                 <tr>
                   <th style={{ width: "3%" }}>No</th>
                   <th style={{ width: "10%" }}>Tanggal Pengajuan</th>

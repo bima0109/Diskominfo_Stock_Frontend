@@ -50,7 +50,12 @@ const formatTanggal = (tanggal) => {
   return date.toLocaleDateString("id-ID", options);
 };
 
-const allStatuses = ["DIPROSES", "ACC KABID", "ACC SEKRETARIS", "ACC PPTK SEKRETARIAT"];
+const allStatuses = [
+  "DIPROSES",
+  "ACC KABID",
+  "ACC SEKRETARIS",
+  "ACC PPTK SEKRETARIAT",
+];
 
 const renderStatusProgress = (currentStatus) => {
   return (
@@ -123,7 +128,11 @@ const VerifSekrePage = () => {
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Gagal update permintaan. Silakan coba lagi.", "error");
+      Swal.fire(
+        "Error",
+        "Gagal update permintaan. Silakan coba lagi.",
+        "error"
+      );
     }
   };
 
@@ -183,7 +192,9 @@ const VerifSekrePage = () => {
         const years = result.map((item) =>
           new Date(item.tanggal).getFullYear()
         );
-        const uniqueYears = Array.from(new Set([...years, today.getFullYear()]));
+        const uniqueYears = Array.from(
+          new Set([...years, today.getFullYear()])
+        );
         uniqueYears.sort((a, b) => b - a);
         setAvailableYears(uniqueYears);
 
@@ -218,34 +229,59 @@ const VerifSekrePage = () => {
       ) : (
         filteredData.map((verif) => (
           <div className="mb-5" key={verif.id}>
-            <table className="table table-bordered">
-              <thead className="table-light">
+            <table
+              className="table table-bordered"
+              style={{ fontSize: "13px" }}
+            >
+              <thead className="table-light" style={{ fontSize: "13px" }}>
                 <tr>
-                  <th className="text-center" style={{ width: "3%" }}>NO</th>
+                  <th className="text-center" style={{ width: "3%" }}>
+                    NO
+                  </th>
                   <th style={{ width: "12%" }}>Tanggal</th>
                   <th style={{ width: "15%" }}>Bidang</th>
                   <th style={{ width: "20%" }}>No Surat</th>
                   <th>Nama Barang</th>
-                  <th className="text-center" style={{ width: "7%" }}>Jumlah Permintaan</th>
-                  <th className="text-center" style={{ width: "7%" }}>Jumlah Stock</th>
-                  <th className="text-center" style={{ width: "10%" }}>Satuan</th>
-                  <th className="text-center" style={{ width: "10%" }}>Keterangan Kabid</th>
-                  <th className="text-center" style={{ width: "10%" }}>Keterangan Sekretaris</th>
-                  <th className="text-center" style={{ width: "10%" }}>Keterangan PPTK</th>
-                  <th className="text-center" style={{ width: "20%" }}>Action</th>
-                  <th className="text-center" style={{ width: "10%" }}>Verifikasi</th>
-                  <th className="text-center" style={{ width: "10%" }}>Progres</th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Jumlah Permintaan
+                  </th>
+                  <th className="text-center" style={{ width: "7%" }}>
+                    Jumlah Stock
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Satuan
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Kabid
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan Sekretaris
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Keterangan PPTK
+                  </th>
+                  <th className="text-center" style={{ width: "20%" }}>
+                    Action
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Verifikasi
+                  </th>
+                  <th className="text-center" style={{ width: "10%" }}>
+                    Progres
+                  </th>
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody style={{ fontSize: "13px" }}>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>
                       <td className="text-center">{i + 1}</td>
                       <td>{i === 0 ? formatTanggal(verif.tanggal) : ""}</td>
                       <td>{i === 0 ? verif.bidang?.nama || "-" : ""}</td>
-                      <td>{i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}</td>
+                      <td>
+                        {i === 0 ? formatNoSurat(verif.id, verif.tanggal) : ""}
+                      </td>
                       <td>{item.nama_barang}</td>
                       <td className="text-center">{item.jumlah}</td>
                       <td className="text-center">{item.jumlah_stock}</td>
@@ -275,7 +311,10 @@ const VerifSekrePage = () => {
                       </td>
 
                       {i === 0 && (
-                        <td rowSpan={verif.permintaans.length} className="text-center">
+                        <td
+                          rowSpan={verif.permintaans.length}
+                          className="text-center"
+                        >
                           {verif.status === "ACC KABID" && (
                             <button
                               className="btn btn-sm btn-primary"
@@ -296,7 +335,9 @@ const VerifSekrePage = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">Tidak ada permintaan</td>
+                    <td colSpan="9" className="text-center">
+                      Tidak ada permintaan
+                    </td>
                   </tr>
                 )}
               </tbody>

@@ -230,8 +230,11 @@ const RecordSekrePage = () => {
                 </div>
               )}
 
-              <table className="table table-bordered">
-                <thead className="table-light">
+              <table
+                className="table table-bordered"
+                style={{ fontSize: "13px" }}
+              >
+                <thead className="table-light" style={{ fontSize: "13px" }}>
                   <tr>
                     <th className="text-center" style={{ width: "3%" }}>
                       NO
@@ -266,7 +269,7 @@ const RecordSekrePage = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style={{ fontSize: "13px" }}>
                   {verif.permintaans.length > 0 ? (
                     verif.permintaans.map((item, i) => (
                       <tr key={item.id}>

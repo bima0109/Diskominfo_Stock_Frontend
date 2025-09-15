@@ -134,7 +134,11 @@ const VerifPPTKPage = () => {
       setVerifikasiData(result);
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Gagal update permintaan. Silakan coba lagi.", "error");
+      Swal.fire(
+        "Error",
+        "Gagal update permintaan. Silakan coba lagi.",
+        "error"
+      );
     }
   };
 
@@ -231,8 +235,11 @@ const VerifPPTKPage = () => {
       ) : (
         filteredData.map((verif, idx) => (
           <div className="mb-5" key={verif.id}>
-            <table className="table table-bordered">
-              <thead className="table-light">
+            <table
+              className="table table-bordered"
+              style={{ fontSize: "13px" }}
+            >
+              <thead className="table-light" style={{ fontSize: "13px" }}>
                 <tr>
                   <th className="text-center" style={{ width: "3%" }}>
                     NO
@@ -274,7 +281,7 @@ const VerifPPTKPage = () => {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody style={{ fontSize: "13px" }}>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => (
                     <tr key={item.id}>

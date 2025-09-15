@@ -417,8 +417,14 @@ const PermintaanPage = () => {
               </div>
             )}
 
-            <table className="table table-bordered align-middle">
-              <thead className="table-light text-center">
+            <table
+              className="table table-bordered align-middle"
+              style={{ fontSize: "13px" }}
+            >
+              <thead
+                className="table-light text-center"
+                style={{ fontSize: "13px" }}
+              >
                 <tr>
                   <th style={{ width: "3%" }}>No</th>
                   <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
@@ -450,7 +456,7 @@ const PermintaanPage = () => {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody style={{ fontSize: "13px" }}>
                 {verif.permintaans.length > 0 ? (
                   verif.permintaans.map((item, i) => {
                     const totalHarga = item.harga * item.jumlah;
