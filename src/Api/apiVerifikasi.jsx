@@ -49,6 +49,26 @@ export const GetRekapTahunan = async (tahun) => {
     throw error.response?.data || error;
   }
 };
+
+export const GetRekapSuper = async (tahun) => {
+  try {
+    const response = await useAxios.post(
+      "/rekap-super",
+      {
+        tahun: tahun,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data; // langsung return semua response JSON
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
 // Kirim data verifikasi (store)
 export const PostVerifikasi = async () => {
   try {

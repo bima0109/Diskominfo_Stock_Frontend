@@ -40,7 +40,7 @@ import RecordSekrePage from "../Sekretaris/recordSekre.jsx";
 import VerifPPTKPage from "../PPTK/verifPPTK.jsx";
 import RecordPPTKPage from "../PPTK/recordPPTK.jsx";
 import RekapTahunanPage from "../Admin/tahunan.jsx";
-
+import RekapSuperPage from "../SuperAdmin/rekap/rekapSuper.jsx";
 
 const router = createBrowserRouter([
   {
@@ -94,12 +94,16 @@ const router = createBrowserRouter([
         element: <MasukPage />,
       },
       {
-        path: "masih",
+        path: "tersedia",
         element: <MasihPage />,
       },
       {
         path: "habis",
         element: <HabisPage />,
+      },
+      {
+        path: "tahunan",
+        element: <RekapSuperPage />,
       },
     ],
   },
@@ -134,12 +138,16 @@ const router = createBrowserRouter([
         element: <MasukPage />,
       },
       {
-        path: "masih",
+        path: "tersedia",
         element: <MasihPage />,
       },
       {
         path: "habis",
         element: <HabisPage />,
+      },
+      {
+        path: "tahunan",
+        element: <RekapSuperPage />,
       },
     ],
   },
@@ -246,12 +254,16 @@ const router = createBrowserRouter([
         element: <MasukPage />,
       },
       {
-        path: "masih",
+        path: "tersedia",
         element: <MasihPage />,
       },
       {
         path: "habis",
         element: <HabisPage />,
+      },
+      {
+        path: "tahunan",
+        element: <RekapSuperPage />,
       },
     ],
   },

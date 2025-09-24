@@ -69,9 +69,14 @@ const LinkSidebar = () => {
               />
 
               <PencetansubSidebar
-                arah="/master/masih/"
-                nama="Barang Masih"
+                arah="/master/tersedia/"
+                nama="Barang Tersedia"
                 linkGambar={iconMasih}
+              />
+              <PencetansubSidebar
+                arah="/master/tahunan/"
+                nama="Rekap Tahunan"
+                linkGambar="https://img.icons8.com/?size=100&id=24874&format=png&color=000000"
               />
             </div>
           )}
@@ -128,9 +133,14 @@ const LinkSidebar = () => {
               />
 
               <PencetansubSidebar
-                arah="/super/masih/"
-                nama="Barang Masih"
+                arah="/super/tersedia/"
+                nama="Barang Tersedia"
                 linkGambar={iconMasih}
+              />
+              <PencetansubSidebar
+                arah="/super/tahunan/"
+                nama="Rekap Tahunan"
+                linkGambar="https://img.icons8.com/?size=100&id=24874&format=png&color=000000"
               />
             </div>
           )}
@@ -210,9 +220,14 @@ const LinkSidebar = () => {
               />
 
               <PencetansubSidebar
-                arah="/pptk/masih/"
-                nama="Barang Masih"
+                arah="/pptk/tersedia/"
+                nama="Barang Tersedia"
                 linkGambar={iconMasih}
+              />
+              <PencetansubSidebar
+                arah="/pptk/tahunan/"
+                nama="Rekap Tahunan"
+                linkGambar="https://img.icons8.com/?size=100&id=24874&format=png&color=000000"
               />
             </div>
           )}
@@ -384,7 +399,7 @@ const Sidebar = () => {
           <img
             src={sipbLogo}
             alt="SIPB Logo"
-            style={{ height: "80px", objectFit: "contain" }}
+            style={{ height: "65px", objectFit: "contain" }}
           />
           <button
             type="button"

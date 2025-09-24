@@ -99,14 +99,19 @@ const HabisPage = () => {
     const tableData = filteredData.map((item, index) => [
       index + 1,
       item.nama_barang,
-      item.jumlah,
-      item.satuan,
+      item.harga
+        ? new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(item.harga)
+        : "-",
       formatTanggalIndo(item.tanggal),
     ]);
 
     autoTable(doc, {
       startY: 58,
-      head: [["No", "Nama Barang", "Jumlah", "Satuan", "Tanggal"]],
+      head: [["No", "Nama Barang", "Harga", "Tanggal"]],
       body: tableData,
       styles: {
         fontSize: 10,
@@ -125,7 +130,6 @@ const HabisPage = () => {
         0: { halign: "center", cellWidth: 10 },
         2: { halign: "center" },
         3: { halign: "center" },
-        4: { halign: "center" },
       },
     });
 
@@ -180,9 +184,9 @@ const HabisPage = () => {
               <th className="text-center" style={{ width: "5%" }}>
                 No
               </th>
-              <th>Nama</th>
-              <th className="text-center">Jumlah</th>
-              <th className="text-center">Satuan</th>
+              <th className="text-center">Nama</th>
+              {/* <th className="text-center">Jumlah</th>
+              <th className="text-center">Satuan</th> */}
               <th className="text-center">Harga</th>
               <th className="text-center">Tanggal</th>
             </tr>
@@ -192,15 +196,15 @@ const HabisPage = () => {
               <tr key={item.id || idx}>
                 <td className="text-center">{idx + 1}</td>
                 <td>{item.nama_barang}</td>
-                <td className="text-center">{item.jumlah}</td>
-                <td className="text-center">{item.satuan}</td>
+                {/* <td className="text-center">{item.jumlah}</td>
+                <td className="text-center">{item.satuan}</td> */}
                 <td className="text-center">
                   {item.harga
                     ? new Intl.NumberFormat("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                    }).format(item.harga)
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(item.harga)
                     : "-"}
                 </td>
                 <td className="text-center">

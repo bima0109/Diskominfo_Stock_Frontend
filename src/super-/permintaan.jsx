@@ -5,9 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import JsBarcode from "jsbarcode";
 import kopsurat from "../assets/kopsurat.png";
 import { useLocation } from "react-router-dom";
+import ttdImage from "../assets/ttd.png";
 
 const romanMonths = [
   "",
@@ -126,20 +126,6 @@ const PermintaanSuperPage = () => {
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
-    // link yang ingin diarahkan saat scan barcode
-    const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
-
-    // generate barcode di canvas hidden
-    JsBarcode(barcodeCanvas.current, pdfUrl, {
-      format: "CODE128",
-      displayValue: false,
-      width: 2,
-      height: 60,
-      margin: 0,
-    });
-
-    const barcodeDataUrl = barcodeCanvas.current.toDataURL("image/png");
-
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.addImage(kopsurat, "PNG", 15, 12, 25, 25);
@@ -209,7 +195,7 @@ const PermintaanSuperPage = () => {
     // Teks rata kiri sejajar PNG
     doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
 
-    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+    doc.addImage(ttdImage, "PNG", leftX, finalY + 25, 60, 20);
 
     doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
     doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
@@ -417,10 +403,14 @@ const PermintaanSuperPage = () => {
               </div>
             )}
 
-            <table className="table table-bordered align-middle"
+            <table
+              className="table table-bordered align-middle"
               style={{ fontSize: "13px" }}
             >
-              <thead className="table-light text-center" style={{ fontSize: "13px" }}>
+              <thead
+                className="table-light text-center"
+                style={{ fontSize: "13px" }}
+              >
                 <tr>
                   <th style={{ width: "3%" }}>No</th>
                   <th style={{ width: "10%" }}>Tanggal Pengajuan</th>
@@ -442,7 +432,7 @@ const PermintaanSuperPage = () => {
                   {verif.status === "ACC PPTK SEKRETARIAT" && (
                     <>
                       <th style={{ width: "10%" }}>Menyetujui</th>
-                      <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                      <th style={{ width: "12%" }}>Tanggal Persetujuan</th>
                     </>
                   )}
                   {verif.status !== "ACC PPTK SEKRETARIAT" && (
@@ -489,10 +479,10 @@ const PermintaanSuperPage = () => {
                         <td className="text-center">
                           {item.harga
                             ? new Intl.NumberFormat("id-ID", {
-                              style: "currency",
-                              currency: "IDR",
-                              minimumFractionDigits: 0,
-                            }).format(item.harga)
+                                style: "currency",
+                                currency: "IDR",
+                                minimumFractionDigits: 0,
+                              }).format(item.harga)
                             : "-"}
                         </td>
                         <td className="text-center">

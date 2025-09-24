@@ -135,7 +135,7 @@ const MasihPage = () => {
 
   return (
     <div className="container py-4">
-      <h3 className="mb-4">Rekapitulasi Data Barang Masih</h3>
+      <h3 className="mb-4">Rekapitulasi Data Barang Tersedia</h3>
 
       <div className="row mb-3">
         <div className="col-md-3">
@@ -199,10 +199,10 @@ const MasihPage = () => {
                   <td className="text-center">
                     {item.harga
                       ? new Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        minimumFractionDigits: 0,
-                      }).format(item.harga)
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        }).format(item.harga)
                       : "-"}
                   </td>
                   <td className="text-center">
@@ -212,7 +212,9 @@ const MasihPage = () => {
                       minimumFractionDigits: 0,
                     }).format(totalHarga)}
                   </td>
-                  <td className="text-center">{formatTanggalIndo(item.tanggal)}</td>
+                  <td className="text-center">
+                    {formatTanggalIndo(item.tanggal)}
+                  </td>
                 </tr>
               );
             })}

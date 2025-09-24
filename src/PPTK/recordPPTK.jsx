@@ -261,7 +261,7 @@ const RecordSekrePage = () => {
                     {verif.status === "ACC PPTK SEKRETARIAT" && (
                       <>
                         <th style={{ width: "10%" }}>Menyetujui</th>
-                        <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                        <th style={{ width: "12%" }}>Tanggal Persetujuan</th>
                       </>
                     )}
                     <th className="text-center" style={{ width: "10%" }}>

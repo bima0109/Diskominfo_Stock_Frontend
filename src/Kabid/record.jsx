@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import kopsurat from "../assets/kopsurat.png";
 import JsBarcode from "jsbarcode";
+import ttdImage from "../assets/ttd.png";
 
 const romanMonths = [
   "",
@@ -92,19 +93,6 @@ const RecordPage = () => {
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
 
-    const pdfUrl = `${window.location.origin}/pdf/${verif.id}`;
-
-    // generate barcode di canvas hidden
-    JsBarcode(barcodeCanvas.current, pdfUrl, {
-      format: "CODE128",
-      displayValue: false,
-      width: 2,
-      height: 60,
-      margin: 0,
-    });
-
-    const barcodeDataUrl = barcodeCanvas.current.toDataURL("image/png");
-
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.addImage(kopsurat, "PNG", 15, 12, 25, 25);
@@ -174,7 +162,7 @@ const RecordPage = () => {
     // Teks rata kiri sejajar PNG
     doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
 
-    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+    doc.addImage(ttdImage, "PNG", leftX, finalY + 25, 60, 20);
 
     doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
     doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
@@ -251,7 +239,7 @@ const RecordPage = () => {
                     {verif.status === "ACC PPTK SEKRETARIAT" && (
                       <>
                         <th style={{ width: "10%" }}>Menyetujui</th>
-                        <th style={{ width: "12%" }}>Tanggal Penyetujuan</th>
+                        <th style={{ width: "12%" }}>Tanggal Persetujuan</th>
                       </>
                     )}
                     <th className="text-center" style={{ width: "10%" }}>
