@@ -3,6 +3,7 @@ import logoJateng from "../Assets/logoJateng.png";
 import { Login } from "../Api/ApiAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Siatuk from "../assets/Siatuk.png";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -87,7 +88,7 @@ const LoginPage = () => {
             case "SEKRETARIS":
               navigate("sekretaris/dashboard-sekre");
               break;
-            case "SUPERADMIN" :
+            case "SUPERADMIN":
               navigate("super/dashboard-super");
               break;
             default:
@@ -124,7 +125,7 @@ const LoginPage = () => {
       `}
       </style>
       <div style={styles.headerSection}>
-        <img
+        {/* <img
           src={logoJateng}
           alt="Logo"
           style={styles.logo}
@@ -132,8 +133,16 @@ const LoginPage = () => {
             e.target.onerror = null;
             e.target.src = "https://placehold.co/80x80?text=No+Logo";
           }}
+        /> */}
+        <img
+          src={Siatuk}
+          alt="Siatuk"
+          style={styles.siatukLogo}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://placehold.co/120x40?text=No+Image";
+          }}
         />
-        <h1 style={styles.title}>SIPB</h1>
         <div style={styles.subtitle}>Sign in to your account to continue</div>
       </div>
 
@@ -264,18 +273,29 @@ const styles = {
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     padding: "20px",
   },
-  headerSection: {
-    textAlign: "center",
+  // headerSection: {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   gap: "10px",
+  //   marginBottom: "10px",
+  //   textAlign: "center",
+  // },
+  // logo: {
+  //   width: "120px",
+  //   height: "120px",
+  //   borderRadius: "50%",
+  //   objectFit: "cover",
+  //   backgroundColor: "rgba(255,255,255,0.2)",
+  //   marginBottom: "10px",
+  // },
+  siatukLogo: {
+    width: "400px",
+    height: "auto",
+    marginTop: "10px",
     marginBottom: "20px",
   },
-  logo: {
-    width: "120px",
-    height: "120px",
-    borderRadius: "50%",
-    objectFit: "cover",
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginBottom: "10px",
-  },
+
   title: {
     margin: "0",
     fontWeight: "900",
@@ -286,6 +306,7 @@ const styles = {
     fontSize: "14px",
     color: "rgba(255,255,255,0.8)",
     marginTop: "4px",
+    textAlign: "center",
   },
   innerContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",
@@ -327,7 +348,7 @@ const styles = {
   passwordWrapper: {
     position: "relative",
     // display: "flex",
-    width: "100%"
+    width: "100%",
   },
   showPassButton: {
     position: "absolute",
