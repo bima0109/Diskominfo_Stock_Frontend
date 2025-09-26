@@ -389,7 +389,7 @@ const PermintaanPage = () => {
       {selectedBidang && (
         <div className="mb-3">
           <h5>
-            Halaman Bidang:{" "}
+            Halaman:{" "}
             <span className="badge bg-primary">
               {selectedBidang.toUpperCase()}
             </span>
