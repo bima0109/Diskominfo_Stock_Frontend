@@ -77,7 +77,7 @@ const DraftPage = () => {
     const today = new Date();
     const dayOfMonth = today.getDate();
 
-    if (dayOfMonth < 1 || dayOfMonth > 10) {
+    if (dayOfMonth < 1 || dayOfMonth > 30) {
       Swal.fire(
         "Peringatan",
         "Pengajuan hanya dapat dilakukan pada tanggal 1–10 setiap bulan.",
@@ -88,24 +88,31 @@ const DraftPage = () => {
 
     try {
       const response = await PostVerifikasi();
-      Swal.fire("Berhasil", response.message || "Pengajuan berhasil.", "success")
-        .then(() => {
-          window.location.href = "/admin/pengajuan/";
-        });
+      Swal.fire(
+        "Berhasil",
+        response.message || "Pengajuan berhasil.",
+        "success"
+      ).then(() => {
+        window.location.href = "/admin/pengajuan/";
+      });
     } catch (error) {
       console.error("Gagal mengajukan:", error);
       if (error.errors) {
         const messages = Object.values(error.errors).flat().join("<br/>");
         Swal.fire("Validasi gagal", messages, "error");
       } else {
-        Swal.fire("Error", error.message || "Terjadi kesalahan saat mengajukan.", "error");
+        Swal.fire(
+          "Error",
+          error.message || "Terjadi kesalahan saat mengajukan.",
+          "error"
+        );
       }
     }
   };
 
   return (
     <div className="container py-4">
-      <h3 className="mb-4">Draft Permintaan Barang</h3>
+      <h3 className="mb-4">Draft Pengajuan Barang</h3>
 
       <table className="table table-bordered">
         <thead className="table-light">

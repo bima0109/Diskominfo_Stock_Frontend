@@ -83,7 +83,7 @@ const MasihPage = () => {
     doc.text("PEMERINTAH PROVINSI JAWA TENGAH", 40, 27);
 
     doc.setFontSize(14);
-    doc.text("LAPORAN REKAPITULASI DATA BARANG MASIH", 105, 40, {
+    doc.text("LAPORAN REKAPITULASI DATA BARANG TERSEDIA", 105, 40, {
       align: "center",
     });
 

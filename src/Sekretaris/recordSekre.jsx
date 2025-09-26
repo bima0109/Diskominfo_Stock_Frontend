@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import JsBarcode from "jsbarcode";
 import kopsurat from "../assets/kopsurat.png";
+import ttdImage from "../assets/ttd.png";
 
 const romanMonths = [
   "",
@@ -186,7 +187,7 @@ const RecordSekrePage = () => {
     // Teks rata kiri sejajar PNG
     doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
 
-    doc.addImage(barcodeDataUrl, "PNG", leftX, finalY + 25, 60, 20);
+    doc.addImage(ttdImage, "PNG", leftX, finalY + 25, 60, 20);
 
     doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
     doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
