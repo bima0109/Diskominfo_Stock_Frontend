@@ -41,6 +41,7 @@ const UserSuperPage = () => {
     password: "",
     role: "",
     bidang: "",
+    ttd: null,
   });
   const [formEdit, setFormEdit] = useState({
     nama: "",
@@ -111,7 +112,9 @@ const UserSuperPage = () => {
         password: formTambah.password,
         id_role: formTambah.role,
         id_bidang: formTambah.bidang,
+        ...(formTambah.role === "3" && { ttd: formTambah.ttd }),
       });
+
       Swal.fire({
         title: "Berhasil",
         text: "User berhasil ditambahkan",
@@ -125,6 +128,7 @@ const UserSuperPage = () => {
       Swal.fire("Error", "Gagal menambahkan user", "error");
     }
   };
+
 
   const handleEdit = (user) => {
     setEditId(user.id);
@@ -384,6 +388,17 @@ const UserSuperPage = () => {
                     </option>
                   ))}
                 </select>
+                {formTambah.role === "3" && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="form-control mb-2"
+                    onChange={(e) =>
+                      setFormTambah({ ...formTambah, ttd: e.target.files[0] })
+                    }
+                    required
+                  />
+                )}
                 <select
                   className="form-control mb-2"
                   value={formTambah.bidang}

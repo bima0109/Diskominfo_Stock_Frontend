@@ -131,17 +131,24 @@ export const GetProfile = async () => {
 
 export const UpdateProfile = async (value) => {
   try {
-    const response = await useAxios.put("/profile", value, {
+    const formData = new FormData();
+    for (const key in value) {
+      formData.append(key, value[key]);
+    }
+
+    const response = await useAxios.post("/profile", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
+
     return response.data.data;
   } catch (error) {
     throw error.response?.data || error;
   }
 };
+
 
 export const UpdatePassword = async (value) => {
   try {
