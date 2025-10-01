@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetProfile, UpdateProfile, UpdatePassword } from "../Api/apiUser";
 import Swal from "sweetalert2";
+import { getThumbnail } from "../Api";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({});
@@ -19,6 +20,7 @@ export default function ProfilePage() {
   const [username, setUsername] = useState("");
   const [idBidang, setIdBidang] = useState("");
   const [idRole, setIdRole] = useState("");
+  const [ttd, setTtd] = useState("");
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -36,6 +38,7 @@ export default function ProfilePage() {
       setUsername(data.username || "");
       setIdBidang(data.id_bidang || "");
       setIdRole(data.id_role || "");
+      setTtd(data.ttd);
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -53,6 +56,7 @@ export default function ProfilePage() {
       await UpdateProfile({
         nama: nama,
         username: username,
+        ttd: ttd,
       });
       Swal.fire({
         icon: "success",
@@ -149,6 +153,29 @@ export default function ProfilePage() {
               ))}
             </select>
           </div>
+          {parseInt(idRole) === 3 && (
+            <div className="mb-3">
+              <label className="form-label">Tanda Tangan</label>
+
+              {/* Jika ada ttd tampilkan gambarnya */}
+              {ttd && (
+                <div className="mb-2">
+                  <img
+                    src={getThumbnail(ttd)}
+                    alt="TTD"
+                    style={{ maxWidth: "200px", maxHeight: "100px", display: "block" }}
+                  />
+                </div>
+              )}
+
+              <input
+                type="file"
+                className="form-control"
+                accept="image/*"
+                onChange={(e) => setTtd(e.target.files[0])}
+              />
+            </div>
+          )}
 
           <button className="btn btn-primary" type="submit">
             Simpan Profil

@@ -5,8 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import kopsurat from "../assets/kopsurat.png";
-import JsBarcode from "jsbarcode";
 import ttdImage from "../assets/ttd.png";
+import { getThumbnail } from "../Api";
 
 const romanMonths = [
   "",
@@ -36,6 +36,24 @@ const formatTanggal = (tanggal) => {
   const options = { day: "2-digit", month: "long", year: "numeric" };
   return date.toLocaleDateString("id-ID", options);
 };
+
+const loadImageAsBase64 = (url) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = url;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+  });
+};
+
 
 const formatTanggalAcc = (tanggal_acc) => {
   if (!tanggal_acc) {
@@ -91,7 +109,7 @@ const RecordSekrePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const handleCetak = (verif) => {
+  const handleCetak = async (verif) => {
     const doc = new jsPDF();
     const tanggalSurat = formatTanggal(verif.tanggal);
     const noSurat = formatNoSurat(verif.id, verif.tanggal);
@@ -162,17 +180,19 @@ const RecordSekrePage = () => {
       ? formatTanggal(verif.tanggal_acc)
       : "-";
 
-    // Teks rata kiri sejajar PNG
     doc.text(`Semarang, ${tanggalAcc}`, leftX, finalY + 20);
+    if (verif.ttd) {
+      const base64 = await loadImageAsBase64(getThumbnail(verif.ttd));
+      doc.addImage(base64, "PNG", 100, 150, 60, 20);
+    } else {
+      doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
+      doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
 
-    doc.addImage(ttdImage, "PNG", leftX, finalY + 25, 60, 20);
+      const blob = doc.output("blob");
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    }
 
-    doc.text("PPTK SEKRETARIAT", leftX, finalY + 52);
-    doc.text(`(${verif.menyetujui || "-"})`, leftX, finalY + 56);
-
-    const blob = doc.output("blob");
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
   };
 
   useEffect(() => {
@@ -336,9 +356,8 @@ const RecordSekrePage = () => {
                   </li>
                 ))}
                 <li
-                  className={`page-item ${
-                    currentPage === totalPages && "disabled"
-                  }`}
+                  className={`page-item ${currentPage === totalPages && "disabled"
+                    }`}
                 >
                   <button
                     className="page-link"
